@@ -1,54 +1,32 @@
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Moon, Sun } from "lucide-react"
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+
+// Importamos el árbol generado automáticamente
+import { routeTree } from './routeTree.gen'
+
+// 1. Creamos la instancia del router
+const router = createRouter({
+  routeTree,
+  context: {
+    isAuthenticated: false, // Valor por defecto
+  },
+})
+
+// 2. Registramos los tipos para TypeScript
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false)
-
-  useEffect(() => {
-    const html = document.documentElement
-    if (isDarkMode) {
-      html.classList.add("dark")
-    } else {
-      html.classList.remove("dark")
-    }
-  }, [isDarkMode])
+  // 🔥 AQUÍ CONTROLAS EL ESTADO GLOBAL (Auth)
+  const isAuthenticated = false // <--- CAMBIA A TRUE PARA ENTRAR
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center gap-6 transition-colors duration-500 bg-background text-foreground">
-      
-      <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight text-primary">
-          Afrodita UI
-        </h1>
-        <p className="text-muted-foreground text-lg">
-          Probando la paleta {isDarkMode ? "Nocturna 🌙" : "Diurna ☀️"}
-        </p>
-      </div>
-
-      <div className="p-6 border rounded-xl bg-card text-card-foreground shadow-lg w-80 space-y-4">
-        <h3 className="font-semibold text-lg">Panel de Control</h3>
-        <p className="text-sm text-muted-foreground">
-          Este es un ejemplo de cómo se ven los textos secundarios y los bordes en este modo.
-        </p>
-        
-        {/* CORRECCIÓN AQUÍ: Cambiamos 'w-full' por 'flex-1' */}
-        <div className="flex gap-2">
-          <Button className="flex-1">Aceptar</Button>
-          <Button variant="secondary" className="flex-1">Cancelar</Button>
-        </div>
-      </div>
-
-      <Button 
-        variant="outline" 
-        size="icon" 
-        className="rounded-full w-12 h-12 border-2"
-        onClick={() => setIsDarkMode(!isDarkMode)}
-      >
-        {isDarkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-      </Button>
-
-    </div>
+    <RouterProvider 
+      router={router} 
+      context={{ isAuthenticated }} 
+    />
   )
 }
 

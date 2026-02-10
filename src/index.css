@@ -122,6 +122,7 @@
 .dark {
   /* Fondo: Un Púrpura muy profundo (casi negro) */
   --background: oklch(0.15 0.05 309);
+  
   /* Texto: El rosa pálido #F4AFCC para leer bien */
   --foreground: oklch(0.95 0.02 346);
 
