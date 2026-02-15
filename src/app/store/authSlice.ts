@@ -1,7 +1,7 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction, createSelector } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
-// 1. Definimos cómo se ve la información del usuario
+// 1. Interfaz de usuario basada en tu modelo de datos
 export interface User {
   user_id: string  
   username: string
@@ -25,9 +25,9 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // 2. Acción para guardar datos al loguearse
+    // Maneja el login guardando usuario y tokens
     setCredentials: (
-      state,
+      state, 
       action: PayloadAction<{ user: User; access: string; refresh: string }>
     ) => {
       const { user, access, refresh } = action.payload
@@ -35,35 +35,54 @@ export const authSlice = createSlice({
       state.token = access
       state.refreshToken = refresh
     },
+    // Limpia el estado al cerrar sesión
     logout: (state) => {
       state.user = null
       state.token = null
       state.refreshToken = null
     },
+    // Útil para el refresco automático de tokens (Silent Refresh)
     updateAccessToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload
     }
   },
 })
 
-// Exportamos las acciones
-export const authActions = authSlice.actions 
+// Exportación de acciones para usar con dispatch
 export const { setCredentials, logout, updateAccessToken } = authSlice.actions 
 
+// Exportación del reducer para el store
 export default authSlice.reducer
 
-// 3. Selectores para acceder a los datos desde cualquier parte de la app
+// --- SELECTORES MEMOIZADOS (Evitan re-renders innecesarios) ---
+
+// Selector base para acceder a la rama de auth
+const selectAuth = (state: RootState) => state.auth;
+
 export const authSelectors = {
+  // Comprueba si hay un token activo
   isAuthenticated: (state: RootState) => !!state.auth.token,
-  user: (state: RootState) => state.auth.user,
-  token: (state: RootState) => state.auth.token,
   
-  // Helper que usa el RouterProvider y createBaseApi
-  authData: (state: RootState) => ({
-    user_id: state.auth.user?.user_id, 
-    role: state.auth.user?.rol,
-    token: state.auth.token,
-    email: state.auth.user?.email,
-    refresh_token: state.auth.refreshToken
-  })
+  // Obtiene el objeto usuario completo
+  user: (state: RootState) => state.auth.user,
+  
+  // Obtiene el token de acceso
+  token: (state: RootState) => state.auth.token,
+
+  /**
+   * Selector Memoizado: authData
+   * Este selector combina múltiples datos en un solo objeto.
+   * Gracias a createSelector, solo se vuelve a calcular si state.auth cambia,
+   * eliminando el error de "Selectors that return a new reference".
+   */
+  authData: createSelector(
+    [selectAuth],
+    (auth) => ({
+      user_id: auth.user?.user_id, 
+      role: auth.user?.rol,
+      token: auth.token,
+      email: auth.user?.email,
+      refresh_token: auth.refreshToken
+    })
+  )
 }

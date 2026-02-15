@@ -36,6 +36,9 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  /* TOKENS PERSONALIZADOS PARA AFRODITA */
+  --color-header: var(--header-bg);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -46,70 +49,41 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* TUS COLORES ORIGINALES CONVERTIDOS:
-  Primary: #FAA6C5 -> oklch(0.76 0.12 346)
-  Vibrant: #FF84AF -> oklch(0.70 0.18 348)
-  Purple:  #B257C9 -> oklch(0.53 0.19 309)
-  Muted:   #C98BB9 -> oklch(0.68 0.11 330)
-  Pale:    #F4AFCC -> oklch(0.81 0.10 346)
-*/
-
 :root {
   --radius: 0.625rem;
 
-  /* Fondo Blanco puro para limpieza en Light Mode */
+  /* BASE */
   --background: oklch(1 0 0);
-  /* Texto principal: Tu Púrpura muy oscuro (casi negro) para mantener la marca */
   --foreground: oklch(0.25 0.05 309);
 
-  /* Tarjetas con un tinte rosa MUY sutil (el F4AFCC pero muy claro) */
+  /* MARCA AFRODITA */
+  --primary: oklch(0.76 0.12 346);
+  /* #FAA6C5 */
+  --primary-foreground: oklch(0.30 0.10 309);
+  --secondary: oklch(0.53 0.19 309);
+  /* #B257C9 */
+  --secondary-foreground: oklch(1 0 0);
+
+  /* INTERFAZ */
   --card: oklch(0.98 0.02 346);
   --card-foreground: oklch(0.25 0.05 309);
-
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.25 0.05 309);
-
-  /* TU PRIMARIO: #FAA6C5 */
-  --primary: oklch(0.76 0.12 346);
-  /* Texto sobre el botón primario: Usamos el Púrpura oscuro para que se lea bien sobre el rosa claro */
-  --primary-foreground: oklch(0.30 0.10 309);
-
-  /* TU SECUNDARIO: #B257C9 (El Púrpura) */
-  --secondary: oklch(0.53 0.19 309);
-  --secondary-foreground: oklch(1 0 0);
-  /* Texto blanco sobre púrpura */
-
-  /* MUTED: #C98BB9 */
   --muted: oklch(0.96 0.01 309);
   --muted-foreground: oklch(0.55 0.10 309);
-
-  /* ACCENT: #FF84AF (Para hovers) */
   --accent: oklch(0.70 0.18 348);
   --accent-foreground: oklch(1 0 0);
-
   --destructive: oklch(0.577 0.245 27.325);
-  /* Rojo estándar para errores */
-
   --border: oklch(0.90 0.03 346);
-  /* Bordes rosaditos suaves */
   --input: oklch(0.90 0.03 346);
-
-  /* Ring de foco: Tu Púrpura */
   --ring: oklch(0.53 0.19 309);
 
-  /* Gráficos adaptados a tu paleta */
-  --chart-1: oklch(0.53 0.19 309);
-  /* Púrpura */
-  --chart-2: oklch(0.70 0.18 348);
-  /* Rosa Fuerte */
-  --chart-3: oklch(0.76 0.12 346);
-  /* Rosa Suave */
-  --chart-4: oklch(0.68 0.11 330);
-  /* Malva */
-  --chart-5: oklch(0.81 0.10 346);
-  /* Rosa Pálido */
+  /* HEADER & SIDEBAR ESPECÍFICOS */
+  --header-bg: oklch(0.81 0.10 346);
+  /* #F4AFCC - El más claro */
+  --sidebar: oklch(0.87 0.05 18);
+  /* #F7D1D0 - El más sólido */
 
-  --sidebar: oklch(0.99 0.01 346);
   --sidebar-foreground: oklch(0.25 0.05 309);
   --sidebar-primary: oklch(0.53 0.19 309);
   --sidebar-primary-foreground: oklch(1 0 0);
@@ -117,13 +91,17 @@
   --sidebar-accent-foreground: oklch(0.25 0.05 309);
   --sidebar-border: oklch(0.92 0.02 346);
   --sidebar-ring: oklch(0.53 0.19 309);
+
+  /* CHARTS */
+  --chart-1: oklch(0.53 0.19 309);
+  --chart-2: oklch(0.70 0.18 348);
+  --chart-3: oklch(0.76 0.12 346);
+  --chart-4: oklch(0.68 0.11 330);
+  --chart-5: oklch(0.81 0.10 346);
 }
 
 .dark {
-  /* Fondo: Un Púrpura muy profundo (casi negro) */
   --background: oklch(0.15 0.05 309);
-  
-  /* Texto: El rosa pálido #F4AFCC para leer bien */
   --foreground: oklch(0.95 0.02 346);
 
   --card: oklch(0.20 0.06 309);
@@ -132,11 +110,9 @@
   --popover: oklch(0.20 0.06 309);
   --popover-foreground: oklch(0.95 0.02 346);
 
-  /* El Primario se mantiene igual, brilla bien en oscuro */
   --primary: oklch(0.76 0.12 346);
   --primary-foreground: oklch(0.20 0.10 309);
 
-  /* Secundario en oscuro: Usamos el malva #C98BB9 */
   --secondary: oklch(0.68 0.11 330);
   --secondary-foreground: oklch(1 0 0);
 
@@ -146,13 +122,14 @@
   --accent: oklch(0.30 0.10 309);
   --accent-foreground: oklch(0.95 0.02 346);
 
-  --destructive: oklch(0.60 0.20 20);
+  /* En DARK MODE el Header y Sidebar se vuelven púrpuras profundos */
+  --header-bg: oklch(0.25 0.05 309);
+  --sidebar: oklch(0.18 0.05 309);
 
   --border: oklch(0.30 0.05 309);
   --input: oklch(0.30 0.05 309);
   --ring: oklch(0.70 0.18 348);
 
-  --sidebar: oklch(0.18 0.05 309);
   --sidebar-foreground: oklch(0.95 0.02 346);
   --sidebar-primary: oklch(0.76 0.12 346);
   --sidebar-primary-foreground: oklch(0.20 0.10 309);

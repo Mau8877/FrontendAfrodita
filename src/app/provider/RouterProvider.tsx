@@ -8,23 +8,20 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { TooltipProvider } from "@/components/ui/tooltip"
 
-// 1. Definimos la interfaz del Contexto (Lo que __root.tsx y los guards usarán)
 export interface RouterAuthContext {
   isAuthenticated: boolean
   userRole?: string
 }
 
-// 2. Creamos el router e inicializamos el contexto con valores dummy
 const router = createRouter({
   routeTree,
-  defaultPreload: 'intent', // Optimización: precarga al pasar el mouse
+  defaultPreload: 'intent',
   context: {
     isAuthenticated: false, 
     userRole: undefined,
   },
 })
 
-// 3. Registramos el router para que TypeScript funcione en toda la app
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
@@ -32,15 +29,13 @@ declare module '@tanstack/react-router' {
 }
 
 export function RouterProvider() {
-  // 4. Conectamos con Redux (El cerebro)
-  // authSelectors.authData ya nos devuelve { role, token, ... } mapeados
-  const { role, token } = useSelector(authSelectors.authData)
-  
-  // Calculamos si está autenticado
-  const isAuthenticated = !!token
 
-  // 5. Creamos el objeto de contexto reactivo
-  // Si cambia el token o el rol en Redux, esto se actualiza automáticamente
+  const token = useSelector(authSelectors.token)
+  const user = useSelector(authSelectors.user)
+  
+  const isAuthenticated = !!token
+  const role = user?.rol
+
   const contextValue = useMemo(() => {
     return {
       isAuthenticated,
@@ -50,7 +45,6 @@ export function RouterProvider() {
 
   return (
     <TooltipProvider>
-      {/* Pasamos el router y el contexto actualizado */}
       <TSRouterProvider router={router} context={contextValue} />
     </TooltipProvider>
   )

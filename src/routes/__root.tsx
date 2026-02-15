@@ -1,7 +1,7 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { Toaster } from "@/components/ui/sonner"
 
-// 1. Definimos qué datos "inyectaremos" desde el main.tsx
+// Definimos qué datos "inyectaremos" desde el main.tsx
 interface RouterContext {
   isAuthenticated: boolean,
   userRole?: string,

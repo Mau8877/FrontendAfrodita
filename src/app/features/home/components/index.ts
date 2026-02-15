@@ -1,1 +1,6 @@
-export * from "./HomeHero"
+export * from "./SeccionProductos"
+export * from "./Tonos"
+export * from "./Banner"
+export * from "./NuevosModelos"
+export * from "./PupilentesCosplay" 
+export * from "./Visitanos"
