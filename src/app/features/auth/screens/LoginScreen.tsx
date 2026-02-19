@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate, Link } from '@tanstack/react-router' // <--- 1. IMPORTAMOS LINK
+import { useNavigate, Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { Eye, EyeOff, Loader2, LogIn } from 'lucide-react'
 
@@ -49,7 +49,7 @@ export function LoginScreen() {
       
       if (response.success) {
         toast.success(response.message || "¡Bienvenido de nuevo!")
-        navigate({ to: '/dashboard' }) 
+        navigate({ to: '/admin/dashboard' }) 
       }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -152,7 +152,6 @@ export function LoginScreen() {
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
             ¿No tienes cuenta?{' '}
-            {/* 2. USAMOS LINK AQUI PARA QUE NO RECARGUE LA PÁGINA */}
             <Link 
               to="/register" 
               className="text-primary hover:underline font-medium"

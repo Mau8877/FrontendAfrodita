@@ -1,63 +1,71 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { type RootState } from '@/app/store'
 import { close } from '../store/sidebarSlice'
-import { X, ShieldCheck, User } from 'lucide-react'
+import { X, Home, ShoppingBag, MapPin, HelpCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Link } from '@tanstack/react-router'
 
 export function SidebarContent() {
   const dispatch = useDispatch()
-  const { user } = useSelector((state: RootState) => state.auth)
   
-  const links = user?.rol === 'admin' 
-    ? ['Dashboard', 'Usuarios', 'Reportes'] 
-    : ['Mi Perfil', 'Mis Pedidos', 'Favoritos']
+  // Definimos los links con sus iconos y rutas
+  const clientLinks = [
+    { label: 'Inicio', to: '/', icon: Home },
+    { label: 'Productos', to: '/productos', icon: ShoppingBag },
+    { label: 'Contacto', to: '/visitanos', icon: MapPin },
+    { label: 'Preguntas Frecuentes', to: '/faq', icon: HelpCircle },
+  ]
+
+  const closeSidebar = () => dispatch(close())
 
   return (
-    // CAMBIO: Usamos bg-sidebar para que tome el #F7D1D0 del CSS
-    <div className="flex flex-col h-full bg-sidebar border-r border-black/5">
-      <div className="p-5 border-b border-black/5 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-primary">
-          {/* Usamos el color secundario (Púrpura) para los iconos para que resalten */}
-          {user?.rol === 'admin' ? (
-            <ShieldCheck className="w-5 h-5 text-secondary" /> 
-          ) : (
-            <User className="w-5 h-5 text-secondary" />
-          )}
-          <span className="font-bold tracking-tight text-foreground italic">Afrodita</span>
+    <div className="flex flex-col h-full bg-[#F4AFCC] border-r border-black/5">
+      {/* HEADER DEL SIDEBAR */}
+      <div className="p-6 border-b border-black/5 flex items-center justify-between">
+        <div className="flex flex-col">
+          <span className="text-[10px] font-black text-secondary/60 uppercase tracking-[0.3em]">Menú</span>
+          <span className="text-xl font-black text-foreground italic tracking-tighter">Afrodita</span>
         </div>
         
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => dispatch(close())}
-          // El hover con primary/20 sobre el fondo nude queda muy fino
-          className="h-8 w-8 rounded-full hover:bg-primary/20 text-foreground"
+          onClick={closeSidebar}
+          className="h-9 w-9 rounded-full hover:bg-white/20 text-foreground transition-all"
         >
-          <X className="h-4 w-4" />
+          <X className="h-5 w-5" />
         </Button>
       </div>
 
-      <nav className="flex-1 p-4 space-y-2">
-        <p className="text-[10px] font-bold text-secondary/60 uppercase tracking-[0.2em] ml-2 mb-4">
-          Navegación
-        </p>
-        
-        {links.map((link) => (
-          <div 
-            key={link} 
-            // Usamos primary para el hover y white para el texto del hover
-            className="p-3 text-sm font-medium text-foreground/80 hover:bg-primary hover:text-primary-foreground rounded-xl cursor-pointer transition-all flex items-center gap-3 group shadow-sm hover:shadow-primary/20"
+      {/* NAVEGACIÓN */}
+      <nav className="flex-1 p-4 mt-4 space-y-3">
+        {clientLinks.map((item) => (
+          <Link 
+            key={item.label}
+            to={item.to}
+            onClick={closeSidebar}
+            // Clases de TanStack Router para cuando la ruta está activa
+            activeProps={{ className: 'bg-primary text-white shadow-md' }}
+            inactiveProps={{ className: 'text-foreground/70 hover:bg-white/30' }}
+            className="group flex items-center gap-4 p-4 rounded-2xl text-sm font-bold transition-all duration-300 cursor-pointer"
           >
-             {/* El puntito blanco en hover sobre el rosa queda excelente */}
-             <div className="w-1.5 h-1.5 rounded-full bg-secondary/30 group-hover:bg-primary-foreground" />
-             {link}
-          </div>
+            {/* Contenedor del Icono */}
+            <div className="bg-sidebar/60 p-2 rounded-xl group-hover:bg-secondary group-hover:text-white transition-colors duration-300">
+              <item.icon className="h-5 w-5 text-secondary group-hover:text-white" strokeWidth={2.5} />
+            </div>
+            
+            <span className="tracking-tight uppercase text-xs font-black">{item.label}</span>
+          </Link>
         ))}
       </nav>
 
-      <div className="p-6 bg-black/5">
-        <div className="text-[10px] text-foreground/40 text-center font-bold uppercase tracking-widest">
-          Afrodita System
+      {/* FOOTER DEL SIDEBAR */}
+      <div className="p-8 bg-black/5">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-1 w-8 bg-secondary/20 rounded-full" />
+          <span className="text-[9px] text-foreground/40 font-black uppercase tracking-[0.4em]">
+            Realza tu mirada
+          </span>
         </div>
       </div>
     </div>

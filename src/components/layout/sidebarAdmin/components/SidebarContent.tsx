@@ -1,25 +1,37 @@
-import { Users, Package, LayoutDashboard, Settings } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
+import { useGetSidebarMenuQuery } from '../store'
+import { iconMap } from './icons'
+import { SidebarItem } from './SidebarItem'
+import { LayoutDashboard } from 'lucide-react'
 
-const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', to: '/dashboard' },
-  { icon: Users, label: 'Gestionar Usuarios', to: '/admin/users' },
-  { icon: Package, label: 'Gestionar Productos', to: '/admin/products' },
-  { icon: Settings, label: 'Configuración', to: '/admin/settings' },
-]
+interface MenuItem {
+  label: string
+  icon: string
+  to?: string
+  variant?: 'highlight'
+  children?: {
+    label: string
+    to: string
+  }[]
+}
+
+interface SidebarResponse {
+  menu: MenuItem[]
+  permissions: string[]
+}
 
 export function SidebarContent() {
+  const { data, isLoading } = useGetSidebarMenuQuery() as { data: SidebarResponse | undefined, isLoading: boolean }
+
+  if (isLoading) return <div className="p-4 animate-pulse text-xs text-secondary/50">Cargando...</div>
+
   return (
-    <nav className="p-4 space-y-2">
-      {menuItems.map((item) => (
-        <Link
-          key={item.label}
-          to={item.to}
-          className="flex items-center gap-3 p-3 rounded-lg text-slate-600 hover:bg-secondary/10 hover:text-secondary transition-colors font-medium"
-        >
-          <item.icon className="h-5 w-5" />
-          <span>{item.label}</span>
-        </Link>
+    <nav className="space-y-2 px-3 custom-scrollbar">
+      {data?.menu.map((item: MenuItem) => (
+        <SidebarItem 
+          key={item.label} 
+          item={item}
+          icon={iconMap[item.icon] || LayoutDashboard} 
+        />
       ))}
     </nav>
   )

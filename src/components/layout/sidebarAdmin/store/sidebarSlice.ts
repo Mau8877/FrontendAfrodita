@@ -12,17 +12,11 @@ export const sidebarSlice = createSlice({
   name: 'sidebarAdmin',
   initialState,
   reducers: {
-    toggle: (state) => {
-      state.isOpen = !state.isOpen
-    },
-    close: (state) => {
-      state.isOpen = false
-    },
-    open: (state) => {
-      state.isOpen = true
-    },
-  },
+    toggle: (state) => { state.isOpen = !state.isOpen },
+    open: (state) => { state.isOpen = true },
+    close: (state) => { state.isOpen = false },
+  }
 })
 
-export const { toggle, close, open } = sidebarSlice.actions
+export const { toggle, open, close } = sidebarSlice.actions
 export default sidebarSlice.reducer

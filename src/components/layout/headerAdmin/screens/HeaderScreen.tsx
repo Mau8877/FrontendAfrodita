@@ -1,27 +1,28 @@
 import { SidebarControl } from '../components/SidebarControl'
-import { SearchBar } from '../components/SearchBar'
 import { BrandLogo } from '../components/BrandLogo'
 import { UserActions } from '../components/UserActions'
 
 export function HeaderScreen() {
   return (
-    <header className="sticky top-0 z-30 w-full h-16 bg-white border-b border-slate-200">
-      <div className="h-full px-4 flex items-center justify-between relative max-w-[1440px] mx-auto">
+    <header className="sticky top-0 z-30 w-full h-16 bg-header border-b border-black/5 shadow-sm transition-colors duration-300">
+      <div className="h-full px-4 md:px-6 flex items-center justify-between max-w-[1440px] mx-auto">
         
-        {/* Lado izquierdo: Buscador Admin */}
-        <div className="flex items-center w-1/3">
-          <SearchBar /> 
+        {/* IZQUIERDA: Botón Hamburguesa (SOLO MÓVIL) */}
+        <div className="w-1/3 flex justify-start">
+           {/* lg:hidden hace que desaparezca en pantallas grandes donde el sidebar ya es fijo */}
+           <div className="lg:hidden text-secondary"> 
+             <SidebarControl />
+           </div>
         </div>
 
-        {/* Centro: Logo */}
-        <BrandLogo />
+        {/* CENTRO: Logo */}
+        <div className="w-1/3 flex justify-center">
+           <BrandLogo />
+        </div>
 
-        {/* Lado derecho: Pill + User + Botón Sidebar */}
-        <div className="flex items-center justify-end gap-2 w-1/3">
-          <UserActions />
-          <div className="border-l pl-2 ml-2">
-             <SidebarControl /> {/* El botón que abre el sidebar derecho */}
-          </div>
+        {/* DERECHA: Acciones */}
+        <div className="w-1/3 flex justify-end">
+           <UserActions />
         </div>
 
       </div>

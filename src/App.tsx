@@ -1,17 +1,18 @@
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-
-// Importamos el árbol generado automáticamente
+import { useSelector } from 'react-redux'
+import { authSelectors } from '@/app/features/auth/store'
 import { routeTree } from './routeTree.gen'
+import { AccessDenied } from '@/app/features/auth/components/AccessDenied'
 
-// 1. Creamos la instancia del router
 const router = createRouter({
   routeTree,
+  defaultNotFoundComponent: AccessDenied,
   context: {
-    isAuthenticated: false, // Valor por defecto
+    isAuthenticated: false,
+    userRole: undefined,
   },
 })
 
-// 2. Registramos los tipos para TypeScript
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
@@ -19,13 +20,16 @@ declare module '@tanstack/react-router' {
 }
 
 function App() {
-  // 🔥 AQUÍ CONTROLAS EL ESTADO GLOBAL (Auth)
-  const isAuthenticated = false // <--- CAMBIA A TRUE PARA ENTRAR
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated)
+  const user = useSelector(authSelectors.user)
 
   return (
     <RouterProvider 
       router={router} 
-      context={{ isAuthenticated }} 
+      context={{ 
+        isAuthenticated,
+        userRole: user?.rol 
+      }} 
     />
   )
 }

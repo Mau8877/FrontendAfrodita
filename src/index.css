@@ -139,6 +139,53 @@
   --sidebar-ring: oklch(0.70 0.18 348);
 }
 
+@layer utilities {
+  .custom-scrollbar {
+    /* Mantenemos el espacio reservado para evitar saltos de layout */
+    scrollbar-gutter: stable;
+
+    /* Webkit (Chrome, Safari, Edge) */
+    &::-webkit-scrollbar {
+      /* Por defecto es muy fino para que no estorbe */
+      width: 4px;
+      transition: width 0.2s ease;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      /* Usamos directamente el púrpura de tu marca */
+      background: #9333ea;
+      border-radius: 10px;
+      /* Ocultamos mediante escalado o transparencia mínima */
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+
+    /* ESTADO ACTIVO: Cuando el mouse entra al sidebar o se está haciendo scroll */
+    &:hover::-webkit-scrollbar,
+    &:active::-webkit-scrollbar {
+      width: 8px;
+      /* Se hace un poco más grueso para facilitar el agarre */
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: #9333ea;
+      /* Borde sutil para que no se pierda en el fondo rosa */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Cuando el usuario toca la barra directamente */
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #a855f7 !important;
+      /* Un púrpura más claro (brillante) */
+      box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+    }
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

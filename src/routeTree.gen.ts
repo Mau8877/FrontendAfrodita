@@ -12,10 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as MainClientRouteImport } from './routes/_main/_client'
 import { Route as MainAuthenticatedRouteImport } from './routes/_main/_authenticated'
+import { Route as MainSplatRouteImport } from './routes/_main/$'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainClientIndexRouteImport } from './routes/_main/_client/index'
-import { Route as MainAuthenticatedDashboardRouteImport } from './routes/_main/_authenticated/dashboard'
+import { Route as MainAuthenticatedAdminDashboardRouteImport } from './routes/_main/_authenticated/admin/dashboard'
 
 const MainRoute = MainRouteImport.update({
   id: '/_main',
@@ -27,6 +28,11 @@ const MainClientRoute = MainClientRouteImport.update({
 } as any)
 const MainAuthenticatedRoute = MainAuthenticatedRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainSplatRoute = MainSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => MainRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
@@ -44,10 +50,10 @@ const MainClientIndexRoute = MainClientIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainClientRoute,
 } as any)
-const MainAuthenticatedDashboardRoute =
-  MainAuthenticatedDashboardRouteImport.update({
-    id: '/dashboard',
-    path: '/dashboard',
+const MainAuthenticatedAdminDashboardRoute =
+  MainAuthenticatedAdminDashboardRouteImport.update({
+    id: '/admin/dashboard',
+    path: '/admin/dashboard',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
 
@@ -55,38 +61,42 @@ export interface FileRoutesByFullPath {
   '/': typeof MainClientIndexRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
-  '/dashboard': typeof MainAuthenticatedDashboardRoute
+  '/$': typeof MainSplatRoute
+  '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MainClientIndexRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
-  '/dashboard': typeof MainAuthenticatedDashboardRoute
+  '/$': typeof MainSplatRoute
+  '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_main': typeof MainRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
+  '/_main/$': typeof MainSplatRoute
   '/_main/_authenticated': typeof MainAuthenticatedRouteWithChildren
   '/_main/_client': typeof MainClientRouteWithChildren
-  '/_main/_authenticated/dashboard': typeof MainAuthenticatedDashboardRoute
   '/_main/_client/': typeof MainClientIndexRoute
+  '/_main/_authenticated/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/dashboard'
+  fullPaths: '/' | '/login' | '/register' | '/$' | '/admin/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/dashboard'
+  to: '/' | '/login' | '/register' | '/$' | '/admin/dashboard'
   id:
     | '__root__'
     | '/_main'
     | '/_auth/login'
     | '/_auth/register'
+    | '/_main/$'
     | '/_main/_authenticated'
     | '/_main/_client'
-    | '/_main/_authenticated/dashboard'
     | '/_main/_client/'
+    | '/_main/_authenticated/admin/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,6 +128,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainAuthenticatedRouteImport
       parentRoute: typeof MainRoute
     }
+    '/_main/$': {
+      id: '/_main/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof MainSplatRouteImport
+      parentRoute: typeof MainRoute
+    }
     '/_auth/register': {
       id: '/_auth/register'
       path: '/register'
@@ -139,22 +156,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainClientIndexRouteImport
       parentRoute: typeof MainClientRoute
     }
-    '/_main/_authenticated/dashboard': {
-      id: '/_main/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof MainAuthenticatedDashboardRouteImport
+    '/_main/_authenticated/admin/dashboard': {
+      id: '/_main/_authenticated/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof MainAuthenticatedAdminDashboardRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
   }
 }
 
 interface MainAuthenticatedRouteChildren {
-  MainAuthenticatedDashboardRoute: typeof MainAuthenticatedDashboardRoute
+  MainAuthenticatedAdminDashboardRoute: typeof MainAuthenticatedAdminDashboardRoute
 }
 
 const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
-  MainAuthenticatedDashboardRoute: MainAuthenticatedDashboardRoute,
+  MainAuthenticatedAdminDashboardRoute: MainAuthenticatedAdminDashboardRoute,
 }
 
 const MainAuthenticatedRouteWithChildren =
@@ -173,11 +190,13 @@ const MainClientRouteWithChildren = MainClientRoute._addFileChildren(
 )
 
 interface MainRouteChildren {
+  MainSplatRoute: typeof MainSplatRoute
   MainAuthenticatedRoute: typeof MainAuthenticatedRouteWithChildren
   MainClientRoute: typeof MainClientRouteWithChildren
 }
 
 const MainRouteChildren: MainRouteChildren = {
+  MainSplatRoute: MainSplatRoute,
   MainAuthenticatedRoute: MainAuthenticatedRouteWithChildren,
   MainClientRoute: MainClientRouteWithChildren,
 }
