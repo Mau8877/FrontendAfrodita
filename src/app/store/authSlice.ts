@@ -1,7 +1,10 @@
 import { createSlice, type PayloadAction, createSelector } from '@reduxjs/toolkit'
 import type { RootState } from '@/app/store'
 
-// 1. Interfaz de usuario basada en tu modelo de datos
+/**
+ * 1. INTERFAZ DE USUARIO
+ * Representa la estructura del usuario devuelto por el backend de Django.
+ */
 export interface User {
   user_id: string  
   username: string
@@ -9,71 +12,92 @@ export interface User {
   rol: string
 }
 
+/**
+ * 2. INTERFAZ DEL ESTADO (AuthState)
+ * Define la forma de la rama 'auth' en el store de Redux.
+ * NOTA: Agregamos sessionId para la trazabilidad de auditoría.
+ */
 interface AuthState {
   user: User | null
   token: string | null        
   refreshToken: string | null 
+  sessionId: string | null
 }
 
+/**
+ * 3. ESTADO INICIAL
+ */
 const initialState: AuthState = {
   user: null,
   token: null,
   refreshToken: null,
+  sessionId: null,
 }
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Maneja el login guardando usuario y tokens
+    /**
+     * Guarda las credenciales tras un login exitoso.
+     * El payload debe incluir session_id desde el backend.
+     */
     setCredentials: (
       state, 
-      action: PayloadAction<{ user: User; access: string; refresh: string }>
+      action: PayloadAction<{ user: User; access: string; refresh: string; session_id: string }>
     ) => {
-      const { user, access, refresh } = action.payload
+      const { user, access, refresh, session_id } = action.payload
       state.user = user
       state.token = access
       state.refreshToken = refresh
+      state.sessionId = session_id 
     },
-    // Limpia el estado al cerrar sesión
+
+    /**
+     * Limpia el estado local.
+     * Importante resetear el sessionId para evitar fugas de auditoría.
+     */
     logout: (state) => {
       state.user = null
       state.token = null
       state.refreshToken = null
+      state.sessionId = null
     },
-    // Útil para el refresco automático de tokens (Silent Refresh)
+
+    /**
+     * Actualiza el Access Token. 
+     * Usado por el middleware de refresco automático.
+     */
     updateAccessToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload
     }
   },
 })
 
-// Exportación de acciones para usar con dispatch
 export const { setCredentials, logout, updateAccessToken } = authSlice.actions 
-
-// Exportación del reducer para el store
 export default authSlice.reducer
 
-// --- SELECTORES MEMOIZADOS (Evitan re-renders innecesarios) ---
+// --- SELECTORES MEMOIZADOS ---
 
-// Selector base para acceder a la rama de auth
 const selectAuth = (state: RootState) => state.auth;
 
 export const authSelectors = {
-  // Comprueba si hay un token activo
+  // Estado de autenticación rápido
   isAuthenticated: (state: RootState) => !!state.auth.token,
   
-  // Obtiene el objeto usuario completo
+  // Datos del perfil del usuario
   user: (state: RootState) => state.auth.user,
   
-  // Obtiene el token de acceso
+  // Tokens de acceso
   token: (state: RootState) => state.auth.token,
+
+  // ID de Sesión para Auditoría 
+  sessionId: (state: RootState) => state.auth.sessionId,
 
   /**
    * Selector Memoizado: authData
-   * Este selector combina múltiples datos en un solo objeto.
-   * Gracias a createSelector, solo se vuelve a calcular si state.auth cambia,
-   * eliminando el error de "Selectors that return a new reference".
+   * Evita el error de "referencia inestable" al agrupar datos del estado.
+   * Ideal para usarlo en layouts o componentes que necesitan info general.
    */
   authData: createSelector(
     [selectAuth],
@@ -82,7 +106,8 @@ export const authSelectors = {
       role: auth.user?.rol,
       token: auth.token,
       email: auth.user?.email,
-      refresh_token: auth.refreshToken
+      refresh_token: auth.refreshToken,
+      sessionId: auth.sessionId
     })
   )
 }

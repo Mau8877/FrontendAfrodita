@@ -17,6 +17,8 @@ import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainClientIndexRouteImport } from './routes/_main/_client/index'
 import { Route as MainAuthenticatedAdminDashboardRouteImport } from './routes/_main/_authenticated/admin/dashboard'
+import { Route as MainAuthenticatedAdminUsersViewRouteImport } from './routes/_main/_authenticated/admin/users/view'
+import { Route as MainAuthenticatedAdminUsersManagementRouteImport } from './routes/_main/_authenticated/admin/users/management'
 
 const MainRoute = MainRouteImport.update({
   id: '/_main',
@@ -56,6 +58,18 @@ const MainAuthenticatedAdminDashboardRoute =
     path: '/admin/dashboard',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
+const MainAuthenticatedAdminUsersViewRoute =
+  MainAuthenticatedAdminUsersViewRouteImport.update({
+    id: '/admin/users/view',
+    path: '/admin/users/view',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminUsersManagementRoute =
+  MainAuthenticatedAdminUsersManagementRouteImport.update({
+    id: '/admin/users/management',
+    path: '/admin/users/management',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof MainClientIndexRoute
@@ -63,6 +77,8 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
+  '/admin/users/view': typeof MainAuthenticatedAdminUsersViewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MainClientIndexRoute
@@ -70,6 +86,8 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
+  '/admin/users/view': typeof MainAuthenticatedAdminUsersViewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -81,12 +99,28 @@ export interface FileRoutesById {
   '/_main/_client': typeof MainClientRouteWithChildren
   '/_main/_client/': typeof MainClientIndexRoute
   '/_main/_authenticated/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/_main/_authenticated/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
+  '/_main/_authenticated/admin/users/view': typeof MainAuthenticatedAdminUsersViewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/$' | '/admin/dashboard'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/$'
+    | '/admin/dashboard'
+    | '/admin/users/management'
+    | '/admin/users/view'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/$' | '/admin/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/$'
+    | '/admin/dashboard'
+    | '/admin/users/management'
+    | '/admin/users/view'
   id:
     | '__root__'
     | '/_main'
@@ -97,6 +131,8 @@ export interface FileRouteTypes {
     | '/_main/_client'
     | '/_main/_client/'
     | '/_main/_authenticated/admin/dashboard'
+    | '/_main/_authenticated/admin/users/management'
+    | '/_main/_authenticated/admin/users/view'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -163,15 +199,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainAuthenticatedAdminDashboardRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
+    '/_main/_authenticated/admin/users/view': {
+      id: '/_main/_authenticated/admin/users/view'
+      path: '/admin/users/view'
+      fullPath: '/admin/users/view'
+      preLoaderRoute: typeof MainAuthenticatedAdminUsersViewRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/users/management': {
+      id: '/_main/_authenticated/admin/users/management'
+      path: '/admin/users/management'
+      fullPath: '/admin/users/management'
+      preLoaderRoute: typeof MainAuthenticatedAdminUsersManagementRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
   }
 }
 
 interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminDashboardRoute: typeof MainAuthenticatedAdminDashboardRoute
+  MainAuthenticatedAdminUsersManagementRoute: typeof MainAuthenticatedAdminUsersManagementRoute
+  MainAuthenticatedAdminUsersViewRoute: typeof MainAuthenticatedAdminUsersViewRoute
 }
 
 const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
   MainAuthenticatedAdminDashboardRoute: MainAuthenticatedAdminDashboardRoute,
+  MainAuthenticatedAdminUsersManagementRoute:
+    MainAuthenticatedAdminUsersManagementRoute,
+  MainAuthenticatedAdminUsersViewRoute: MainAuthenticatedAdminUsersViewRoute,
 }
 
 const MainAuthenticatedRouteWithChildren =

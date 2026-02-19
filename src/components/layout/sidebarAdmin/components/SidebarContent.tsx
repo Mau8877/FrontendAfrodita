@@ -2,6 +2,8 @@ import { useGetSidebarMenuQuery } from '../store'
 import { iconMap } from './icons'
 import { SidebarItem } from './SidebarItem'
 import { LayoutDashboard } from 'lucide-react'
+import { authSelectors } from '@/app/features/auth/store'
+import { useSelector } from 'react-redux'
 
 interface MenuItem {
   label: string
@@ -20,7 +22,12 @@ interface SidebarResponse {
 }
 
 export function SidebarContent() {
-  const { data, isLoading } = useGetSidebarMenuQuery() as { data: SidebarResponse | undefined, isLoading: boolean }
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated)
+
+  const { data, isLoading } = useGetSidebarMenuQuery(undefined, {
+    skip: !isAuthenticated,
+  }) as { data: SidebarResponse | undefined, isLoading: boolean }
+  if (!isAuthenticated) return null
 
   if (isLoading) return <div className="p-4 animate-pulse text-xs text-secondary/50">Cargando...</div>
 

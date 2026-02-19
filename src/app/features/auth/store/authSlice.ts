@@ -12,12 +12,14 @@ interface AuthState {
   user: User | null
   token: string | null        
   refreshToken: string | null 
+  sessionId: string | null
 }
 
 const initialState: AuthState = {
   user: null,
   token: null,
   refreshToken: null,
+  sessionId: null,
 }
 
 export const authSlice = createSlice({
@@ -26,17 +28,24 @@ export const authSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: User; access: string; refresh: string }>
+      action: PayloadAction<{ 
+        user: User; 
+        access: string; 
+        refresh: string; 
+        session_id: string 
+      }>
     ) => {
-      const { user, access, refresh } = action.payload
+      const { user, access, refresh, session_id } = action.payload
       state.user = user
       state.token = access
       state.refreshToken = refresh
+      state.sessionId = session_id 
     },
     logout: (state) => {
       state.user = null
       state.token = null
       state.refreshToken = null
+      state.sessionId = null
     },
     updateAccessToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload

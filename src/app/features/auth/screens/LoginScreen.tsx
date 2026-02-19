@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate, Link } from '@tanstack/react-router'
@@ -22,7 +23,11 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import { api } from '@/app/store'
+import { setCredentials } from '@/app/store/authSlice'
+
 export function LoginScreen() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   
@@ -46,7 +51,8 @@ export function LoginScreen() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       const response = await login(data).unwrap()
-      
+      dispatch(api.util.resetApiState());
+      dispatch(setCredentials(response.data));
       if (response.success) {
         toast.success(response.message || "¡Bienvenido de nuevo!")
         navigate({ to: '/admin/dashboard' }) 

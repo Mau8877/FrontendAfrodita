@@ -19,42 +19,31 @@ export const Route = createFileRoute('/_main')({
 })
 
 function MainLayout() {
-  // Obtenemos el usuario para validar su rol
   const user = useSelector(authSelectors.user)
+  const isAuthenticated = useSelector(authSelectors.isAuthenticated)
   const role = user?.rol
 
-  // LÓGICA DE ROL: 
-  // Mostramos versión CLIENTE si: no hay rol (invitado) o si es explícitamente 'cliente'
   const isClientView = !role || role === 'Cliente'
+  if (!isAuthenticated) {
+    return (
+      <div className="h-screen w-screen bg-white">
+        <Outlet />
+      </div>
+    )
+  }
 
   return (
-    /* h-screen + overflow-hidden: Layout base que ocupa toda la pantalla sin scroll global */
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-white">
-      
-      {/* 1. DRAWERS (MENÚS MÓVILES) 
-          Estos componentes son invisibles por defecto y solo aparecen 
-          cuando das clic a la hamburguesa (controlado por Redux).
-          ¡Son obligatorios para que funcione en el celular! 
-      */}
+      {/* Solo se montan si hay sesión activa */}
       {isClientView ? <SidebarDrawerClient /> : <SidebarDrawerAdmin />}
-      
-      {/* 2. HEADERS (Barra superior) */}
       {isClientView ? <HeaderClient /> : <HeaderAdmin />}
 
       <div className="flex flex-1 overflow-hidden">
-        
-        {/* 3. SIDEBARS FIJOS (Solo visibles en Escritorio) 
-            Dentro de estos componentes ya tienes la clase 'hidden lg:flex',
-            así que no estorban en móvil.
-        */}
         {isClientView ? <SidebarClient /> : <SidebarAdmin />}
 
-        {/* 4. CONTENIDO PRINCIPAL (El único con scroll) */}
         <main className="flex-1 bg-slate-50 overflow-y-auto">
-          {/* Aquí se renderizan tus páginas (Dashboard, Home, etc.) */}
           <Outlet />     
         </main>
-
       </div>
     </div>
   )

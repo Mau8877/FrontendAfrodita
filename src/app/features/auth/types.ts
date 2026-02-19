@@ -63,9 +63,14 @@ export interface AuthResponse {
     access: string
     refresh: string
     user: User
+    session_id: string
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errors?: Record<string, string[]> | any
+}
+
+export interface LogoutRequest {
+  session_id: string;
 }
 
 // La estructura para cuando falla el registro (o cualquier error 400)

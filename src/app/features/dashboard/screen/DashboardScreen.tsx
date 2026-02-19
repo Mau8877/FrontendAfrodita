@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { useLazyGetProtectedDataQuery } from '../store'
 import { type RootState } from '@/app/store'
+import { LoaderAfrodita } from '@/components/LoaderAfrodita'
 
 export function DashboardScreen() {
   const dispatch = useDispatch()
@@ -144,6 +145,26 @@ export function DashboardScreen() {
           </CardContent>
         </Card>
 
+        <Card className="border-slate-200 shadow-sm overflow-hidden min-h-[400px]">
+          <CardHeader className="bg-slate-50/50 border-b p-4">
+            <CardTitle className="text-sm font-bold uppercase text-slate-700">
+              Laboratorio de Pruebas
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent className="p-0 relative flex-1 min-h-[350px]">
+            
+            {/* 🧪 PRUEBA 1: Estado Normal (Comenta esta línea para probar el error) */}
+            {/* <LoaderAfrodita message="BlackJack es lo mejor" /> */}
+
+            {/* 🔴 PRUEBA 2: Estado de Error Forzado */}
+            <LoaderAfrodita 
+              message="Error: El dealer tiene 21" 
+              hasError={true} 
+            />
+
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
