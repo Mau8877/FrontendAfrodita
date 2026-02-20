@@ -213,7 +213,7 @@ export function DashboardScreen() {
           <CardContent className="p-0 relative flex-1 min-h-[350px]">
             <LoaderAfrodita 
               message="Simulación de error: El dealer tiene 21" 
-              hasError={true} 
+              hasError={false} 
             />
           </CardContent>
         </Card>
