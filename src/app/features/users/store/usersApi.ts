@@ -14,7 +14,7 @@ export const usersApi = api.injectEndpoints({
       query: (params) => ({
         url: '/users/',
         method: 'GET',
-        params, // RTK Query convierte esto automáticamente a ?page=1&search=...
+        params,
       }),
       providesTags: (result) =>
         result?.data?.results
@@ -42,7 +42,6 @@ export const usersApi = api.injectEndpoints({
     }),
 
     // --- ACTUALIZAR / RESTAURAR USUARIO ---
-    // El backend usa PUT para ambos, diferenciando por 'restore: true' en el body
     updateUser: builder.mutation<UserResponse, { id: string; body: UpdateUserRequest | { restore: boolean } }>({
       query: ({ id, body }) => ({
         url: `/users/${id}/`,
@@ -60,7 +59,7 @@ export const usersApi = api.injectEndpoints({
       query: ({ id, permanent = false }) => ({
         url: `/users/${id}/`,
         method: 'DELETE',
-        params: { permanent }, // Envía ?permanent=true si es borrado físico
+        params: { permanent },
       }),
       invalidatesTags: [{ type: 'Users', id: 'LIST' }],
     }),

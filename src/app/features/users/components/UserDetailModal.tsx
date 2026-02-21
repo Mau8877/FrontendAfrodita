@@ -48,13 +48,11 @@ export function UserDetailModal({ user, isOpen, onClose }: UserDetailModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      {/* sm:max-w-3xl para mayor amplitud en web y diseño 100% responsivo */}
       <DialogContent className="sm:max-w-3xl w-[95vw] h-[90vh] sm:h-auto sm:max-h-[85vh] bg-white rounded-3xl overflow-hidden border-none shadow-2xl p-0 flex flex-col">
         
-        {/* HEADER: BLOQUE DE IDENTIDAD ALINEADO (MANTENIDO) */}
+        {/* HEADER: BLOQUE DE IDENTIDAD ALINEADO */}
         <div className="relative bg-primary/5 p-6 sm:p-10 border-b border-primary/10 flex-shrink-0">
           
-          {/* DialogDescription invisible para eliminar el Warning de la consola */}
           <DialogDescription className="sr-only">
             Vista detallada del perfil de {user.perfil?.nombre}, incluyendo información de contacto, fidelización y direcciones.
           </DialogDescription>
@@ -107,10 +105,10 @@ export function UserDetailModal({ user, isOpen, onClose }: UserDetailModalProps)
           </div>
         </div>
 
-        {/* BODY REESTRUCTURADO CON TU CLASE .custom-scrollbar */}
+        {/* BODY */}
         <div className="p-6 sm:p-10 pt-2 space-y-6 overflow-y-auto flex-grow bg-white custom-scrollbar">
           
-          {/* FILA 1: DATOS FIJOS (Se alinean con el Header) */}
+          {/* FILA 1: DATOS FIJOS*/}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4 border-b border-primary/5 pb-4">
             <div className="space-y-1 text-center sm:text-left">
               <h4 className="text-[10px] font-black uppercase tracking-[3px] text-primary flex items-center justify-center sm:justify-start gap-2">
@@ -132,10 +130,10 @@ export function UserDetailModal({ user, isOpen, onClose }: UserDetailModalProps)
             </div>
           </div>
 
-          {/* FILA 2: DATOS DINÁMICOS (Sin espacio fantasma) */}
+          {/* FILA 2: DATOS DINÁMICOS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6 items-start">
             
-            {/* Comunicación (Izquierda) */}
+            {/* Comunicación */}
             <div className="space-y-3">
               <h4 className="text-[10px] font-black uppercase tracking-[3px] text-primary flex items-center gap-2">
                 <Smartphone className="w-4 h-4" /> Comunicación
@@ -169,7 +167,7 @@ export function UserDetailModal({ user, isOpen, onClose }: UserDetailModalProps)
               </div>
             </div>
 
-            {/* Direcciones (Derecha - Bajo Nacimiento) */}
+            {/* Direcciones */}
             <div className="space-y-3 sm:border-l sm:border-primary/5 sm:pl-10">
               <h4 className="text-[10px] font-black uppercase tracking-[3px] text-primary flex items-center gap-2">
                 <MapPin className="w-4 h-4" /> Direcciones
@@ -181,7 +179,7 @@ export function UserDetailModal({ user, isOpen, onClose }: UserDetailModalProps)
                       <div className={`mt-1.5 h-2.5 w-2.5 rounded-full shrink-0 ${d.es_principal ? 'bg-secondary animate-pulse' : 'bg-primary/20'}`} />
                       <div className="flex-grow text-left">
                         <p className="text-xs font-black text-secondary leading-tight">{d.direccion_exacta}</p>
-                        {d.es_principal && <span className="text-[8px] font-black uppercase text-secondary tracking-widest mt-1 block">Sede Principal</span>}
+                        {d.es_principal && <span className="text-[8px] font-black uppercase text-secondary tracking-widest mt-1 block">Principal</span>}
                       </div>
                     </div>
                   ))
