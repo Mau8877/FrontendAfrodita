@@ -9,9 +9,12 @@ import {
   BarChart, 
   Settings, 
   Truck,
-  HelpCircle
+  HelpCircle,
+  ShieldUser,
+  ClipboardPenLine, 
+  Lock,
+  UserCog
 } from 'lucide-react'
-
 
 export const iconMap: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -23,5 +26,9 @@ export const iconMap: Record<string, LucideIcon> = {
   BarChart,
   Settings,
   Truck,
-  Default: HelpCircle
+  ShieldUser,
+  ClipboardPenLine, 
+  Lock,
+  UserCog,
+  Default: HelpCircle,
 }

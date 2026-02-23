@@ -13,6 +13,7 @@ interface MenuItem {
   children?: {
     label: string
     to: string
+    icon?: string
   }[]
 }
 
@@ -27,8 +28,8 @@ export function SidebarContent() {
   const { data, isLoading } = useGetSidebarMenuQuery(undefined, {
     skip: !isAuthenticated,
   }) as { data: SidebarResponse | undefined, isLoading: boolean }
-  if (!isAuthenticated) return null
 
+  if (!isAuthenticated) return null
   if (isLoading) return <div className="p-4 animate-pulse text-xs text-secondary/50">Cargando...</div>
 
   return (

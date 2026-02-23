@@ -69,10 +69,21 @@ export function UserDeleteModal({ user, isOpen, onClose }: UserDeleteModalProps)
             <DialogTitle className="text-xl font-black uppercase tracking-tight text-slate-900 text-center w-full">
               {isPermanent ? "Borrado Irreversible" : "Mover a la Papelera"}
             </DialogTitle>
-            <DialogDescription className="text-slate-500 font-bold text-[11px] leading-relaxed text-center w-full px-2">
-              {isPermanent 
-                ? "Se eliminarán permanentemente todos los registros y relaciones de este usuario de la base de datos."
-                : "El usuario será desactivado. Podrás encontrarlo en la tabla y restaurarlo en la acción de edición."}
+            <DialogDescription asChild className="text-slate-500 font-bold text-[11px] leading-relaxed text-center w-full px-4">
+              <div className="flex flex-col gap-2">
+                {isPermanent ? (
+                  <>
+                    <span>Se eliminarán permanentemente todos los registros y relaciones de este usuario de la base de datos.</span>
+                    <span className="text-[10px] text-rose-400 italic">
+                      (Solo usar esta opción si creaste un usuario por error o necesitas eliminarlo completamente por razones de privacidad).
+                    </span>
+                  </>
+                ) : (
+                  <span>
+                    El usuario será desactivado. Podrás encontrarlo en la tabla y restaurarlo en la acción de edición.
+                  </span>
+                )}
+              </div>
             </DialogDescription>
           </DialogHeader>
 

@@ -185,10 +185,7 @@ export function UserEditModal({ user, isOpen, onClose }: UserEditModalProps) {
                   <h4 className="text-[10px] font-black uppercase tracking-[2px] text-primary">Credenciales</h4>
                 </div>
                 
-                {/* Sistema de 5 columnas para dar anchos desiguales: 2 para User, 2 para Email, 1 para Rol */}
                 <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-                  
-                  {/* USERNAME (Ocupa 2/5) */}
                   <FormField control={form.control} name="username" render={({ field }) => (
                     <FormItem className="sm:col-span-2 space-y-1">
                       <FormLabel className="text-[9px] font-bold uppercase text-slate-400 ml-1">Username</FormLabel>
@@ -199,7 +196,6 @@ export function UserEditModal({ user, isOpen, onClose }: UserEditModalProps) {
                     </FormItem>
                   )} />
 
-                  {/* EMAIL (Ocupa 2/5) */}
                   <FormField control={form.control} name="email" render={({ field }) => (
                     <FormItem className="sm:col-span-2 space-y-1">
                       <FormLabel className="text-[9px] font-bold uppercase text-slate-400 ml-1">Email</FormLabel>
@@ -210,7 +206,6 @@ export function UserEditModal({ user, isOpen, onClose }: UserEditModalProps) {
                     </FormItem>
                   )} />
 
-                  {/* ROL (Ocupa 1/5 - Más estrecho) */}
                   <FormField control={form.control} name="id_rol" render={({ field }) => (
                     <FormItem className="sm:col-span-1 space-y-1">
                       <FormLabel className="text-[9px] font-black uppercase text-slate-400 ml-1 flex items-center gap-1">
@@ -346,19 +341,26 @@ export function UserEditModal({ user, isOpen, onClose }: UserEditModalProps) {
                 </div>
               </div>
 
-              <div className={`flex items-center justify-between p-4 rounded-[1.5rem] border transition-all duration-500 ${isActive ? 'bg-emerald-50/60 border-emerald-200' : 'bg-rose-50/60 border-rose-200'}`}>
-                <div className="flex items-center gap-3">
-                  <div className={`h-8 w-8 rounded-full flex items-center justify-center text-white transition-colors duration-500 ${isActive ? 'bg-emerald-500' : 'bg-rose-500'}`}>
-                    {isActive ? <Power className="w-4 h-4" /> : <PowerOff className="w-4 h-4" />}
+              {!user?.is_active && (
+                <div className={`flex items-center justify-between p-4 rounded-[1.5rem] border transition-all duration-500 ${isActive ? 'bg-emerald-50/60 border-emerald-200' : 'bg-rose-50/60 border-rose-200'} animate-in fade-in slide-in-from-top-2`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`h-8 w-8 rounded-full flex items-center justify-center text-white transition-colors duration-500 ${isActive ? 'bg-emerald-500' : 'bg-rose-500'}`}>
+                      {isActive ? <Power className="w-4 h-4" /> : <PowerOff className="w-4 h-4" />}
+                    </div>
+                    <div>
+                      <p className={`text-[12px] font-black uppercase ${isActive ? 'text-emerald-700' : 'text-rose-700'}`}>
+                        {isActive ? 'Usuario Activo' : 'Usuario Inactivo'}
+                      </p>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase leading-none">
+                        {isActive ? 'Restaurando acceso' : 'Sin acceso al sistema'}
+                      </p>
+                    </div>
                   </div>
-                  <p className={`text-[12px] font-black uppercase ${isActive ? 'text-emerald-700' : 'text-rose-700'}`}>
-                    {isActive ? 'Usuario Activo' : 'Usuario Inactivo'}
-                  </p>
+                  <FormField control={form.control} name="is_active" render={({ field }) => (
+                    <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} className={`scale-110 data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-rose-500`} /></FormControl>
+                  )} />
                 </div>
-                <FormField control={form.control} name="is_active" render={({ field }) => (
-                  <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} className={`scale-110 data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-rose-500`} /></FormControl>
-                )} />
-              </div>
+              )}
             </div>
 
             <DialogFooter className="p-6 bg-slate-50 border-t border-slate-100 gap-3 flex-shrink-0">

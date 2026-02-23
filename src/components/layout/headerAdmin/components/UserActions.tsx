@@ -33,21 +33,20 @@ export function UserActions() {
     const currentSessionId = sessionId;
 
     try {
-      // 1. NOTIFICAMOS AL SERVIDOR PRIMERO (Mientras aún tenemos el token)
       if (currentSessionId) {
-        // Usamos await aquí para que use el token ANTES de borrarlo
+        // 1. Notificación Exitosa
         await logoutServer({ session_id: currentSessionId }).unwrap();
+      } else {
+        // 2. Alerta de sesión huérfana (solo para debug o admin)
+        console.warn("No hay session_id: el log quedará como 'En Sesión'");
       }
     } catch (error) {
-      // Si falla el servidor (ej. 500), igual procedemos a limpiar el front
-      console.error("Error al notificar salida al servidor:", error);
+      console.error("Error al cerrar sesión en servidor:", error);
     } finally {
-      // 2. LIMPIEZA ATÓMICA (Ahora sí borramos todo)
-      dispatch(api.util.resetApiState()); // Mata cualquier GET colgado del sidebar
-      dispatch(logout());                 // Borra user, token y sessionId
-      localStorage.clear();               // Limpia persistencia
-      
-      // 3. SALIDA
+      // 3. Limpieza total (Esto ya lo haces perfecto)
+      dispatch(api.util.resetApiState());
+      dispatch(logout());
+      localStorage.clear();
       navigate({ to: '/login' });
       toast.info("Sesión terminada");
     }

@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_main/_authenticated/admin/users/view')({
   staticData: {
     metaRoute: {
       title: 'Directorio de Usuarios',
-      icon: 'Users',
+      icon: 'UsersRound',
       hidden: false
     }
   }

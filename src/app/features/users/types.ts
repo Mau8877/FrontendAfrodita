@@ -1,20 +1,5 @@
 import type { UserCreateFormValues, UserEditFormValues } from "./schemas";
-
-// --- ESTRUCTURAS DE RESPUESTA DEL BACKEND ---
-
-export interface StandardResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-  errors: Record<string, string[]> | null;
-}
-
-export interface PaginatedData<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
+import type { StandardResponse, PaginatedData } from '@/app/common.types';
 
 // --- MODELOS DE DATOS (DOMINIO) ---
 

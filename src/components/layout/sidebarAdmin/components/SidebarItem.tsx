@@ -1,23 +1,22 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ChevronDown, type LucideIcon } from 'lucide-react'
+import { iconMap } from './icons'
 
-// 1. Definimos la interfaz para los sub-elementos (Hijos)
 interface MenuItemChild {
   label: string
   to: string
+  icon?: string
 }
 
-// 2. Definimos la interfaz para el item principal
 interface MenuItem {
   label: string
   icon: string
-  to?: string      // Opcional porque si tiene hijos, el padre puede no tener link
+  to?: string
   variant?: 'highlight'
   children?: MenuItemChild[]
 }
 
-// 3. Tipamos las Props del componente
 interface SidebarItemProps {
   item: MenuItem
   icon: LucideIcon
@@ -25,11 +24,8 @@ interface SidebarItemProps {
 
 export function SidebarItem({ item, icon: Icon }: SidebarItemProps) {
   const [isOpen, setIsOpen] = useState(false)
-  
-  // Verificamos si tiene hijos de forma segura
   const hasChildren = !!(item.children && item.children.length > 0)
 
-  // --- RENDERIZADO PARA LINKS DIRECTOS ---
   if (!hasChildren) {
     return (
       <Link 
@@ -45,7 +41,6 @@ export function SidebarItem({ item, icon: Icon }: SidebarItemProps) {
     )
   }
 
-  // --- RENDERIZADO PARA PESTAÑAS COLAPSABLES ---
   return (
     <div className="space-y-1">
       <button 
@@ -62,20 +57,24 @@ export function SidebarItem({ item, icon: Icon }: SidebarItemProps) {
         />
       </button>
 
-      {/* Contenedor de sub-ítems */}
       <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
         <div className="ml-9 mt-1 space-y-1 border-l-2 border-secondary/20 pl-3">
-          {item.children?.map((child) => (
-            <Link
-              key={child.to}
-              to={child.to}
-              activeProps={{ className: 'text-secondary font-extrabold translate-x-1' }}
-              inactiveProps={{ className: 'text-slate-500 hover:text-secondary' }}
-              className="block py-2 text-xs font-semibold transition-all duration-200"
-            >
-              {child.label}
-            </Link>
-          ))}
+          {item.children?.map((child) => {
+            const ChildIcon = child.icon ? iconMap[child.icon] : null;
+
+            return (
+              <Link
+                key={child.to}
+                to={child.to}
+                activeProps={{ className: 'text-secondary font-extrabold translate-x-1' }}
+                inactiveProps={{ className: 'text-slate-500 hover:text-secondary' }}
+                className="flex items-center gap-2 py-2 text-xs font-semibold transition-all duration-200"
+              >
+                {ChildIcon && <ChildIcon className="h-4 w-4 opacity-60" />}
+                <span>{child.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

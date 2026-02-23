@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_main/_authenticated/admin/users/manageme
   staticData: {
     metaRoute: {
       title: 'Gestión de Usuarios',
-      icon: 'UsersCog',
+      icon: 'UserCog',
       hidden: false
     }
   }

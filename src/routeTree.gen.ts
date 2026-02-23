@@ -19,6 +19,8 @@ import { Route as MainClientIndexRouteImport } from './routes/_main/_client/inde
 import { Route as MainAuthenticatedAdminDashboardRouteImport } from './routes/_main/_authenticated/admin/dashboard'
 import { Route as MainAuthenticatedAdminUsersViewRouteImport } from './routes/_main/_authenticated/admin/users/view'
 import { Route as MainAuthenticatedAdminUsersManagementRouteImport } from './routes/_main/_authenticated/admin/users/management'
+import { Route as MainAuthenticatedAdminSecurityLoginLogsRouteImport } from './routes/_main/_authenticated/admin/security/login-logs'
+import { Route as MainAuthenticatedAdminSecurityActionLogsRouteImport } from './routes/_main/_authenticated/admin/security/action-logs'
 
 const MainRoute = MainRouteImport.update({
   id: '/_main',
@@ -70,6 +72,18 @@ const MainAuthenticatedAdminUsersManagementRoute =
     path: '/admin/users/management',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
+const MainAuthenticatedAdminSecurityLoginLogsRoute =
+  MainAuthenticatedAdminSecurityLoginLogsRouteImport.update({
+    id: '/admin/security/login-logs',
+    path: '/admin/security/login-logs',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminSecurityActionLogsRoute =
+  MainAuthenticatedAdminSecurityActionLogsRouteImport.update({
+    id: '/admin/security/action-logs',
+    path: '/admin/security/action-logs',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof MainClientIndexRoute
@@ -77,6 +91,8 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
+  '/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
   '/admin/users/view': typeof MainAuthenticatedAdminUsersViewRoute
 }
@@ -86,6 +102,8 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
+  '/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
   '/admin/users/view': typeof MainAuthenticatedAdminUsersViewRoute
 }
@@ -99,6 +117,8 @@ export interface FileRoutesById {
   '/_main/_client': typeof MainClientRouteWithChildren
   '/_main/_client/': typeof MainClientIndexRoute
   '/_main/_authenticated/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/_main/_authenticated/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
+  '/_main/_authenticated/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/_main/_authenticated/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
   '/_main/_authenticated/admin/users/view': typeof MainAuthenticatedAdminUsersViewRoute
 }
@@ -110,6 +130,8 @@ export interface FileRouteTypes {
     | '/register'
     | '/$'
     | '/admin/dashboard'
+    | '/admin/security/action-logs'
+    | '/admin/security/login-logs'
     | '/admin/users/management'
     | '/admin/users/view'
   fileRoutesByTo: FileRoutesByTo
@@ -119,6 +141,8 @@ export interface FileRouteTypes {
     | '/register'
     | '/$'
     | '/admin/dashboard'
+    | '/admin/security/action-logs'
+    | '/admin/security/login-logs'
     | '/admin/users/management'
     | '/admin/users/view'
   id:
@@ -131,6 +155,8 @@ export interface FileRouteTypes {
     | '/_main/_client'
     | '/_main/_client/'
     | '/_main/_authenticated/admin/dashboard'
+    | '/_main/_authenticated/admin/security/action-logs'
+    | '/_main/_authenticated/admin/security/login-logs'
     | '/_main/_authenticated/admin/users/management'
     | '/_main/_authenticated/admin/users/view'
   fileRoutesById: FileRoutesById
@@ -213,17 +239,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainAuthenticatedAdminUsersManagementRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
+    '/_main/_authenticated/admin/security/login-logs': {
+      id: '/_main/_authenticated/admin/security/login-logs'
+      path: '/admin/security/login-logs'
+      fullPath: '/admin/security/login-logs'
+      preLoaderRoute: typeof MainAuthenticatedAdminSecurityLoginLogsRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/security/action-logs': {
+      id: '/_main/_authenticated/admin/security/action-logs'
+      path: '/admin/security/action-logs'
+      fullPath: '/admin/security/action-logs'
+      preLoaderRoute: typeof MainAuthenticatedAdminSecurityActionLogsRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
   }
 }
 
 interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminDashboardRoute: typeof MainAuthenticatedAdminDashboardRoute
+  MainAuthenticatedAdminSecurityActionLogsRoute: typeof MainAuthenticatedAdminSecurityActionLogsRoute
+  MainAuthenticatedAdminSecurityLoginLogsRoute: typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   MainAuthenticatedAdminUsersManagementRoute: typeof MainAuthenticatedAdminUsersManagementRoute
   MainAuthenticatedAdminUsersViewRoute: typeof MainAuthenticatedAdminUsersViewRoute
 }
 
 const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
   MainAuthenticatedAdminDashboardRoute: MainAuthenticatedAdminDashboardRoute,
+  MainAuthenticatedAdminSecurityActionLogsRoute:
+    MainAuthenticatedAdminSecurityActionLogsRoute,
+  MainAuthenticatedAdminSecurityLoginLogsRoute:
+    MainAuthenticatedAdminSecurityLoginLogsRoute,
   MainAuthenticatedAdminUsersManagementRoute:
     MainAuthenticatedAdminUsersManagementRoute,
   MainAuthenticatedAdminUsersViewRoute: MainAuthenticatedAdminUsersViewRoute,
