@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { PermissionGuard } from '@/app/features/auth/components/PermissionGuard'
-import { BitacoraLogsScreen } from '@/app/features/logs'
+import { BitacoraLogsScreen } from '@/app/features/bitacora'
 
 export const Route = createFileRoute('/_main/_authenticated/admin/security/action-logs',)({
   component: () => (

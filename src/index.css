@@ -4,6 +4,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* --- CONFIGURACIÓN TOTAL DE GENERACIÓN (SAFE-LIST) --- */
+/* 1. Fondos: Todos los colores + Opacidades */
+@source inline("bg-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone,taupe,mauve,mist,olive,primary,secondary}-{50,100,200,300,400,500,600,700,800,900,950}");
+@source inline("bg-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone,taupe,mauve,mist,olive,primary,secondary}-{50,100,200,300,400,500,600,700,800,900,950}/{0,5,10,15,20,25,30,40,50,60,70,75,80,90,95,100}");
+
+/* 2. Textos: Todos los colores + Opacidades */
+@source inline("text-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone,taupe,mauve,mist,olive,primary,secondary}-{50,100,200,300,400,500,600,700,800,900,950}");
+@source inline("text-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone,taupe,mauve,mist,olive,primary,secondary}-{50,100,200,300,400,500,600,700,800,900,950}/{0,5,10,15,20,25,30,40,50,60,70,75,80,90,95,100}");
+
+/* 3. Bordes: Todos los colores + Opacidades */
+@source inline("border-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone,taupe,mauve,mist,olive,primary,secondary}-{50,100,200,300,400,500,600,700,800,900,950}");
+@source inline("border-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose,slate,gray,zinc,neutral,stone,taupe,mauve,mist,olive,primary,secondary}-{50,100,200,300,400,500,600,700,800,900,950}/{0,5,10,15,20,25,30,40,50,60,70,75,80,90,95,100}");
+
 @theme {
   --font-sans: "Inter", sans-serif;
 }
