@@ -13,7 +13,13 @@ import {
   ShieldUser,
   ClipboardPenLine, 
   Lock,
-  UserCog
+  UserCog,
+  Palette,
+  PackageOpen,
+  Package2,
+  Layers,
+  Tags,
+  Badge
 } from 'lucide-react'
 
 export const iconMap: Record<string, LucideIcon> = {
@@ -31,4 +37,10 @@ export const iconMap: Record<string, LucideIcon> = {
   Lock,
   UserCog,
   Default: HelpCircle,
+  Palette,
+  PackageOpen,
+  Package2,
+  Layers,
+  Tags,
+  Badge
 }

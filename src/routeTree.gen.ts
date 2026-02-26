@@ -21,6 +21,12 @@ import { Route as MainAuthenticatedAdminUsersViewRouteImport } from './routes/_m
 import { Route as MainAuthenticatedAdminUsersManagementRouteImport } from './routes/_main/_authenticated/admin/users/management'
 import { Route as MainAuthenticatedAdminSecurityLoginLogsRouteImport } from './routes/_main/_authenticated/admin/security/login-logs'
 import { Route as MainAuthenticatedAdminSecurityActionLogsRouteImport } from './routes/_main/_authenticated/admin/security/action-logs'
+import { Route as MainAuthenticatedAdminCatalogType_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/type_management'
+import { Route as MainAuthenticatedAdminCatalogProduct_viewRouteImport } from './routes/_main/_authenticated/admin/catalog/product_view'
+import { Route as MainAuthenticatedAdminCatalogProduct_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/product_management'
+import { Route as MainAuthenticatedAdminCatalogColor_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/color_management'
+import { Route as MainAuthenticatedAdminCatalogCategories_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/categories_management'
+import { Route as MainAuthenticatedAdminCatalogBrands_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/brands_management'
 
 const MainRoute = MainRouteImport.update({
   id: '/_main',
@@ -84,6 +90,42 @@ const MainAuthenticatedAdminSecurityActionLogsRoute =
     path: '/admin/security/action-logs',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
+const MainAuthenticatedAdminCatalogType_managementRoute =
+  MainAuthenticatedAdminCatalogType_managementRouteImport.update({
+    id: '/admin/catalog/type_management',
+    path: '/admin/catalog/type_management',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminCatalogProduct_viewRoute =
+  MainAuthenticatedAdminCatalogProduct_viewRouteImport.update({
+    id: '/admin/catalog/product_view',
+    path: '/admin/catalog/product_view',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminCatalogProduct_managementRoute =
+  MainAuthenticatedAdminCatalogProduct_managementRouteImport.update({
+    id: '/admin/catalog/product_management',
+    path: '/admin/catalog/product_management',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminCatalogColor_managementRoute =
+  MainAuthenticatedAdminCatalogColor_managementRouteImport.update({
+    id: '/admin/catalog/color_management',
+    path: '/admin/catalog/color_management',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminCatalogCategories_managementRoute =
+  MainAuthenticatedAdminCatalogCategories_managementRouteImport.update({
+    id: '/admin/catalog/categories_management',
+    path: '/admin/catalog/categories_management',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminCatalogBrands_managementRoute =
+  MainAuthenticatedAdminCatalogBrands_managementRouteImport.update({
+    id: '/admin/catalog/brands_management',
+    path: '/admin/catalog/brands_management',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof MainClientIndexRoute
@@ -91,6 +133,12 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
+  '/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
+  '/admin/catalog/color_management': typeof MainAuthenticatedAdminCatalogColor_managementRoute
+  '/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
+  '/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  '/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
   '/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
   '/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
@@ -102,6 +150,12 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
+  '/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
+  '/admin/catalog/color_management': typeof MainAuthenticatedAdminCatalogColor_managementRoute
+  '/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
+  '/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  '/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
   '/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
   '/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
@@ -117,6 +171,12 @@ export interface FileRoutesById {
   '/_main/_client': typeof MainClientRouteWithChildren
   '/_main/_client/': typeof MainClientIndexRoute
   '/_main/_authenticated/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/_main/_authenticated/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
+  '/_main/_authenticated/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
+  '/_main/_authenticated/admin/catalog/color_management': typeof MainAuthenticatedAdminCatalogColor_managementRoute
+  '/_main/_authenticated/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
+  '/_main/_authenticated/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  '/_main/_authenticated/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
   '/_main/_authenticated/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
   '/_main/_authenticated/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/_main/_authenticated/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
@@ -130,6 +190,12 @@ export interface FileRouteTypes {
     | '/register'
     | '/$'
     | '/admin/dashboard'
+    | '/admin/catalog/brands_management'
+    | '/admin/catalog/categories_management'
+    | '/admin/catalog/color_management'
+    | '/admin/catalog/product_management'
+    | '/admin/catalog/product_view'
+    | '/admin/catalog/type_management'
     | '/admin/security/action-logs'
     | '/admin/security/login-logs'
     | '/admin/users/management'
@@ -141,6 +207,12 @@ export interface FileRouteTypes {
     | '/register'
     | '/$'
     | '/admin/dashboard'
+    | '/admin/catalog/brands_management'
+    | '/admin/catalog/categories_management'
+    | '/admin/catalog/color_management'
+    | '/admin/catalog/product_management'
+    | '/admin/catalog/product_view'
+    | '/admin/catalog/type_management'
     | '/admin/security/action-logs'
     | '/admin/security/login-logs'
     | '/admin/users/management'
@@ -155,6 +227,12 @@ export interface FileRouteTypes {
     | '/_main/_client'
     | '/_main/_client/'
     | '/_main/_authenticated/admin/dashboard'
+    | '/_main/_authenticated/admin/catalog/brands_management'
+    | '/_main/_authenticated/admin/catalog/categories_management'
+    | '/_main/_authenticated/admin/catalog/color_management'
+    | '/_main/_authenticated/admin/catalog/product_management'
+    | '/_main/_authenticated/admin/catalog/product_view'
+    | '/_main/_authenticated/admin/catalog/type_management'
     | '/_main/_authenticated/admin/security/action-logs'
     | '/_main/_authenticated/admin/security/login-logs'
     | '/_main/_authenticated/admin/users/management'
@@ -253,11 +331,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainAuthenticatedAdminSecurityActionLogsRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
+    '/_main/_authenticated/admin/catalog/type_management': {
+      id: '/_main/_authenticated/admin/catalog/type_management'
+      path: '/admin/catalog/type_management'
+      fullPath: '/admin/catalog/type_management'
+      preLoaderRoute: typeof MainAuthenticatedAdminCatalogType_managementRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/catalog/product_view': {
+      id: '/_main/_authenticated/admin/catalog/product_view'
+      path: '/admin/catalog/product_view'
+      fullPath: '/admin/catalog/product_view'
+      preLoaderRoute: typeof MainAuthenticatedAdminCatalogProduct_viewRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/catalog/product_management': {
+      id: '/_main/_authenticated/admin/catalog/product_management'
+      path: '/admin/catalog/product_management'
+      fullPath: '/admin/catalog/product_management'
+      preLoaderRoute: typeof MainAuthenticatedAdminCatalogProduct_managementRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/catalog/color_management': {
+      id: '/_main/_authenticated/admin/catalog/color_management'
+      path: '/admin/catalog/color_management'
+      fullPath: '/admin/catalog/color_management'
+      preLoaderRoute: typeof MainAuthenticatedAdminCatalogColor_managementRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/catalog/categories_management': {
+      id: '/_main/_authenticated/admin/catalog/categories_management'
+      path: '/admin/catalog/categories_management'
+      fullPath: '/admin/catalog/categories_management'
+      preLoaderRoute: typeof MainAuthenticatedAdminCatalogCategories_managementRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/catalog/brands_management': {
+      id: '/_main/_authenticated/admin/catalog/brands_management'
+      path: '/admin/catalog/brands_management'
+      fullPath: '/admin/catalog/brands_management'
+      preLoaderRoute: typeof MainAuthenticatedAdminCatalogBrands_managementRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
   }
 }
 
 interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminDashboardRoute: typeof MainAuthenticatedAdminDashboardRoute
+  MainAuthenticatedAdminCatalogBrands_managementRoute: typeof MainAuthenticatedAdminCatalogBrands_managementRoute
+  MainAuthenticatedAdminCatalogCategories_managementRoute: typeof MainAuthenticatedAdminCatalogCategories_managementRoute
+  MainAuthenticatedAdminCatalogColor_managementRoute: typeof MainAuthenticatedAdminCatalogColor_managementRoute
+  MainAuthenticatedAdminCatalogProduct_managementRoute: typeof MainAuthenticatedAdminCatalogProduct_managementRoute
+  MainAuthenticatedAdminCatalogProduct_viewRoute: typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  MainAuthenticatedAdminCatalogType_managementRoute: typeof MainAuthenticatedAdminCatalogType_managementRoute
   MainAuthenticatedAdminSecurityActionLogsRoute: typeof MainAuthenticatedAdminSecurityActionLogsRoute
   MainAuthenticatedAdminSecurityLoginLogsRoute: typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   MainAuthenticatedAdminUsersManagementRoute: typeof MainAuthenticatedAdminUsersManagementRoute
@@ -266,6 +392,18 @@ interface MainAuthenticatedRouteChildren {
 
 const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
   MainAuthenticatedAdminDashboardRoute: MainAuthenticatedAdminDashboardRoute,
+  MainAuthenticatedAdminCatalogBrands_managementRoute:
+    MainAuthenticatedAdminCatalogBrands_managementRoute,
+  MainAuthenticatedAdminCatalogCategories_managementRoute:
+    MainAuthenticatedAdminCatalogCategories_managementRoute,
+  MainAuthenticatedAdminCatalogColor_managementRoute:
+    MainAuthenticatedAdminCatalogColor_managementRoute,
+  MainAuthenticatedAdminCatalogProduct_managementRoute:
+    MainAuthenticatedAdminCatalogProduct_managementRoute,
+  MainAuthenticatedAdminCatalogProduct_viewRoute:
+    MainAuthenticatedAdminCatalogProduct_viewRoute,
+  MainAuthenticatedAdminCatalogType_managementRoute:
+    MainAuthenticatedAdminCatalogType_managementRoute,
   MainAuthenticatedAdminSecurityActionLogsRoute:
     MainAuthenticatedAdminSecurityActionLogsRoute,
   MainAuthenticatedAdminSecurityLoginLogsRoute:
