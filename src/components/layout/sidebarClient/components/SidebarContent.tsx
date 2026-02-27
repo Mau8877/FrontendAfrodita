@@ -5,10 +5,13 @@ import { X, Home, ShoppingBag, MapPin, HelpCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
 
-export function SidebarContent() {
+interface SidebarContentProps {
+  onItemClick?: () => void
+}
+
+export function SidebarContent({ onItemClick }: SidebarContentProps) {
   const dispatch = useDispatch()
   
-  // Definimos los links con sus iconos y rutas
   const clientLinks = [
     { label: 'Inicio', to: '/', icon: Home },
     { label: 'Productos', to: '/productos', icon: ShoppingBag },
@@ -16,7 +19,13 @@ export function SidebarContent() {
     { label: 'Preguntas Frecuentes', to: '/faq', icon: HelpCircle },
   ]
 
-  const closeSidebar = () => dispatch(close())
+  const closeSidebar = () => {
+    if (onItemClick) {
+      onItemClick()
+    } else {
+      dispatch(close())
+    }
+  }
 
   return (
     <div className="flex flex-col h-full bg-[#F4AFCC] border-r border-black/5">
@@ -43,17 +52,14 @@ export function SidebarContent() {
           <Link 
             key={item.label}
             to={item.to}
-            onClick={closeSidebar}
-            // Clases de TanStack Router para cuando la ruta está activa
+            onClick={closeSidebar} // <--- Esto ya lo tenías, ahora disparará el cierre pro
             activeProps={{ className: 'bg-primary text-white shadow-md' }}
             inactiveProps={{ className: 'text-foreground/70 hover:bg-white/30' }}
             className="group flex items-center gap-4 p-4 rounded-2xl text-sm font-bold transition-all duration-300 cursor-pointer"
           >
-            {/* Contenedor del Icono */}
             <div className="bg-sidebar/60 p-2 rounded-xl group-hover:bg-secondary group-hover:text-white transition-colors duration-300">
               <item.icon className="h-5 w-5 text-secondary group-hover:text-white" strokeWidth={2.5} />
             </div>
-            
             <span className="tracking-tight uppercase text-xs font-black">{item.label}</span>
           </Link>
         ))}

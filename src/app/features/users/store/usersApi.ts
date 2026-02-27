@@ -9,7 +9,7 @@ import {
 export const usersApi = api.injectEndpoints({
   endpoints: (builder) => ({
     
-    // --- LISTADO DE USUARIOS (Paginado, con Filtros y Búsqueda) ---
+    // --- LISTADO DE USUARIOS ---
     getUsers: builder.query<UsersListResponse, { page?: number; search?: string; id_rol?: string; ordering?: string }>({
       query: (params) => ({
         url: '/users/',
@@ -38,7 +38,12 @@ export const usersApi = api.injectEndpoints({
         method: 'POST',
         body: newUser,
       }),
-      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+      // Invalidamos la lista de usuarios y la bitácora de acciones
+      invalidatesTags: [
+        { type: 'Users', id: 'LIST' },
+        { type: 'ActionLogs', id: 'LIST' },
+        'LoginLogs'    
+      ],
     }),
 
     // --- ACTUALIZAR / RESTAURAR USUARIO ---
@@ -51,6 +56,8 @@ export const usersApi = api.injectEndpoints({
       invalidatesTags: (_result, _error, { id }) => [
         { type: 'Users', id },
         { type: 'Users', id: 'LIST' },
+        { type: 'ActionLogs', id: 'LIST' },
+        'LoginLogs'    
       ],
     }),
 
@@ -61,7 +68,11 @@ export const usersApi = api.injectEndpoints({
         method: 'DELETE',
         params: { permanent },
       }),
-      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+      invalidatesTags: [
+        { type: 'Users', id: 'LIST' },
+        { type: 'ActionLogs', id: 'LIST' },
+        'LoginLogs'    
+      ],
     }),
 
   }),

@@ -1,13 +1,13 @@
 import { useState } from "react"
 import { Users, Trash2, Power, PowerOff } from "lucide-react"
 import { type ColumnDef, type SortingState } from "@tanstack/react-table"
-//import { toast } from "sonner"
 
 import { PageHeader } from "@/components/ui/page-header"
 import { DataTable } from "@/components/ui/data-table"
-import { useGetUsersQuery } from "../store/usersApi" 
+import { useGetUsersQuery, useDeleteUserMutation } from "../store/usersApi"
 import { type User } from "../types" 
-import { UserDetailModal, UserEditModal, UserDeleteModal, UserCreateModal } from "../"
+import { UserDetailModal, UserEditModal, UserCreateModal } from "../"
+import { GenericDeleteModal } from "@/components/GenericDeleteModal"
 
 export const UserManagementScreen = () => {
   const [page, setPage] = useState(0)
@@ -22,6 +22,8 @@ export const UserManagementScreen = () => {
   const [userToDelete, setUserToDelete] = useState<User | null>(null)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+
+  const [deleteUser] = useDeleteUserMutation()
 
   const ordering = sorting.length 
     ? `${sorting[0].desc ? '-' : ''}${sorting[0].id}` 
@@ -42,7 +44,6 @@ export const UserManagementScreen = () => {
   const totalCount = apiResponse?.data?.count || 0
   const totalPages = Math.ceil(totalCount / 10)
 
-  // 6. COLUMNAS CON LÓGICA DE 3 ESTADOS
   const columns: ColumnDef<User>[] = [
     {
       id: "perfil__nombre", 
@@ -91,7 +92,6 @@ export const UserManagementScreen = () => {
         const active = row.original.is_active;
         const isDeleted = !!row.original.deleted_at;
 
-        // Lógica de 3 variables:
         if (isDeleted && !active) {
           return (
             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-500 border border-slate-200">
@@ -120,7 +120,6 @@ export const UserManagementScreen = () => {
     }
   ]
 
-  // Handlers de acciones
   const onDetail = (user: User) => {
     setSelectedUser(user);
     setIsDetailOpen(true);
@@ -172,8 +171,7 @@ export const UserManagementScreen = () => {
       <UserDetailModal 
         user={selectedUser} 
         isOpen={isDetailOpen} 
-        onClose={() => 
-          setIsDetailOpen(false)} 
+        onClose={() => setIsDetailOpen(false)} 
       />
 
       <UserEditModal 
@@ -185,13 +183,23 @@ export const UserManagementScreen = () => {
         }} 
       />
 
-      <UserDeleteModal
-        user={userToDelete}
+      {/* 4. Implementación del Modal Genérico */}
+      <GenericDeleteModal
+        item={userToDelete}
         isOpen={isDeleteOpen}
         onClose={() => {
           setIsDeleteOpen(false);
           setUserToDelete(null);
         }}
+        onDelete={(params) => deleteUser(params).unwrap()}
+        itemName={
+          userToDelete?.perfil?.nombre 
+            ? `${userToDelete.perfil.nombre} ${userToDelete.perfil.apellido}` 
+            : userToDelete?.username || ""
+        }
+        itemType="este usuario"
+        itemIdentifier={userToDelete?.email}
+        isSuperUser={true}
       />
 
       <UserCreateModal 

@@ -22,7 +22,11 @@ interface SidebarResponse {
   permissions: string[]
 }
 
-export function SidebarContent() {
+interface SidebarContentProps {
+  onItemClick?: () => void
+}
+
+export function SidebarContent({ onItemClick }: SidebarContentProps) {
   const isAuthenticated = useSelector(authSelectors.isAuthenticated)
 
   const { data, isLoading } = useGetSidebarMenuQuery(undefined, {
@@ -38,7 +42,8 @@ export function SidebarContent() {
         <SidebarItem 
           key={item.label} 
           item={item}
-          icon={iconMap[item.icon] || LayoutDashboard} 
+          icon={iconMap[item.icon] || LayoutDashboard}
+          onClick={onItemClick}
         />
       ))}
     </nav>

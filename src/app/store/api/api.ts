@@ -11,6 +11,9 @@ export const api = createApi({
     debug: true,
   }),
   // Definimos los tags globales, pero no los endpoints
-  tagTypes: ['Users', 'Auth', 'Menu', 'Roles', 'LoginLogs', 'ActionLogs'], 
+  tagTypes: [
+    'Users', 'Auth', 'Menu', 'Roles', 'LoginLogs', 'ActionLogs',
+    'Brands'
+  ], 
   endpoints: () => ({}), // <--- ¡VACÍO! Se llenará desde las features
 })

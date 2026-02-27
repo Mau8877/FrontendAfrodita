@@ -20,16 +20,18 @@ interface MenuItem {
 interface SidebarItemProps {
   item: MenuItem
   icon: LucideIcon
+  onClick?: () => void
 }
 
-export function SidebarItem({ item, icon: Icon }: SidebarItemProps) {
+export function SidebarItem({ item, icon: Icon, onClick }: SidebarItemProps) {
   const [isOpen, setIsOpen] = useState(false)
   const hasChildren = !!(item.children && item.children.length > 0)
 
   if (!hasChildren) {
     return (
       <Link 
-        to={item.to || '#'} 
+        to={item.to || '#'}
+        onClick={onClick}
         activeProps={{ className: 'bg-secondary text-white shadow-md' }}
         inactiveProps={{ className: 'text-slate-700 hover:bg-white/40' }}
         className={`group flex items-center gap-3 p-3 rounded-xl text-sm font-bold transition-all duration-200 
@@ -66,6 +68,7 @@ export function SidebarItem({ item, icon: Icon }: SidebarItemProps) {
               <Link
                 key={child.to}
                 to={child.to}
+                onClick={onClick}
                 activeProps={{ className: 'text-secondary font-extrabold translate-x-1' }}
                 inactiveProps={{ className: 'text-slate-500 hover:text-secondary' }}
                 className="flex items-center gap-2 py-2 text-xs font-semibold transition-all duration-200"

@@ -8,6 +8,8 @@ export function SidebarDrawer() {
   const isOpen = useSelector((state: RootState) => state.sidebarAdmin.isOpen)
   const dispatch = useDispatch()
 
+  const handleClose = () => dispatch(close())
+
   return (
     <>
       {/* OVERLAY: Fondo oscuro con desenfoque suave */}
@@ -16,7 +18,7 @@ export function SidebarDrawer() {
           fixed inset-0 bg-secondary/20 backdrop-blur-sm z-[998] transition-opacity duration-300
           ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}
         `}
-        onClick={() => dispatch(close())}
+        onClick={handleClose}
       />
 
       {/* SIDEBAR: Con el color bg-header/80 y efecto traslúcido */}
@@ -34,7 +36,7 @@ export function SidebarDrawer() {
           </div>
           <button 
             type="button"
-            onClick={() => dispatch(close())}
+            onClick={handleClose}
             className="p-2 hover:bg-white/20 rounded-full text-slate-600 hover:text-secondary transition-all active:scale-90"
           >
             <X className="h-5 w-5" strokeWidth={3} />
@@ -43,7 +45,7 @@ export function SidebarDrawer() {
         
         {/* Contenido con el scroll personalizado de Afrodita */}
         <div className="h-[calc(100vh-90px)] overflow-y-auto custom-scrollbar px-2 py-4">
-          <SidebarContent />
+          <SidebarContent onItemClick={handleClose} />
         </div>
       </aside>
     </>
