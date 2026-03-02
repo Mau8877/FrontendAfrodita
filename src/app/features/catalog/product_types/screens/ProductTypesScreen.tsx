@@ -1,37 +1,37 @@
 import { useState } from "react"
-import { Badge, Trash2, CheckCircle } from "lucide-react"
+import { Layers, Trash2, CheckCircle } from "lucide-react"
 import { type ColumnDef, type SortingState } from "@tanstack/react-table"
 
 import { PageHeader } from "@/components/ui/page-header"
 import { DataTable } from "@/components/ui/data-table"
-import { useGetBrandsQuery, useDeleteBrandMutation } from "../store/brandApi" 
-import { type Brand } from "../types" 
-import { BrandEditModal, BrandCreateModal } from "../components"
+import { useGetProductTypesQuery, useDeleteProductTypeMutation } from "../store/productTypeApi" 
+import { type ProductType } from "../types" 
+import { ProductTypeEditModal, ProductTypeCreateModal } from "../components"
 import { GenericDeleteModal } from "@/components/GenericDeleteModal"
 
-export const BrandsScreen = () => {
+export const ProductTypesScreen = () => {
   const [page, setPage] = useState(0)
   const [sorting, setSorting] = useState<SortingState>([])
   const [searchValue, setSearchValue] = useState("") 
   const [appliedSearch, setAppliedSearch] = useState("") 
 
-  const [brandToEdit, setBrandToEdit] = useState<Brand | null>(null)
+  const [typeToEdit, setTypeToEdit] = useState<ProductType | null>(null)
   const [isEditOpen, setIsEditOpen] = useState(false)
   
   // Estados para el borrado
-  const [brandToDelete, setBrandToDelete] = useState<Brand | null>(null)
+  const [typeToDelete, setTypeToDelete] = useState<ProductType | null>(null)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   
   const [isCreateOpen, setIsCreateOpen] = useState(false)
 
   // Hook de borrado
-  const [deleteBrand] = useDeleteBrandMutation()
+  const [deleteProductType] = useDeleteProductTypeMutation()
 
   const ordering = sorting.length 
     ? `${sorting[0].desc ? '-' : ''}${sorting[0].id}` 
     : undefined
 
-  const { data: apiResponse, isFetching, refetch } = useGetBrandsQuery({ 
+  const { data: apiResponse, isFetching, refetch } = useGetProductTypesQuery({ 
     page: page + 1, 
     ordering, 
     search: appliedSearch || undefined 
@@ -42,14 +42,14 @@ export const BrandsScreen = () => {
     setAppliedSearch(searchValue) 
   }
 
-  const brands = apiResponse?.data?.results || []
+  const productTypes = apiResponse?.data?.results || []
   const totalCount = apiResponse?.data?.count || 0
   const totalPages = Math.ceil(totalCount / 10)
 
-  const columns: ColumnDef<Brand>[] = [
+  const columns: ColumnDef<ProductType>[] = [
     {
       accessorKey: "nombre",
-      header: "Nombre de Marca",
+      header: "Nombre de Tipo",
       enableSorting: true,
       cell: ({ row }) => (
         <span className="font-bold text-primary uppercase tracking-tighter block">
@@ -62,8 +62,6 @@ export const BrandsScreen = () => {
       header: "Descripción",
       enableSorting: false,
       cell: ({ row }) => (
-        /* Agregamos mx-auto para centrar el contenedor si es más pequeño que la celda 
-          y text-center para el contenido */
         <div className="max-w-[300px] py-2 mx-auto text-center"> 
           <p className="text-slate-500 text-[12px] font-medium leading-relaxed break-words whitespace-pre-wrap line-clamp-2 hover:line-clamp-none transition-all duration-300">
             {row.original.descripcion || (
@@ -98,13 +96,13 @@ export const BrandsScreen = () => {
     }
   ]
 
-  const onEdit = (brand: Brand) => {
-    setBrandToEdit(brand);
+  const onEdit = (type: ProductType) => {
+    setTypeToEdit(type);
     setIsEditOpen(true);
   }
 
-  const onDelete = (brand: Brand) => {
-    setBrandToDelete(brand);
+  const onDelete = (type: ProductType) => {
+    setTypeToDelete(type);
     setIsDeleteOpen(true);
   }
   
@@ -113,15 +111,15 @@ export const BrandsScreen = () => {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <PageHeader 
-        title="Gestionar Marcas" 
-        icon={Badge} 
-        breadcrumbs={[ { label: "Catalog" }, { label: "Brand_management" } ]} 
+        title="Gestionar Tipos de Producto" 
+        icon={Layers} 
+        breadcrumbs={[ { label: "Catalog" }, { label: "type_management" } ]} 
       />
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <DataTable 
           columns={columns} 
-          data={brands}
+          data={productTypes}
           isFetching={isFetching}
           onRefresh={refetch}
           manualPagination={true}
@@ -140,30 +138,30 @@ export const BrandsScreen = () => {
         />
       </div>
 
-      <BrandEditModal 
-        brand={brandToEdit} 
+      <ProductTypeEditModal 
+        type={typeToEdit} 
         isOpen={isEditOpen} 
         onClose={() => {
           setIsEditOpen(false);
-          setBrandToEdit(null);
+          setTypeToEdit(null);
         }} 
       />
 
-      <BrandCreateModal 
+      <ProductTypeCreateModal 
         isOpen={isCreateOpen} 
         onClose={() => setIsCreateOpen(false)} 
       />
 
       <GenericDeleteModal
-        item={brandToDelete}
+        item={typeToDelete}
         isOpen={isDeleteOpen}
         onClose={() => {
           setIsDeleteOpen(false);
-          setBrandToDelete(null);
+          setTypeToDelete(null);
         }}
-        onDelete={(params) => deleteBrand(params).unwrap()}
-        itemName={brandToDelete?.nombre || ""}
-        itemType="esta marca"
+        onDelete={(params) => deleteProductType(params).unwrap()}
+        itemName={typeToDelete?.nombre || ""}
+        itemType="este tipo de producto"
         itemIdentifier="Registro de Catálogo"
         isSuperUser={true} 
       />

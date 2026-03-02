@@ -17,39 +17,48 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Plus, Type, FileText } from "lucide-react"
+import { Plus, Type, Palette, FolderTree } from "lucide-react"
 import { toast } from "sonner"
-import { brandSchema } from "../schemas"
-import { useCreateBrandMutation } from "../store/brandApi"
+import { colorSchema } from "../schemas"
+import { useCreateColorMutation, useGetColorSelectorsQuery } from "../store/colorApi"
 import { parseBackendErrors } from "@/utils/formatErrors"
 
-type FormInput = z.input<typeof brandSchema>;
-type FormOutput = z.infer<typeof brandSchema>;
+type FormInput = z.input<typeof colorSchema>;
+type FormOutput = z.infer<typeof colorSchema>;
 
-interface BrandCreateModalProps {
+interface ColorCreateModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
-  const [createBrand, { isLoading }] = useCreateBrandMutation()
+export function ColorCreateModal({ isOpen, onClose }: ColorCreateModalProps) {
+  const [createColor, { isLoading }] = useCreateColorMutation()
+  // Obtenemos las familias para el Select
+  const { data: selectors } = useGetColorSelectorsQuery()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<FormInput, any, FormOutput>({
-    resolver: zodResolver(brandSchema),
+    resolver: zodResolver(colorSchema),
     defaultValues: {
       nombre: "",
-      descripcion: "",
+      codigo_hex: "",
+      id_familia: null,
     },
   })
 
   const onSubmit: SubmitHandler<FormOutput> = async (values) => {
     try {
-      await createBrand(values).unwrap()
-      toast.success("¡Marca registrada con éxito!")
+      await createColor(values).unwrap()
+      toast.success("¡Color registrado con éxito!")
       form.reset()
       onClose()
     } catch (error: unknown) {
@@ -78,7 +87,6 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] w-[95vw] bg-white rounded-[2.5rem] border-none shadow-2xl p-0 overflow-hidden flex flex-col">
         
-        {/* HEADER VERDE - IGUAL A USUARIOS */}
         <DialogHeader className="p-6 bg-emerald-500/5 border-b border-emerald-500/10 flex-shrink-0 text-left">
           <div className="flex items-center gap-4">
             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
@@ -86,10 +94,10 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
             </div>
             <div>
               <DialogTitle className="text-2xl font-black text-emerald-900 uppercase tracking-tighter leading-none">
-                Nueva Marca
+                Nuevo Color
               </DialogTitle>
               <DialogDescription className="text-[9px] font-bold text-emerald-600/60 uppercase tracking-widest mt-0.5">
-                Añade fabricantes o proveedores de lentes al catálogo.
+                Añade variantes cromáticas y organízalas por familias.
               </DialogDescription>
             </div>
           </div>
@@ -98,22 +106,57 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-grow overflow-hidden">
             
-            {/* CUERPO DEL FORMULARIO CON PADDING */}
-            <div className="p-6 space-y-4 flex-grow overflow-y-auto custom-scrollbar">
+            <div className="p-6 space-y-5 flex-grow overflow-y-auto custom-scrollbar">
+              
+              {/* CAMPO FAMILIA (NUEVO) */}
+              <FormField
+                control={form.control}
+                name="id_familia"
+                render={({ field }) => (
+                  <FormItem className="space-y-1 text-left">
+                    <FormLabel className="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
+                      <FolderTree className="w-3 h-3" /> Familia del Color
+                    </FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      value={field.value ?? undefined}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="h-11 rounded-2xl font-bold bg-slate-50 border-slate-100 focus:bg-white transition-all">
+                          <SelectValue placeholder="Selecciona una familia (Opcional)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
+                        {selectors?.data.familias.map((familia) => (
+                          <SelectItem 
+                            key={familia.id} 
+                            value={familia.id}
+                            className="text-xs font-bold text-slate-600 focus:bg-emerald-50 focus:text-emerald-700 rounded-xl m-1"
+                          >
+                            {familia.nombre}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[9px]" />
+                  </FormItem>
+                )}
+              />
+
+              {/* CAMPO NOMBRE */}
               <FormField
                 control={form.control}
                 name="nombre"
                 render={({ field }) => (
                   <FormItem className="space-y-1 text-left">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
-                      <Type className="w-3 h-3" /> Nombre de la Marca
+                      <Type className="w-3 h-3" /> Nombre del Color
                     </FormLabel>
                     <FormControl>
                       <Input 
                         {...field} 
-                        placeholder="Ej: Urban Layer, Freshlady..." 
-                        maxLength={100}
-                        onChange={(e) => field.onChange(e.target.value.substring(0, 100))}
+                        placeholder="Ej: Verde Esmeralda, Azul Zafiro..." 
+                        maxLength={50}
                         className="h-11 rounded-2xl font-bold bg-slate-50 border-slate-100 focus:bg-white transition-all" 
                       />
                     </FormControl>
@@ -122,23 +165,38 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
                 )}
               />
 
+              {/* CAMPO HEX */}
               <FormField
                 control={form.control}
-                name="descripcion"
+                name="codigo_hex"
                 render={({ field }) => (
                   <FormItem className="space-y-1 text-left">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
-                      <FileText className="w-3 h-3" /> Descripción Opcional
+                      <Palette className="w-3 h-3" /> Código HEX
                     </FormLabel>
                     <FormControl>
-                      <Textarea 
-                        {...field} 
-                        value={field.value ?? ""}
-                        placeholder="Detalles o descripción de la marca..." 
-                        maxLength={500}
-                        onChange={(e) => field.onChange(e.target.value.substring(0, 500))}
-                        className="min-h-[120px] rounded-2xl font-medium bg-slate-50 border-slate-100 focus:bg-white resize-none"
-                      />
+                      <div className="relative flex items-center">
+                        <span className="absolute left-12 text-slate-400 font-bold select-none">
+                          #
+                        </span>
+                        
+                        <Input 
+                          {...field} 
+                          value={field.value?.replace('#', '') ?? ""}
+                          placeholder="000000" 
+                          maxLength={6} 
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^A-Fa-f0-9]/g, '');
+                            field.onChange(`#${val}`);
+                          }}
+                          className="h-11 rounded-2xl font-bold bg-slate-50 border-slate-100 focus:bg-white transition-all pl-16" 
+                        />
+
+                        <div 
+                          className="absolute left-3 w-6 h-6 rounded-lg border border-white shadow-sm transition-colors duration-300"
+                          style={{ backgroundColor: field.value?.startsWith('#') ? field.value : '#e2e8f0' }}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage className="text-[9px]" />
                   </FormItem>
@@ -146,7 +204,6 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
               />
             </div>
 
-            {/* FOOTER GRIS QUE "CHOCA" CON LAS PAREDES */}
             <DialogFooter className="p-6 bg-slate-50 border-t border-slate-100 gap-3 flex-shrink-0">
               <Button 
                 type="button" 
@@ -161,7 +218,7 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
                 disabled={isLoading} 
                 className="h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black uppercase text-[10px] px-10 shadow-lg shadow-emerald-200 transition-all active:scale-95"
               >
-                {isLoading ? "Registrando..." : "Guardar Marca"}
+                {isLoading ? "Registrando..." : "Guardar Color"}
               </Button>
             </DialogFooter>
 

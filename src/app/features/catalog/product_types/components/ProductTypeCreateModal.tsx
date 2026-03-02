@@ -22,24 +22,24 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Plus, Type, FileText } from "lucide-react"
 import { toast } from "sonner"
-import { brandSchema } from "../schemas"
-import { useCreateBrandMutation } from "../store/brandApi"
+import { productTypeSchema } from "../schemas"
+import { useCreateProductTypeMutation } from "../store/productTypeApi"
 import { parseBackendErrors } from "@/utils/formatErrors"
 
-type FormInput = z.input<typeof brandSchema>;
-type FormOutput = z.infer<typeof brandSchema>;
+type FormInput = z.input<typeof productTypeSchema>;
+type FormOutput = z.infer<typeof productTypeSchema>;
 
-interface BrandCreateModalProps {
+interface ProductTypeCreateModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
-  const [createBrand, { isLoading }] = useCreateBrandMutation()
+export function ProductTypeCreateModal({ isOpen, onClose }: ProductTypeCreateModalProps) {
+  const [createProductType, { isLoading }] = useCreateProductTypeMutation()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<FormInput, any, FormOutput>({
-    resolver: zodResolver(brandSchema),
+    resolver: zodResolver(productTypeSchema),
     defaultValues: {
       nombre: "",
       descripcion: "",
@@ -48,8 +48,8 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
 
   const onSubmit: SubmitHandler<FormOutput> = async (values) => {
     try {
-      await createBrand(values).unwrap()
-      toast.success("¡Marca registrada con éxito!")
+      await createProductType(values).unwrap()
+      toast.success("¡Tipo de producto registrado con éxito!")
       form.reset()
       onClose()
     } catch (error: unknown) {
@@ -78,7 +78,7 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] w-[95vw] bg-white rounded-[2.5rem] border-none shadow-2xl p-0 overflow-hidden flex flex-col">
         
-        {/* HEADER VERDE - IGUAL A USUARIOS */}
+        {/* HEADER VERDE - IGUAL A CATEGORIAS/MARCAS/USUARIOS */}
         <DialogHeader className="p-6 bg-emerald-500/5 border-b border-emerald-500/10 flex-shrink-0 text-left">
           <div className="flex items-center gap-4">
             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
@@ -86,10 +86,10 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
             </div>
             <div>
               <DialogTitle className="text-2xl font-black text-emerald-900 uppercase tracking-tighter leading-none">
-                Nueva Marca
+                Nuevo Tipo
               </DialogTitle>
               <DialogDescription className="text-[9px] font-bold text-emerald-600/60 uppercase tracking-widest mt-0.5">
-                Añade fabricantes o proveedores de lentes al catálogo.
+                Define una nueva variante de producto para el inventario.
               </DialogDescription>
             </div>
           </div>
@@ -106,12 +106,12 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
                 render={({ field }) => (
                   <FormItem className="space-y-1 text-left">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
-                      <Type className="w-3 h-3" /> Nombre de la Marca
+                      <Type className="w-3 h-3" /> Nombre del Tipo
                     </FormLabel>
                     <FormControl>
                       <Input 
                         {...field} 
-                        placeholder="Ej: Urban Layer, Freshlady..." 
+                        placeholder="Ej: Armazón, Mica, Accesorios..." 
                         maxLength={100}
                         onChange={(e) => field.onChange(e.target.value.substring(0, 100))}
                         className="h-11 rounded-2xl font-bold bg-slate-50 border-slate-100 focus:bg-white transition-all" 
@@ -134,7 +134,7 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
                       <Textarea 
                         {...field} 
                         value={field.value ?? ""}
-                        placeholder="Detalles o descripción de la marca..." 
+                        placeholder="Define las características de este tipo de producto..." 
                         maxLength={500}
                         onChange={(e) => field.onChange(e.target.value.substring(0, 500))}
                         className="min-h-[120px] rounded-2xl font-medium bg-slate-50 border-slate-100 focus:bg-white resize-none"
@@ -161,7 +161,7 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
                 disabled={isLoading} 
                 className="h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black uppercase text-[10px] px-10 shadow-lg shadow-emerald-200 transition-all active:scale-95"
               >
-                {isLoading ? "Registrando..." : "Guardar Marca"}
+                {isLoading ? "Registrando..." : "Guardar Tipo"}
               </Button>
             </DialogFooter>
 

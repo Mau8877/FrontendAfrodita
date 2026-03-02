@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/ui/page-header"
 import { DataTable } from "@/components/ui/data-table"
 import { useGetActionLogsQuery } from "../store" 
 import { type BitacoraAccion } from "../types" 
-import { AntesDespuesData } from "../components/AntesDespuesData"
+import { AntesDespuesData } from "../components"
 
 // --- MAPEADO DE CLASES COMPLETAS (TAILWIND PURISTA) ---
 // Escribir la clase entera garantiza que el compilador la detecte
