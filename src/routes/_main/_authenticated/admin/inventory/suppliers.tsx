@@ -1,20 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { PermissionGuard } from '@/app/features/auth/components/PermissionGuard'
-import { ProductViewScreen } from '@/app/features/catalog'
+import { SuppliersScreen } from '@/app/features/inventory'
 
 export const Route = createFileRoute(
-  '/_main/_authenticated/admin/catalog/product_view',
+  '/_main/_authenticated/admin/inventory/suppliers',
 )({
   component: () => (
-    <PermissionGuard permission="ver_catalogo">
-      <ProductViewScreen />
+    <PermissionGuard permission="gestionar_proveedores">
+      <SuppliersScreen />
     </PermissionGuard>
   ),
   staticData: {
     metaRoute: {
-      title: 'Ver Productos',
-      icon: 'Package2',
+      title: 'Gestionar Proveedores',
+      icon: 'Handshake',
       hidden: false
     }
-  }
+  } 
 })

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   type ColumnDef,
   flexRender,
@@ -11,7 +12,8 @@ import {
 import { useState, type ReactNode } from "react"
 import { 
   RefreshCw, Search, ChevronLeft, ChevronRight, 
-  ArrowUpDown, Eye, EyeOff, Pencil, Trash2, ClipboardList, Plus 
+  ArrowUpDown, Eye, EyeOff, Pencil, Trash2, ClipboardList, Plus,
+  OctagonX
 } from "lucide-react"
 
 import {
@@ -25,7 +27,7 @@ import {
 import { Button } from "./button"
 import { Input } from "./input"
 
-// ── INTERFAZ ACTUALIZADA CON OPCIONES DE VISIBILIDAD ──
+// ── INTERFAZ ACTUALIZADA CON ONANNUL ──
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -35,6 +37,7 @@ interface DataTableProps<TData, TValue> {
   onView?: (data: TData) => void
   onEdit?: (data: TData) => void
   onDelete?: (data: TData) => void
+  onAnnul?: (data: TData) => void
   onDetail?: (data: TData) => void
   onAdd?: () => void
   // Paginación
@@ -47,7 +50,7 @@ interface DataTableProps<TData, TValue> {
   onSortingChange?: (sorting: SortingState) => void
   globalFilter?: string
   onGlobalFilterChange?: (filter: string) => void
-  onSearchTrigger?: () => void // Para disparar la búsqueda con Enter o Botón
+  onSearchTrigger?: () => void 
   totalRecords?: number
   // Opciones de ocultamiento
   hideSearch?: boolean
@@ -56,12 +59,13 @@ interface DataTableProps<TData, TValue> {
 }
 
 function ActionButtons<TData>({ 
-  data, onView, onEdit, onDelete, onDetail 
+  data, onView, onEdit, onDelete, onDetail, onAnnul 
 }: { 
   data: TData, 
   onView?: (d: TData) => void, 
   onEdit?: (d: TData) => void, 
   onDelete?: (d: TData) => void,
+  onAnnul?: (d: TData) => void,
   onDetail?: (d: TData) => void 
 }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -93,6 +97,12 @@ function ActionButtons<TData>({
         </Button>
       )}
 
+      {onAnnul && (
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10" onClick={() => onAnnul(data)}>
+          <OctagonX className="h-4 w-4" />
+        </Button>
+      )}
+
       {onDelete && (
         <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10" onClick={() => onDelete(data)}>
           <Trash2 className="h-4 w-4" />
@@ -111,6 +121,7 @@ export function DataTable<TData, TValue>({
   onView,
   onEdit,
   onDelete,
+  onAnnul,
   onDetail,
   onAdd,
   pageCount,
@@ -122,7 +133,7 @@ export function DataTable<TData, TValue>({
   onGlobalFilterChange,
   onSearchTrigger,
   totalRecords = 0,
-  hideSearch = false, // Nuevas props por defecto
+  hideSearch = false,
   hideToolbar = false,
   hidePagination = false,
 }: DataTableProps<TData, TValue>) {
@@ -130,14 +141,21 @@ export function DataTable<TData, TValue>({
   const [internalSorting, setInternalSorting] = useState<SortingState>([])
   const [internalFilter, setInternalFilter] = useState("")
 
+  // Se añade onAnnul a la condición de renderizado de la columna de acciones
   const finalColumns = [
     ...columns,
-    ...(onView || onEdit || onDelete || onDetail ? [{
+    ...(onView || onEdit || onDelete || onDetail || onAnnul ? [{
       id: "actions",
       header: "Acciones",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: ({ row }: { row: any }) => (
-        <ActionButtons data={row.original} onView={onView} onEdit={onEdit} onDelete={onDelete} onDetail={onDetail} />
+        <ActionButtons 
+          data={row.original} 
+          onView={onView} 
+          onEdit={onEdit} 
+          onDelete={onDelete} 
+          onAnnul={onAnnul} 
+          onDetail={onDetail} 
+        />
       )
     }] : [])
   ] as ColumnDef<TData, TValue>[]
@@ -186,12 +204,10 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4 bg-white p-1 rounded-xl w-full overflow-hidden">
       
-      {/* RENDERIZADO CONDICIONAL DEL TOOLBAR */}
       {!hideToolbar && (
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 px-1">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-grow">
             
-            {/* RENDERIZADO CONDICIONAL DEL BUSCADOR */}
             {!hideSearch && (
               <div className="flex items-center gap-2 w-full md:max-w-[480px]">
                 <div className="relative flex-grow">
@@ -298,7 +314,6 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      {/* RENDERIZADO CONDICIONAL DE LA PAGINACIÓN */}
       {!hidePagination && (
         <div className="flex flex-col items-center justify-center py-4 mt-1 border-t border-primary/5 bg-white space-y-3">
           <div className="flex items-center gap-3 sm:gap-6">

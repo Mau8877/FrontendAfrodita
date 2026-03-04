@@ -2,12 +2,19 @@ import { api } from '@/app/store/api/api'
 import { 
   type ProductResponse, 
   type ProductsListResponse, 
-  type ProductSelectorsResponse
+  type ProductSelectorsResponse,
+  type ProductSimpleListResponse,
 } from '../types'
 
 export const productApi = api.injectEndpoints({
   endpoints: (builder) => ({
     
+    // --- LISTA DE PRODUCTOS SIMPLES PARA REPOSICION DE STOCK ---
+    getProductsSimple: builder.query<ProductSimpleListResponse, void>({
+      query: () => '/inventario/products/simple-list/',
+      providesTags: [{ type: 'Products', id: 'SIMPLE' }],
+    }),
+
     // --- SELECTORES (Marcas, Categorías, Tipos, Colores) ---
     getProductSelectors: builder.query<ProductSelectorsResponse, void>({
       query: () => '/inventario/products/selectors/',
@@ -83,6 +90,7 @@ export const productApi = api.injectEndpoints({
 })
 
 export const {
+  useGetProductsSimpleQuery,
   useGetProductSelectorsQuery,
   useGetProductsQuery,
   useGetProductByIdQuery,

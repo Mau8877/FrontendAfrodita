@@ -32,6 +32,12 @@ export interface Product {
   deleted_at: string | null;
 }
 
+// --- TIPO PARA LISTADO SIMPLE REPOSICION DE STOCK ---
+export interface ProductSimple {
+  id: string;
+  nombre: string;
+}
+
 // --- TIPOS PARA SELECTORES ---
 export interface ProductSelectors {
   marcas: { id: string; nombre: string }[];
@@ -51,3 +57,4 @@ export type UpdateProductRequest = {
 export type ProductsListResponse = StandardResponse<PaginatedData<Product>>;
 export type ProductResponse = StandardResponse<Product>;
 export type ProductSelectorsResponse = StandardResponse<ProductSelectors>;
+export type ProductSimpleListResponse = StandardResponse<ProductSimple[]>;

@@ -19,7 +19,11 @@ import {
   Package2,
   Layers,
   Tags,
-  Badge
+  Badge,
+  UsersRound,
+  PackageCheck,
+  Handshake,
+  Receipt,
 } from 'lucide-react'
 
 export const iconMap: Record<string, LucideIcon> = {
@@ -42,5 +46,9 @@ export const iconMap: Record<string, LucideIcon> = {
   Package2,
   Layers,
   Tags,
-  Badge
+  Badge,
+  UsersRound,
+  PackageCheck,
+  Handshake,
+  Receipt,
 }

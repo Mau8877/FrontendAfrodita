@@ -11,16 +11,22 @@ interface ProductCardItemProps {
   product: Product
   onEdit?: (p: Product) => void
   onDelete?: (p: Product) => void
+  // Agregamos esta prop para controlar si queremos mostrar el botón de ojo (visibilidad)
+  showVisibilityToggle?: boolean 
 }
 
 const ProductActions = ({ 
-  product, onEdit, onDelete 
+  product, onEdit, onDelete, showVisibilityToggle = true
 }: { 
   product: Product, 
   onEdit?: (p: Product) => void, 
-  onDelete?: (p: Product) => void
+  onDelete?: (p: Product) => void,
+  showVisibilityToggle?: boolean
 }) => {
   const [updateProduct, { isLoading }] = useUpdateProductMutation()
+
+  // Si no hay ninguna acción permitida, no renderizamos el contenedor
+  if (!showVisibilityToggle && !onEdit && !onDelete) return null;
 
   const handleToggleVisibility = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -44,39 +50,48 @@ const ProductActions = ({
 
   return (
     <div className="flex items-center justify-around w-full mt-auto pt-4 border-t border-slate-100/60">
-      <Button 
-        variant="ghost" size="icon" 
-        disabled={isLoading}
-        className={`h-10 w-10 rounded-2xl transition-all duration-300 ${
-          !product.is_visible 
-          ? 'bg-rose-50 text-rose-500 hover:bg-rose-100' 
-          : 'text-slate-300 hover:text-rose-400 hover:bg-rose-50/50'
-        }`}
-        onClick={handleToggleVisibility}
-      >
-        {product.is_visible ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
-      </Button>
-
-      <Button 
+      {/* OJO: Solo si se activa la prop */}
+      {showVisibilityToggle && (
+        <Button 
           variant="ghost" size="icon" 
-          className="h-10 w-10 rounded-2xl text-slate-300 hover:text-sky-500 hover:bg-sky-50"
-          onClick={(e) => { e.stopPropagation(); onEdit?.(product) }}
-      >
-        <Pencil className="h-5 w-5" />
-      </Button>
+          disabled={isLoading}
+          className={`h-10 w-10 rounded-2xl transition-all duration-300 ${
+            !product.is_visible 
+            ? 'bg-rose-50 text-rose-500 hover:bg-rose-100' 
+            : 'text-slate-300 hover:text-rose-400 hover:bg-rose-50/50'
+          }`}
+          onClick={handleToggleVisibility}
+        >
+          {product.is_visible ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+        </Button>
+      )}
 
-      <Button 
-          variant="ghost" size="icon" 
-          className="h-10 w-10 rounded-2xl text-slate-300 hover:text-red-500 hover:bg-red-50"
-          onClick={(e) => { e.stopPropagation(); onDelete?.(product) }}
-      >
-        <Trash2 className="h-5 w-5" />
-      </Button>
+      {/* LÁPIZ: Solo si viene la función onEdit */}
+      {onEdit && (
+        <Button 
+            variant="ghost" size="icon" 
+            className="h-10 w-10 rounded-2xl text-slate-300 hover:text-sky-500 hover:bg-sky-50"
+            onClick={(e) => { e.stopPropagation(); onEdit?.(product) }}
+        >
+          <Pencil className="h-5 w-5" />
+        </Button>
+      )}
+
+      {/* BASURERO: Solo si viene la función onDelete */}
+      {onDelete && (
+        <Button 
+            variant="ghost" size="icon" 
+            className="h-10 w-10 rounded-2xl text-slate-300 hover:text-red-500 hover:bg-red-50"
+            onClick={(e) => { e.stopPropagation(); onDelete?.(product) }}
+        >
+          <Trash2 className="h-5 w-5" />
+        </Button>
+      )}
     </div>
   )
 }
 
-export const ProductCardItem = ({ product, onEdit, onDelete }: ProductCardItemProps) => {
+export const ProductCardItem = ({ product, onEdit, onDelete, showVisibilityToggle }: ProductCardItemProps) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   
@@ -100,9 +115,8 @@ export const ProductCardItem = ({ product, onEdit, onDelete }: ProductCardItemPr
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      {/* ... (Todo el código del renderizado de imagen se mantiene igual) ... */}
       <div className="relative h-48 bg-slate-50/40 flex items-center justify-center p-6 overflow-hidden">
-        
-        {/* --- ICONOS DE ESTADO (SOLO ICONOS) --- */}
         <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
           {isDeleted ? (
             <div className="h-7 w-7 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-400 border border-slate-200 shadow-sm" title="En Papelera">
@@ -151,6 +165,7 @@ export const ProductCardItem = ({ product, onEdit, onDelete }: ProductCardItemPr
       </div>
 
       <div className="p-5 flex-grow flex flex-col">
+        {/* ... (Sección de textos se mantiene igual) ... */}
         <div className="mb-3">
           <p className="text-[9px] font-black text-slate-400/80 uppercase tracking-widest mb-1">
             {product.nombre_tipo} <span className="mx-1 opacity-50">/</span> {product.nombre_categoria}
@@ -158,7 +173,6 @@ export const ProductCardItem = ({ product, onEdit, onDelete }: ProductCardItemPr
           <h3 className={`text-[13px] font-black uppercase leading-tight line-clamp-1 ${isDeleted ? 'text-slate-300' : 'text-slate-800'}`}>
             {product.nombre}
           </h3>
-          
           <p className="mt-1.5 text-[10px] font-medium text-slate-400 leading-relaxed line-clamp-2 italic">
             {product.descripcion || "Sin descripción"}
           </p>
@@ -175,7 +189,13 @@ export const ProductCardItem = ({ product, onEdit, onDelete }: ProductCardItemPr
           </span>
         </div>
 
-        <ProductActions product={product} onEdit={onEdit} onDelete={onDelete} />
+        {/* Pasamos las props condicionales a las acciones */}
+        <ProductActions 
+          product={product} 
+          onEdit={onEdit} 
+          onDelete={onDelete} 
+          showVisibilityToggle={showVisibilityToggle} 
+        />
       </div>
     </div>
   )
