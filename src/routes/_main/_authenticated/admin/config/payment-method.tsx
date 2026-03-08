@@ -1,20 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { PermissionGuard } from '@/app/features/auth/components/PermissionGuard'
-import { StockScreen } from '@/app/features/inventory'
+import { PaymentMethodScreen } from '@/app/features/config'
 
 export const Route = createFileRoute(
-  '/_main/_authenticated/admin/inventory/stock',
+  '/_main/_authenticated/admin/config/payment-method',
 )({
   component: () => (
-    <PermissionGuard permission="ver_stock">
-      <StockScreen />
+    <PermissionGuard permission="gestionar_metodo_pago">
+      <PaymentMethodScreen />
     </PermissionGuard>
   ),
   staticData: {
     metaRoute: {
-      title: 'Stock',
-      icon: 'PackageCheck',
+      title: 'Gestionar Métodos de Pago',
+      icon: 'QrCode',
       hidden: false
     }
   }
 })
+

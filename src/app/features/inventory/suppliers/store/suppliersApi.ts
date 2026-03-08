@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { api } from '@/app/store/api/api'
 import { 
   type SupplierResponse, 
@@ -23,6 +24,11 @@ export const suppliersApi = api.injectEndpoints({
               { type: 'Suppliers', id: 'LIST' },
             ]
           : [{ type: 'Suppliers', id: 'LIST' }],
+    }),
+
+    getSuppliersSimple: builder.query<any, void>({
+      query: () => '/inventario/suppliers/simple-list/',
+      providesTags: [{ type: 'Suppliers', id: 'LIST' }],
     }),
 
     // --- DETALLE DE UN PROVEEDOR ---
@@ -80,6 +86,7 @@ export const suppliersApi = api.injectEndpoints({
 
 export const {
   useGetSuppliersQuery,
+  useGetSuppliersSimpleQuery,
   useGetSupplierByIdQuery,
   useCreateSupplierMutation,
   useUpdateSupplierMutation,

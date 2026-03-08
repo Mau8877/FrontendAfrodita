@@ -155,12 +155,12 @@
 @layer utilities {
   .custom-scrollbar {
     /* Mantenemos el espacio reservado para evitar saltos de layout */
-    scrollbar-gutter: stable;
+    scrollbar-gutter: auto;
 
     /* Webkit (Chrome, Safari, Edge) */
     &::-webkit-scrollbar {
       /* Por defecto es muy fino para que no estorbe */
-      width: 4px;
+      width: 3px;
       transition: width 0.2s ease;
     }
 

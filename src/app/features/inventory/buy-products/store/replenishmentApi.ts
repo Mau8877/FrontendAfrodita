@@ -30,7 +30,7 @@ export const replenishmentApi = api.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: 'Replenishment', id }],
     }),
 
-    // --- CREAR REPOSICIÓN (PROCESO INSANO) ---
+    // --- CREAR REPOSICIÓN  ---
     createReplenishment: builder.mutation<ReplenishmentResponse, CreateReplenishmentRequest>({
       query: (newReplenishment) => ({
         url: '/inventario/replenishment/',
@@ -40,7 +40,8 @@ export const replenishmentApi = api.injectEndpoints({
       invalidatesTags: [
         { type: 'Replenishment', id: 'LIST' },
         { type: 'ActionLogs', id: 'LIST' },
-        'LoginLogs'  
+        'LoginLogs',
+        'Stock'  
       ],
     }),
 
@@ -54,6 +55,8 @@ export const replenishmentApi = api.injectEndpoints({
         { type: 'Replenishment', id },
         { type: 'Replenishment', id: 'LIST' },
         { type: 'ActionLogs', id: 'LIST' },
+        'LoginLogs',
+        'Stock'
       ],
     }),
 

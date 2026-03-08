@@ -1,6 +1,7 @@
 import { 
   type LucideIcon,
   LayoutDashboard, 
+  DollarSign,
   Store, 
   Users, 
   Package, 
@@ -24,10 +25,15 @@ import {
   PackageCheck,
   Handshake,
   Receipt,
+  Map,
+  QrCode,
+  Key,
+  UserRoundCog,
 } from 'lucide-react'
 
 export const iconMap: Record<string, LucideIcon> = {
   LayoutDashboard,
+  DollarSign,
   Store,
   Users,
   Package,
@@ -51,4 +57,8 @@ export const iconMap: Record<string, LucideIcon> = {
   PackageCheck,
   Handshake,
   Receipt,
+  Map,
+  QrCode,
+  Key,
+  UserRoundCog,
 }

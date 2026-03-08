@@ -30,7 +30,7 @@ import { TrendingUp, PackagePlus, Trash2, Plus } from "lucide-react"
 import { toast } from "sonner"
 import { replenishmentSchema, type ReplenishmentRequiredValues } from "../schemas"
 import { useCreateReplenishmentMutation } from "../store/replenishmentApi"
-import { useGetSuppliersQuery } from "@/app/features/inventory"
+import { useGetSuppliersSimpleQuery } from "@/app/features/inventory"
 import { useGetProductsSimpleQuery } from "@/app/features/catalog"
 import { parseBackendErrors } from "@/utils/formatErrors"
 
@@ -42,10 +42,10 @@ interface Props {
 export function ReplenishmentCreateModal({ isOpen, onClose }: Props) {
   const [createReplenishment, { isLoading }] = useCreateReplenishmentMutation()
   
-  const { data: suppliersRes } = useGetSuppliersQuery({ page: 1 }, { skip: !isOpen })
+  const { data: suppliersRes } = useGetSuppliersSimpleQuery(undefined, { skip: !isOpen })
   const { data: productsRes } = useGetProductsSimpleQuery(undefined, { skip: !isOpen })
-  
-  const suppliers = suppliersRes?.data?.results || []
+
+  const suppliers = suppliersRes?.data || []
   const allProducts = productsRes?.data || []
 
   const form = useForm<ReplenishmentRequiredValues>({
@@ -116,7 +116,6 @@ export function ReplenishmentCreateModal({ isOpen, onClose }: Props) {
     }
   }
 
-  // Función para bloquear negativos y caracteres inválidos
   const blockInvalidChar = (e: React.KeyboardEvent) => 
     ['-', 'e', 'E', '+'].includes(e.key) && e.preventDefault();
 
@@ -146,7 +145,11 @@ export function ReplenishmentCreateModal({ isOpen, onClose }: Props) {
                     <FormLabel className="text-[9px] font-black uppercase text-slate-400">Proveedor</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl><SelectTrigger className="h-10 rounded-xl font-bold bg-white"><SelectValue placeholder="..." /></SelectTrigger></FormControl>
-                      <SelectContent>{suppliers.map((s: any) => (<SelectItem key={s.id} value={s.id} className="font-bold">{s.nombre}</SelectItem>))}</SelectContent>
+                      <SelectContent>
+                        {Array.isArray(suppliers) && suppliers.map((s: any) => (
+                          <SelectItem key={s.id} value={s.id} className="font-bold">{s.nombre}</SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </FormItem>
                 )} />
@@ -192,7 +195,7 @@ export function ReplenishmentCreateModal({ isOpen, onClose }: Props) {
                       
                       <FormField control={form.control} name={`detalles.${index}.id_producto`} render={({ field: pField }) => {
                         const selectedIds = watchDetalles.map((d, i) => (i !== index ? d.id_producto : null)).filter(Boolean);
-                        const availableProducts = allProducts.filter(p => !selectedIds.includes(p.id));
+                        const availableProducts = Array.isArray(allProducts) ? allProducts.filter(p => !selectedIds.includes(p.id)) : [];
                         return (
                           <FormItem className="md:col-span-4 space-y-1">
                             <FormLabel className="text-[8px] font-black uppercase text-slate-400">Producto</FormLabel>

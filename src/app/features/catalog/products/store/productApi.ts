@@ -12,12 +12,22 @@ export const productApi = api.injectEndpoints({
     // --- LISTA DE PRODUCTOS SIMPLES PARA REPOSICION DE STOCK ---
     getProductsSimple: builder.query<ProductSimpleListResponse, void>({
       query: () => '/inventario/products/simple-list/',
-      providesTags: [{ type: 'Products', id: 'SIMPLE' }],
+      providesTags: [
+        { type: 'Products', id: 'SIMPLE' },
+        { type: 'Products', id: 'LIST' },
+      ],
     }),
 
     // --- SELECTORES (Marcas, Categorías, Tipos, Colores) ---
     getProductSelectors: builder.query<ProductSelectorsResponse, void>({
       query: () => '/inventario/products/selectors/',
+      providesTags: [
+        { type: 'Products', id: 'SELECTORS' },
+        { type: 'Brands', id: 'LIST' },     
+        { type: 'Categories', id: 'LIST' }, 
+        { type: 'Colors', id: 'LIST' },
+        { type: 'ProductTypes', id: 'LIST' },
+      ],
     }),
 
     // --- LISTADO CON FILTROS ---
@@ -81,7 +91,7 @@ export const productApi = api.injectEndpoints({
       invalidatesTags: [
         { type: 'Products', id: 'LIST' },
         { type: 'ActionLogs', id: 'LIST' },
-        'LoginLogs'  
+        'LoginLogs'
       ],
     }),
 

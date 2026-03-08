@@ -24,6 +24,11 @@ import { Route as MainAuthenticatedAdminSecurityActionLogsRouteImport } from './
 import { Route as MainAuthenticatedAdminInventorySuppliersRouteImport } from './routes/_main/_authenticated/admin/inventory/suppliers'
 import { Route as MainAuthenticatedAdminInventoryStockRouteImport } from './routes/_main/_authenticated/admin/inventory/stock'
 import { Route as MainAuthenticatedAdminInventoryBuy_productsRouteImport } from './routes/_main/_authenticated/admin/inventory/buy_products'
+import { Route as MainAuthenticatedAdminConfigShippingRateRouteImport } from './routes/_main/_authenticated/admin/config/shipping-rate'
+import { Route as MainAuthenticatedAdminConfigRolesRouteImport } from './routes/_main/_authenticated/admin/config/roles'
+import { Route as MainAuthenticatedAdminConfigPermissionsRouteImport } from './routes/_main/_authenticated/admin/config/permissions'
+import { Route as MainAuthenticatedAdminConfigPaymentMethodRouteImport } from './routes/_main/_authenticated/admin/config/payment-method'
+import { Route as MainAuthenticatedAdminConfigBranchRouteImport } from './routes/_main/_authenticated/admin/config/branch'
 import { Route as MainAuthenticatedAdminCatalogType_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/type_management'
 import { Route as MainAuthenticatedAdminCatalogProduct_viewRouteImport } from './routes/_main/_authenticated/admin/catalog/product_view'
 import { Route as MainAuthenticatedAdminCatalogProduct_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/product_management'
@@ -111,6 +116,36 @@ const MainAuthenticatedAdminInventoryBuy_productsRoute =
     path: '/admin/inventory/buy_products',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
+const MainAuthenticatedAdminConfigShippingRateRoute =
+  MainAuthenticatedAdminConfigShippingRateRouteImport.update({
+    id: '/admin/config/shipping-rate',
+    path: '/admin/config/shipping-rate',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminConfigRolesRoute =
+  MainAuthenticatedAdminConfigRolesRouteImport.update({
+    id: '/admin/config/roles',
+    path: '/admin/config/roles',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminConfigPermissionsRoute =
+  MainAuthenticatedAdminConfigPermissionsRouteImport.update({
+    id: '/admin/config/permissions',
+    path: '/admin/config/permissions',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminConfigPaymentMethodRoute =
+  MainAuthenticatedAdminConfigPaymentMethodRouteImport.update({
+    id: '/admin/config/payment-method',
+    path: '/admin/config/payment-method',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminConfigBranchRoute =
+  MainAuthenticatedAdminConfigBranchRouteImport.update({
+    id: '/admin/config/branch',
+    path: '/admin/config/branch',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
 const MainAuthenticatedAdminCatalogType_managementRoute =
   MainAuthenticatedAdminCatalogType_managementRouteImport.update({
     id: '/admin/catalog/type_management',
@@ -160,6 +195,11 @@ export interface FileRoutesByFullPath {
   '/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   '/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
   '/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
+  '/admin/config/branch': typeof MainAuthenticatedAdminConfigBranchRoute
+  '/admin/config/payment-method': typeof MainAuthenticatedAdminConfigPaymentMethodRoute
+  '/admin/config/permissions': typeof MainAuthenticatedAdminConfigPermissionsRoute
+  '/admin/config/roles': typeof MainAuthenticatedAdminConfigRolesRoute
+  '/admin/config/shipping-rate': typeof MainAuthenticatedAdminConfigShippingRateRoute
   '/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
@@ -180,6 +220,11 @@ export interface FileRoutesByTo {
   '/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   '/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
   '/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
+  '/admin/config/branch': typeof MainAuthenticatedAdminConfigBranchRoute
+  '/admin/config/payment-method': typeof MainAuthenticatedAdminConfigPaymentMethodRoute
+  '/admin/config/permissions': typeof MainAuthenticatedAdminConfigPermissionsRoute
+  '/admin/config/roles': typeof MainAuthenticatedAdminConfigRolesRoute
+  '/admin/config/shipping-rate': typeof MainAuthenticatedAdminConfigShippingRateRoute
   '/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
@@ -204,6 +249,11 @@ export interface FileRoutesById {
   '/_main/_authenticated/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   '/_main/_authenticated/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
   '/_main/_authenticated/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
+  '/_main/_authenticated/admin/config/branch': typeof MainAuthenticatedAdminConfigBranchRoute
+  '/_main/_authenticated/admin/config/payment-method': typeof MainAuthenticatedAdminConfigPaymentMethodRoute
+  '/_main/_authenticated/admin/config/permissions': typeof MainAuthenticatedAdminConfigPermissionsRoute
+  '/_main/_authenticated/admin/config/roles': typeof MainAuthenticatedAdminConfigRolesRoute
+  '/_main/_authenticated/admin/config/shipping-rate': typeof MainAuthenticatedAdminConfigShippingRateRoute
   '/_main/_authenticated/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/_main/_authenticated/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/_main/_authenticated/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
@@ -226,6 +276,11 @@ export interface FileRouteTypes {
     | '/admin/catalog/product_management'
     | '/admin/catalog/product_view'
     | '/admin/catalog/type_management'
+    | '/admin/config/branch'
+    | '/admin/config/payment-method'
+    | '/admin/config/permissions'
+    | '/admin/config/roles'
+    | '/admin/config/shipping-rate'
     | '/admin/inventory/buy_products'
     | '/admin/inventory/stock'
     | '/admin/inventory/suppliers'
@@ -246,6 +301,11 @@ export interface FileRouteTypes {
     | '/admin/catalog/product_management'
     | '/admin/catalog/product_view'
     | '/admin/catalog/type_management'
+    | '/admin/config/branch'
+    | '/admin/config/payment-method'
+    | '/admin/config/permissions'
+    | '/admin/config/roles'
+    | '/admin/config/shipping-rate'
     | '/admin/inventory/buy_products'
     | '/admin/inventory/stock'
     | '/admin/inventory/suppliers'
@@ -269,6 +329,11 @@ export interface FileRouteTypes {
     | '/_main/_authenticated/admin/catalog/product_management'
     | '/_main/_authenticated/admin/catalog/product_view'
     | '/_main/_authenticated/admin/catalog/type_management'
+    | '/_main/_authenticated/admin/config/branch'
+    | '/_main/_authenticated/admin/config/payment-method'
+    | '/_main/_authenticated/admin/config/permissions'
+    | '/_main/_authenticated/admin/config/roles'
+    | '/_main/_authenticated/admin/config/shipping-rate'
     | '/_main/_authenticated/admin/inventory/buy_products'
     | '/_main/_authenticated/admin/inventory/stock'
     | '/_main/_authenticated/admin/inventory/suppliers'
@@ -391,6 +456,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainAuthenticatedAdminInventoryBuy_productsRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
+    '/_main/_authenticated/admin/config/shipping-rate': {
+      id: '/_main/_authenticated/admin/config/shipping-rate'
+      path: '/admin/config/shipping-rate'
+      fullPath: '/admin/config/shipping-rate'
+      preLoaderRoute: typeof MainAuthenticatedAdminConfigShippingRateRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/config/roles': {
+      id: '/_main/_authenticated/admin/config/roles'
+      path: '/admin/config/roles'
+      fullPath: '/admin/config/roles'
+      preLoaderRoute: typeof MainAuthenticatedAdminConfigRolesRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/config/permissions': {
+      id: '/_main/_authenticated/admin/config/permissions'
+      path: '/admin/config/permissions'
+      fullPath: '/admin/config/permissions'
+      preLoaderRoute: typeof MainAuthenticatedAdminConfigPermissionsRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/config/payment-method': {
+      id: '/_main/_authenticated/admin/config/payment-method'
+      path: '/admin/config/payment-method'
+      fullPath: '/admin/config/payment-method'
+      preLoaderRoute: typeof MainAuthenticatedAdminConfigPaymentMethodRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/config/branch': {
+      id: '/_main/_authenticated/admin/config/branch'
+      path: '/admin/config/branch'
+      fullPath: '/admin/config/branch'
+      preLoaderRoute: typeof MainAuthenticatedAdminConfigBranchRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
     '/_main/_authenticated/admin/catalog/type_management': {
       id: '/_main/_authenticated/admin/catalog/type_management'
       path: '/admin/catalog/type_management'
@@ -444,6 +544,11 @@ interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminCatalogProduct_managementRoute: typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   MainAuthenticatedAdminCatalogProduct_viewRoute: typeof MainAuthenticatedAdminCatalogProduct_viewRoute
   MainAuthenticatedAdminCatalogType_managementRoute: typeof MainAuthenticatedAdminCatalogType_managementRoute
+  MainAuthenticatedAdminConfigBranchRoute: typeof MainAuthenticatedAdminConfigBranchRoute
+  MainAuthenticatedAdminConfigPaymentMethodRoute: typeof MainAuthenticatedAdminConfigPaymentMethodRoute
+  MainAuthenticatedAdminConfigPermissionsRoute: typeof MainAuthenticatedAdminConfigPermissionsRoute
+  MainAuthenticatedAdminConfigRolesRoute: typeof MainAuthenticatedAdminConfigRolesRoute
+  MainAuthenticatedAdminConfigShippingRateRoute: typeof MainAuthenticatedAdminConfigShippingRateRoute
   MainAuthenticatedAdminInventoryBuy_productsRoute: typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   MainAuthenticatedAdminInventoryStockRoute: typeof MainAuthenticatedAdminInventoryStockRoute
   MainAuthenticatedAdminInventorySuppliersRoute: typeof MainAuthenticatedAdminInventorySuppliersRoute
@@ -467,6 +572,16 @@ const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
     MainAuthenticatedAdminCatalogProduct_viewRoute,
   MainAuthenticatedAdminCatalogType_managementRoute:
     MainAuthenticatedAdminCatalogType_managementRoute,
+  MainAuthenticatedAdminConfigBranchRoute:
+    MainAuthenticatedAdminConfigBranchRoute,
+  MainAuthenticatedAdminConfigPaymentMethodRoute:
+    MainAuthenticatedAdminConfigPaymentMethodRoute,
+  MainAuthenticatedAdminConfigPermissionsRoute:
+    MainAuthenticatedAdminConfigPermissionsRoute,
+  MainAuthenticatedAdminConfigRolesRoute:
+    MainAuthenticatedAdminConfigRolesRoute,
+  MainAuthenticatedAdminConfigShippingRateRoute:
+    MainAuthenticatedAdminConfigShippingRateRoute,
   MainAuthenticatedAdminInventoryBuy_productsRoute:
     MainAuthenticatedAdminInventoryBuy_productsRoute,
   MainAuthenticatedAdminInventoryStockRoute:
