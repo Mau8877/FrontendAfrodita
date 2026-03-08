@@ -1,11 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { PermissionGuard } from '@/app/features/auth/components/PermissionGuard'
+import { BranchesScreen } from '@/app/features/config'
 
 export const Route = createFileRoute(
   '/_main/_authenticated/admin/config/branch',
 )({
-  component: RouteComponent,
+  component: () => (
+    <PermissionGuard permission="gestionar_metodo_pago">
+      <BranchesScreen />
+    </PermissionGuard>
+  ),
+  staticData: {
+    metaRoute: {
+      title: 'Gestionar Sucursales',
+      icon: 'Store',
+      hidden: false
+    }
+  }  
 })
-
-function RouteComponent() {
-  return <div>Hello "/_main/_authenticated/admin/config/branch"!</div>
-}

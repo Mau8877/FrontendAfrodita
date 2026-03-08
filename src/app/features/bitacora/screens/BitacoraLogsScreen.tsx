@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
-import { History, Copy, Database } from "lucide-react"
+import { ClipboardPenLine, Copy, Database } from "lucide-react"
 import { type ColumnDef, type SortingState } from "@tanstack/react-table"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
@@ -132,7 +132,7 @@ export const BitacoraLogsScreen = () => {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <PageHeader title="Bitácora de Acciones" icon={History} breadcrumbs={[ { label: "Security" }, { label: "Action-Logs" } ]} />
+      <PageHeader title="Bitácora de Acciones" icon={ClipboardPenLine} breadcrumbs={[ { label: "Security" }, { label: "Action-Logs" } ]} />
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <DataTable 
           columns={columns} 

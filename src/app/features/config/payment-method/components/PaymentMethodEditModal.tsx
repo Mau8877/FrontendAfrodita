@@ -108,7 +108,7 @@ export function PaymentMethodEditModal({ method, isOpen, onClose }: PaymentMetho
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] w-[95vw] h-auto bg-white rounded-[2.5rem] border-none shadow-2xl p-0 overflow-hidden flex flex-col">
         
-        {/* HEADER AZUL - MÓDULO VENTAS */}
+        {/* HEADER MÓDULO VENTAS */}
         <DialogHeader className="relative bg-primary/5 p-6 sm:p-6 border-b border-primary/10 text-left">
           <div className="flex items-center gap-4">
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">

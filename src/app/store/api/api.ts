@@ -14,7 +14,8 @@ export const api = createApi({
   tagTypes: [
     'Users', 'Auth', 'Menu', 'Roles', 'LoginLogs', 'ActionLogs',
     'Brands', 'Categories', 'ProductTypes', 'Colors', 'ColorFamilies',
-    'Products', 'Suppliers', 'Replenishment', 'Stock', 'PaymentMethods'
+    'Products', 'Suppliers', 'Replenishment', 'Stock', 'PaymentMethods',
+    'Branches', 'ShippingRates', 
   ], 
   endpoints: () => ({}),
 })

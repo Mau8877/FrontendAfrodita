@@ -6,6 +6,7 @@ import { store, persistor } from '@/app/store'
 import { RouterProvider } from '@/app/provider/RouterProvider'
 import './index.css'
 import { Toaster } from "@/components/ui/sonner"
+import 'leaflet/dist/leaflet.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

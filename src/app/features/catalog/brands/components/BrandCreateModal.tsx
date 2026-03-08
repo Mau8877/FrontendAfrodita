@@ -78,7 +78,7 @@ export function BrandCreateModal({ isOpen, onClose }: BrandCreateModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] w-[95vw] bg-white rounded-[2.5rem] border-none shadow-2xl p-0 overflow-hidden flex flex-col">
         
-        {/* HEADER VERDE - IGUAL A USUARIOS */}
+        {/* HEADER */}
         <DialogHeader className="p-6 bg-emerald-500/5 border-b border-emerald-500/10 flex-shrink-0 text-left">
           <div className="flex items-center gap-4">
             <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
