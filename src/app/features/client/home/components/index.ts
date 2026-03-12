@@ -1,4 +1,4 @@
-export * from "./SeccionProductos"
+export * from "./TipoProductos"
 export * from "./Tonos"
 export * from "./Banner"
 export * from "./NuevosModelos"

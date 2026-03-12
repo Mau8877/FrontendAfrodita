@@ -12,10 +12,14 @@ export const api = createApi({
   }),
   // Definimos los tags globales, pero no los endpoints
   tagTypes: [
+    // TAGS DE ADMINISTRACION
     'Users', 'Auth', 'Menu', 'Roles', 'LoginLogs', 'ActionLogs',
     'Brands', 'Categories', 'ProductTypes', 'Colors', 'ColorFamilies',
     'Products', 'Suppliers', 'Replenishment', 'Stock', 'PaymentMethods',
-    'Branches', 'ShippingRates', 
+    'Branches', 'ShippingRates',
+    
+    // TAGS DE CLIENTES
+    
   ], 
   endpoints: () => ({}),
 })

@@ -51,11 +51,27 @@ export function LoginScreen() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       const response = await login(data).unwrap()
+      
+      // Limpiamos cache y guardamos credenciales
       dispatch(api.util.resetApiState());
       dispatch(setCredentials(response.data));
+
       if (response.success) {
         toast.success(response.message || "¡Bienvenido de nuevo!")
-        navigate({ to: '/admin/dashboard' }) 
+
+        // Extraemos el rol del usuario que acaba de loguearse
+        const userRole = response.data.user.rol;
+
+        // Definimos los roles administrativos autorizados
+        const rolesAdmin = ['Super User', 'Admin', 'Vendedor'];
+
+        // Lógica de redirección basada en el rol
+        if (rolesAdmin.includes(userRole)) {
+          navigate({ to: '/admin/dashboard' })
+        } else {
+          // Si es Cliente o cualquier otro rol no administrativo
+          navigate({ to: '/' })
+        }
       }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

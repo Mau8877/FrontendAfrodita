@@ -54,6 +54,9 @@ export type UpdateProductRequest = {
   body: Partial<ProductFormValues & { restore?: boolean }>;
 };
 
+// Respuesta para la HomePage Nuevos Modelos (Lista de 3 productos sin paginación)
+export type NewModelsResponse = StandardResponse<Product[]>;
+
 export type ProductsListResponse = StandardResponse<PaginatedData<Product>>;
 export type ProductResponse = StandardResponse<Product>;
 export type ProductSelectorsResponse = StandardResponse<ProductSelectors>;

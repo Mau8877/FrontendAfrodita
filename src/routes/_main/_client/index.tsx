@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { HomeScreen } from '@/app/features/home' 
+import { HomeScreen } from '@/app/features/client/home' 
 import { Home } from 'lucide-react' 
 
 export const Route = createFileRoute('/_main/_client/')({

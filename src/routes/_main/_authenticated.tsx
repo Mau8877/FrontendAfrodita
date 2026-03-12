@@ -1,16 +1,30 @@
-import { createFileRoute, redirect, Outlet, useNavigate } from '@tanstack/react-router'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
 import { store } from '@/app/store' 
 import { useSelector } from 'react-redux'
 import { authSelectors } from '@/app/features/auth/store'
-import { useEffect } from 'react'
+
+// Definimos los roles que tienen permiso para acceder al panel administrativo
+const ROLES_AUTORIZADOS = ['Super User', 'Admin', 'Vendedor'];
 
 export const Route = createFileRoute('/_main/_authenticated')({
   beforeLoad: ({ location }) => {
     const { token, user } = store.getState().auth
+    const role = user?.rol
+
+    // 1. Verificación de Autenticación
     if (!token || !user) {
       throw redirect({
         to: '/login',
         search: { redirect: location.href },
+      })
+    }
+
+    // 2. Verificación de Autorización (Roles Administrativos)
+    // Si el rol no está en la lista de autorizados, lo mandamos a la raíz del cliente
+    if (!ROLES_AUTORIZADOS.includes(role || '')) {
+      throw redirect({
+        to: '/',
       })
     }
   },
@@ -19,19 +33,15 @@ export const Route = createFileRoute('/_main/_authenticated')({
 
 function AuthenticatedLayout() {
   const isAuthenticated = useSelector(authSelectors.isAuthenticated)
-  const navigate = useNavigate()
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate({ to: '/login' })
-    }
-  }, [isAuthenticated, navigate])
-
+  // Si por algún motivo el estado de Redux cambia y se desloguea, 
+  // el beforeLoad de la siguiente navegación lo atrapará, 
+  // pero aquí evitamos renderizar contenido sensible.
   if (!isAuthenticated) return null
 
   return (
-    <div className="flex h-[calc(100vh-64px)] overflow-hidden"> 
-      <main className="flex-1 overflow-y-auto p-4 scroll-smooth bg-gray-50">
+    <div className="flex flex-col h-full overflow-hidden bg-slate-50"> 
+      <main className="flex-1 overflow-y-auto custom-scrollbar">
         <Outlet />
       </main>
     </div>
