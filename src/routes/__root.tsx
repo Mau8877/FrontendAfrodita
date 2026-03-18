@@ -10,7 +10,9 @@ interface RouterContext {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
-      <Outlet /> {/* Aquí se renderizan todas las vistas */}
+      <div className="h-screen w-full overflow-y-auto custom-scrollbar">
+        <Outlet /> {/* Aquí se renderizan todas las vistas */}
+      </div>
       <Toaster /> {/* Las notificaciones globales */}
     </>
   ),

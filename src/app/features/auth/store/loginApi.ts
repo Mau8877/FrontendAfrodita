@@ -1,11 +1,11 @@
 import { api } from '@/app/store/api/api' 
 import { setCredentials } from './authSlice' 
-import { type AuthResponse, type LoginFormValues, type LogoutRequest } from '../types'
+import { type AuthResponse, type LogoutRequest } from '../types'
+import { type LoginFormValues } from '../schemas/loginSchema'
 
 export const loginApi = api.injectEndpoints({
   endpoints: (builder) => ({
     
-    // --- MUTATION DE LOGIN ---
     login: builder.mutation<AuthResponse, LoginFormValues>({
       query: (credentials) => ({
         url: '/auth/login/',
@@ -14,9 +14,10 @@ export const loginApi = api.injectEndpoints({
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled
+          const { data } = await queryFulfilled // 'data' es el AuthResponse completo
+          
           if (data.success) {
-            // Guardamos todo en Redux, incluyendo el session_id
+            // Accedemos a data.data que es donde están los tokens y el user
             dispatch(setCredentials({
               user: data.data.user,
               access: data.data.access,
@@ -25,13 +26,12 @@ export const loginApi = api.injectEndpoints({
             }))
           }
         } catch {
-          // El error se maneja en el componente
+          // Errores manejados en el componente
         }
       },
       invalidatesTags: ['Auth'], 
     }),
 
-    // --- MUTATION DE LOGOUT ---
     logoutServer: builder.mutation<{ success: boolean; message: string }, LogoutRequest>({
       query: (body) => ({
         url: '/auth/logout/',
@@ -45,5 +45,4 @@ export const loginApi = api.injectEndpoints({
   overrideExisting: false,
 })
 
-// Exportamos AMBOS hooks
 export const { useLoginMutation, useLogoutServerMutation } = loginApi

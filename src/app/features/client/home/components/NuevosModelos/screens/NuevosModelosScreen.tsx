@@ -1,19 +1,17 @@
 import { useGetNewModelsQuery } from "../store/newModelsApi"
 import { ProductClientCard } from "@/components/ui/data-card-table-client"
-import { DataCardTable } from "@/components/ui/data-card-table"
 import { Link } from "@tanstack/react-router"
-import { Sparkles } from "lucide-react"
+import { ImageIcon } from "lucide-react"
 
 export function NuevosModelosScreen() {
-  const { data, isFetching, refetch } = useGetNewModelsQuery()
+  const { data, isFetching } = useGetNewModelsQuery()
   const productos = data?.data || []
 
   return (
-    // Quitamos border-b y py-20 para reducir espacios
     <section className="py-12 bg-white w-full">
       <div className="max-w-[1400px] mx-auto px-4 md:px-10">
         
-        {/* ENCABEZADO CENTRADO EN MÓVIL */}
+        {/* ENCABEZADO */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 text-center md:text-left items-center md:items-end">
           <div className="space-y-1">
             <div className="flex items-center justify-center md:justify-start gap-2">
@@ -36,17 +34,37 @@ export function NuevosModelosScreen() {
           </Link>
         </div>
 
-        {/* GRID SIN STYLE TAG: Usamos un contenedor que fuerza el grid 2x2 en móvil */}
-        <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
-           {productos.map((product) => (
+        {/* LÓGICA DE RENDERIZADO */}
+        {isFetching ? (
+          /* SKELETON / LOADING STATE */
+          <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="aspect-[3/4] rounded-[1.5rem] md:rounded-[2.5rem] bg-slate-50 animate-pulse border border-slate-100" />
+            ))}
+          </div>
+        ) : productos.length > 0 ? (
+          /* GRID DE PRODUCTOS */
+          <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+            {productos.map((product) => (
               <ProductClientCard 
                 key={product.id}
                 product={product} 
                 onAddToCart={(p) => console.log("Carrito:", p.nombre)}
                 onQuickView={(p) => console.log("Detalle:", p.id)}
               />
-           ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          /* EMPTY STATE: No hay productos */
+          <div className="w-full py-20 flex flex-col items-center justify-center bg-slate-50/50 rounded-[2rem] md:rounded-[3rem] border border-dashed border-slate-200">
+            <div className="p-4 rounded-full bg-white shadow-sm mb-4">
+              <ImageIcon className="w-8 h-8 text-slate-300" />
+            </div>
+            <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-slate-400 text-center px-6">
+              No hay productos disponibles en el catálogo por el momento, vuelva más tarde
+            </p>
+          </div>
+        )}
       </div>
     </section>
   )

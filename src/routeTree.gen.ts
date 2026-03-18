@@ -16,6 +16,7 @@ import { Route as MainSplatRouteImport } from './routes/_main/$'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainClientIndexRouteImport } from './routes/_main/_client/index'
+import { Route as MainClientCatalogRouteImport } from './routes/_main/_client/catalog'
 import { Route as MainAuthenticatedAdminDashboardRouteImport } from './routes/_main/_authenticated/admin/dashboard'
 import { Route as MainAuthenticatedAdminUsersViewRouteImport } from './routes/_main/_authenticated/admin/users/view'
 import { Route as MainAuthenticatedAdminUsersManagementRouteImport } from './routes/_main/_authenticated/admin/users/management'
@@ -66,6 +67,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const MainClientIndexRoute = MainClientIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => MainClientRoute,
+} as any)
+const MainClientCatalogRoute = MainClientCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
   getParentRoute: () => MainClientRoute,
 } as any)
 const MainAuthenticatedAdminDashboardRoute =
@@ -188,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
+  '/catalog': typeof MainClientCatalogRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
   '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
   '/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
+  '/catalog': typeof MainClientCatalogRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
   '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
   '/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
@@ -241,6 +249,7 @@ export interface FileRoutesById {
   '/_main/$': typeof MainSplatRoute
   '/_main/_authenticated': typeof MainAuthenticatedRouteWithChildren
   '/_main/_client': typeof MainClientRouteWithChildren
+  '/_main/_client/catalog': typeof MainClientCatalogRoute
   '/_main/_client/': typeof MainClientIndexRoute
   '/_main/_authenticated/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
   '/_main/_authenticated/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
@@ -269,6 +278,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/$'
+    | '/catalog'
     | '/admin/dashboard'
     | '/admin/catalog/brands_management'
     | '/admin/catalog/categories_management'
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/$'
+    | '/catalog'
     | '/admin/dashboard'
     | '/admin/catalog/brands_management'
     | '/admin/catalog/categories_management'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/_main/$'
     | '/_main/_authenticated'
     | '/_main/_client'
+    | '/_main/_client/catalog'
     | '/_main/_client/'
     | '/_main/_authenticated/admin/dashboard'
     | '/_main/_authenticated/admin/catalog/brands_management'
@@ -398,6 +410,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof MainClientIndexRouteImport
+      parentRoute: typeof MainClientRoute
+    }
+    '/_main/_client/catalog': {
+      id: '/_main/_client/catalog'
+      path: '/catalog'
+      fullPath: '/catalog'
+      preLoaderRoute: typeof MainClientCatalogRouteImport
       parentRoute: typeof MainClientRoute
     }
     '/_main/_authenticated/admin/dashboard': {
@@ -601,10 +620,12 @@ const MainAuthenticatedRouteWithChildren =
   MainAuthenticatedRoute._addFileChildren(MainAuthenticatedRouteChildren)
 
 interface MainClientRouteChildren {
+  MainClientCatalogRoute: typeof MainClientCatalogRoute
   MainClientIndexRoute: typeof MainClientIndexRoute
 }
 
 const MainClientRouteChildren: MainClientRouteChildren = {
+  MainClientCatalogRoute: MainClientCatalogRoute,
   MainClientIndexRoute: MainClientIndexRoute,
 }
 
