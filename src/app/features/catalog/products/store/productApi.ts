@@ -27,6 +27,7 @@ export const productApi = api.injectEndpoints({
         { type: 'Categories', id: 'LIST' }, 
         { type: 'Colors', id: 'LIST' },
         { type: 'ProductTypes', id: 'LIST' },
+        { type: 'Tonos', id: 'LIST' },
       ],
     }),
 

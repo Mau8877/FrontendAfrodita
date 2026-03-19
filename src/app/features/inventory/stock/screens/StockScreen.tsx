@@ -123,16 +123,17 @@ export const StockScreen = () => {
           onSortingChange={setSorting}
           onDetail={onDetail}
         />
-      </div>
 
-      <StockDetailModal 
-        productId={selectedProduct?.id} 
-        isOpen={isDetailOpen} 
-        onClose={() => {
-          setIsDetailOpen(false);
-          setSelectedProduct(null);
-        }} 
-      />
+        {/* 👇 MOVER AQUÍ */}
+        <StockDetailModal 
+          productId={selectedProduct?.id} 
+          isOpen={isDetailOpen} 
+          onClose={() => {
+            setIsDetailOpen(false);
+            setSelectedProduct(null);
+          }} 
+        />
+      </div>
     </div>
   )
 }

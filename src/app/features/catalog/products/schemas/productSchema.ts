@@ -35,6 +35,10 @@ export const productSchema = z.object({
   colores_ids: z
     .array(z.string().uuid("ID de color inválido"))
     .min(1, "Debe seleccionar al menos un color"),
+  
+  tonos_ids: z
+    .array(z.string().uuid("ID de tono inválido"))
+    .min(1, "Debe seleccionar al menos un tono para el catálogo"),
 
   imagenes_upload: z
     .array(

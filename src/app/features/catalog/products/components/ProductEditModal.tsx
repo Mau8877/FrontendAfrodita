@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/select"
 import { 
   Package, Palette, Plus, Star, ImageIcon, UploadCloud,
-  Type, Hash, CircleDollarSign, AlignLeft, Bookmark, Layers, Folders, Box, Trash2, RefreshCcw
+  Type, Hash, CircleDollarSign, AlignLeft, Bookmark, Layers, Folders, Box, Trash2, RefreshCcw,
+  SwatchBook
 } from "lucide-react"
 import { toast } from "sonner"
 import { type Product } from "../types"
@@ -24,7 +25,7 @@ import { productSchema, type ProductFormValues } from "../schemas"
 import { useUpdateProductMutation, useGetProductSelectorsQuery } from "../store/productApi"
 import { parseBackendErrors } from "@/utils/formatErrors"
 
-// --- SUB-COMPONENTE: PREVISUALIZACIÓN TOTALMENTE SANA ---
+// --- SUB-COMPONENTE: PREVISUALIZACIÓN TOTALMENTE SANA (MANTENIDO) ---
 const ImagePreviewItem = ({ 
   file, 
   isPrincipal, 
@@ -43,18 +44,13 @@ const ImagePreviewItem = ({
     if (file instanceof File) {
       let isMounted = true;
       const reader = new FileReader();
-
       reader.onloadend = () => {
         if (isMounted && typeof reader.result === "string") {
           setLocalDataUrl(reader.result);
         }
       };
-
       reader.readAsDataURL(file);
-
-      return () => {
-        isMounted = false;
-      };
+      return () => { isMounted = false; };
     }
   }, [file]);
 
@@ -102,14 +98,15 @@ interface ProductEditModalProps {
 export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalProps) {
   const [updateProduct, { isLoading }] = useUpdateProductMutation()
   const { data: selectorsResponse } = useGetProductSelectorsQuery()
-  const selectors = selectorsResponse?.data || { marcas: [], categorias: [], tipos: [], colores: [] }
+  // Agregamos "tonos" a los selectores desestructurados
+  const selectors = selectorsResponse?.data || { marcas: [], categorias: [], tipos: [], colores: [], tonos: [] }
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema) as any,
     defaultValues: {
       nombre: "", descripcion: "", sku: "", precio_venta: "" as any,
       stock_minimo: 3, id_marca: "", id_categoria: "", id_tipo: "",
-      colores_ids: [], is_visible: true, imagenes_upload: []
+      colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: [] // Agregado tonos_ids
     },
   })
 
@@ -138,6 +135,7 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
         id_categoria: product.id_categoria,
         id_tipo: product.id_tipo,
         colores_ids: product.colores.map(c => c.id),
+        tonos_ids: product.tonos.map(t => t.id), // Cargamos los tonos actuales
         is_visible: product.is_visible,
         imagenes_upload: product.imagenes.map(img => ({
           imagen: img.imagen,
@@ -168,7 +166,6 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
     }
   }
 
-  // --- LÓGICA DE RESTAURACIÓN ---
   const handleRestore = async () => {
     if (!product) return
     try {
@@ -204,6 +201,8 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
     formData.append('is_visible', String(values.is_visible))
 
     values.colores_ids.forEach(id => formData.append('colores_ids', id))
+    // AÑADIMOS LOS TONOS AL FORMDATA
+    values.tonos_ids.forEach(id => formData.append('tonos_ids', id))
 
     values.imagenes_upload.forEach((imgObj, index) => {
       if (imgObj.imagen instanceof File) {
@@ -337,8 +336,29 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
                 )} />
               </div>
 
+              {/* SECCIÓN DE TONOS (NUEVA) */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2 px-1"><Palette className="w-4 h-4 text-secondary" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Variantes de Color</h4></div>
+                <div className="flex items-center gap-2 px-1">
+                  <SwatchBook className="w-4 h-4 text-secondary" />
+                  <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Tonos y Filtros (Catálogo)</h4>
+                </div>
+                <FormField control={form.control} name="tonos_ids" render={({ field }) => (
+                  <div className="flex flex-wrap gap-2.5 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                    {selectors.tonos.map(tono => (
+                      <button key={tono.id} type="button" onClick={() => {
+                        const next = field.value.includes(tono.id) ? field.value.filter(id => id !== tono.id) : [...field.value, tono.id];
+                        field.onChange(next);
+                      }} className={`flex items-center gap-2.5 px-4 py-2 rounded-full border-2 transition-all duration-300 ${field.value.includes(tono.id) ? 'bg-secondary text-white border-secondary shadow-lg scale-105' : 'bg-white text-slate-500 border-slate-200 hover:border-secondary/50'}`}>
+                        <span className="text-[10px] font-black uppercase tracking-tight">{tono.nombre}</span>
+                      </button>
+                    ))}
+                  </div>
+                )} />
+              </div>
+
+              {/* VARIANTES DE COLOR (MANTENIDO) */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1"><Palette className="w-4 h-4 text-secondary" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Variantes de Color (Físicos)</h4></div>
                 <FormField control={form.control} name="colores_ids" render={({ field }) => (
                   <div className="flex flex-wrap gap-2.5 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 shadow-inner">
                     {selectors.colores.map(color => (
@@ -399,7 +419,6 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
                   )}
                 </div>
               </div>
-
             </div>
 
             <DialogFooter className="p-7 bg-slate-50 border-t border-slate-100 gap-4 flex-shrink-0">

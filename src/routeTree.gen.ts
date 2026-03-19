@@ -31,6 +31,7 @@ import { Route as MainAuthenticatedAdminConfigPermissionsRouteImport } from './r
 import { Route as MainAuthenticatedAdminConfigPaymentMethodRouteImport } from './routes/_main/_authenticated/admin/config/payment-method'
 import { Route as MainAuthenticatedAdminConfigBranchRouteImport } from './routes/_main/_authenticated/admin/config/branch'
 import { Route as MainAuthenticatedAdminCatalogType_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/type_management'
+import { Route as MainAuthenticatedAdminCatalogTonos_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/tonos_management'
 import { Route as MainAuthenticatedAdminCatalogProduct_viewRouteImport } from './routes/_main/_authenticated/admin/catalog/product_view'
 import { Route as MainAuthenticatedAdminCatalogProduct_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/product_management'
 import { Route as MainAuthenticatedAdminCatalogColor_managementRouteImport } from './routes/_main/_authenticated/admin/catalog/color_management'
@@ -158,6 +159,12 @@ const MainAuthenticatedAdminCatalogType_managementRoute =
     path: '/admin/catalog/type_management',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
+const MainAuthenticatedAdminCatalogTonos_managementRoute =
+  MainAuthenticatedAdminCatalogTonos_managementRouteImport.update({
+    id: '/admin/catalog/tonos_management',
+    path: '/admin/catalog/tonos_management',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
 const MainAuthenticatedAdminCatalogProduct_viewRoute =
   MainAuthenticatedAdminCatalogProduct_viewRouteImport.update({
     id: '/admin/catalog/product_view',
@@ -201,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/admin/catalog/color_management': typeof MainAuthenticatedAdminCatalogColor_managementRoute
   '/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   '/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  '/admin/catalog/tonos_management': typeof MainAuthenticatedAdminCatalogTonos_managementRoute
   '/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
   '/admin/config/branch': typeof MainAuthenticatedAdminConfigBranchRoute
   '/admin/config/payment-method': typeof MainAuthenticatedAdminConfigPaymentMethodRoute
@@ -227,6 +235,7 @@ export interface FileRoutesByTo {
   '/admin/catalog/color_management': typeof MainAuthenticatedAdminCatalogColor_managementRoute
   '/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   '/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  '/admin/catalog/tonos_management': typeof MainAuthenticatedAdminCatalogTonos_managementRoute
   '/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
   '/admin/config/branch': typeof MainAuthenticatedAdminConfigBranchRoute
   '/admin/config/payment-method': typeof MainAuthenticatedAdminConfigPaymentMethodRoute
@@ -257,6 +266,7 @@ export interface FileRoutesById {
   '/_main/_authenticated/admin/catalog/color_management': typeof MainAuthenticatedAdminCatalogColor_managementRoute
   '/_main/_authenticated/admin/catalog/product_management': typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   '/_main/_authenticated/admin/catalog/product_view': typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  '/_main/_authenticated/admin/catalog/tonos_management': typeof MainAuthenticatedAdminCatalogTonos_managementRoute
   '/_main/_authenticated/admin/catalog/type_management': typeof MainAuthenticatedAdminCatalogType_managementRoute
   '/_main/_authenticated/admin/config/branch': typeof MainAuthenticatedAdminConfigBranchRoute
   '/_main/_authenticated/admin/config/payment-method': typeof MainAuthenticatedAdminConfigPaymentMethodRoute
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/admin/catalog/color_management'
     | '/admin/catalog/product_management'
     | '/admin/catalog/product_view'
+    | '/admin/catalog/tonos_management'
     | '/admin/catalog/type_management'
     | '/admin/config/branch'
     | '/admin/config/payment-method'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/admin/catalog/color_management'
     | '/admin/catalog/product_management'
     | '/admin/catalog/product_view'
+    | '/admin/catalog/tonos_management'
     | '/admin/catalog/type_management'
     | '/admin/config/branch'
     | '/admin/config/payment-method'
@@ -340,6 +352,7 @@ export interface FileRouteTypes {
     | '/_main/_authenticated/admin/catalog/color_management'
     | '/_main/_authenticated/admin/catalog/product_management'
     | '/_main/_authenticated/admin/catalog/product_view'
+    | '/_main/_authenticated/admin/catalog/tonos_management'
     | '/_main/_authenticated/admin/catalog/type_management'
     | '/_main/_authenticated/admin/config/branch'
     | '/_main/_authenticated/admin/config/payment-method'
@@ -517,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainAuthenticatedAdminCatalogType_managementRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
+    '/_main/_authenticated/admin/catalog/tonos_management': {
+      id: '/_main/_authenticated/admin/catalog/tonos_management'
+      path: '/admin/catalog/tonos_management'
+      fullPath: '/admin/catalog/tonos_management'
+      preLoaderRoute: typeof MainAuthenticatedAdminCatalogTonos_managementRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
     '/_main/_authenticated/admin/catalog/product_view': {
       id: '/_main/_authenticated/admin/catalog/product_view'
       path: '/admin/catalog/product_view'
@@ -562,6 +582,7 @@ interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminCatalogColor_managementRoute: typeof MainAuthenticatedAdminCatalogColor_managementRoute
   MainAuthenticatedAdminCatalogProduct_managementRoute: typeof MainAuthenticatedAdminCatalogProduct_managementRoute
   MainAuthenticatedAdminCatalogProduct_viewRoute: typeof MainAuthenticatedAdminCatalogProduct_viewRoute
+  MainAuthenticatedAdminCatalogTonos_managementRoute: typeof MainAuthenticatedAdminCatalogTonos_managementRoute
   MainAuthenticatedAdminCatalogType_managementRoute: typeof MainAuthenticatedAdminCatalogType_managementRoute
   MainAuthenticatedAdminConfigBranchRoute: typeof MainAuthenticatedAdminConfigBranchRoute
   MainAuthenticatedAdminConfigPaymentMethodRoute: typeof MainAuthenticatedAdminConfigPaymentMethodRoute
@@ -589,6 +610,8 @@ const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
     MainAuthenticatedAdminCatalogProduct_managementRoute,
   MainAuthenticatedAdminCatalogProduct_viewRoute:
     MainAuthenticatedAdminCatalogProduct_viewRoute,
+  MainAuthenticatedAdminCatalogTonos_managementRoute:
+    MainAuthenticatedAdminCatalogTonos_managementRoute,
   MainAuthenticatedAdminCatalogType_managementRoute:
     MainAuthenticatedAdminCatalogType_managementRoute,
   MainAuthenticatedAdminConfigBranchRoute:

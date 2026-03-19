@@ -14,7 +14,7 @@ export const api = createApi({
   tagTypes: [
     // TAGS DE ADMINISTRACION
     'Users', 'Auth', 'Menu', 'Roles', 'LoginLogs', 'ActionLogs',
-    'Brands', 'Categories', 'ProductTypes', 'Colors', 'ColorFamilies',
+    'Brands', 'Categories', 'ProductTypes', 'Colors', 'Tonos',
     'Products', 'Suppliers', 'Replenishment', 'Stock', 'PaymentMethods',
     'Branches', 'ShippingRates',
     

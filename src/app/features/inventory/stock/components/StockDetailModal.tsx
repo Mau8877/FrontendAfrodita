@@ -191,15 +191,15 @@ export function StockDetailModal({ productId, isOpen, onClose }: Props) {
                 <DataTable 
                   columns={columns} 
                   data={product.lotes_activos || []} 
-                  hideToolbar 
-                  hidePagination 
+                  hideToolbar={true}
+                  hidePagination={true}
                 />
               </div>
             </div>
 
             {/* FOOTER */}
             <div className="p-4 bg-slate-50 flex justify-between items-center px-8 border-t border-slate-100">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Afrodita Inventory System v3</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Afrodita Inventory System v1</span>
               <span className="text-[9px] font-mono text-slate-300">REF: {product.id.split('-')[0]}</span>
             </div>
           </>

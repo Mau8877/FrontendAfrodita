@@ -1,9 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { CatalogScreen } from '@/app/features/client/catalog'
 
 export const Route = createFileRoute('/_main/_client/catalog')({
-  component: RouteComponent,
+  component: () => (
+      <CatalogScreen />
+    ),
+    staticData: {
+      metaRoute: {
+        title: 'Catálogo de Productos',
+      }
+    } 
 })
 
-function RouteComponent() {
-  return <div>Hello "/_main/_client/catalog"!</div>
-}

@@ -1,5 +1,6 @@
 export * from './brands'
 export * from './categories'
 export * from './colors'
+export * from './tonos'
 export * from './products'
 export * from './product_types'

@@ -11,19 +11,20 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import {
+import { 
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select"
 import { 
   PackagePlus, Palette, Plus, Star, ImageIcon, UploadCloud, 
-  AlignLeft, Type, Hash, CircleDollarSign, Layers, Folders, Bookmark, Box, Trash2
+  AlignLeft, Type, Hash, CircleDollarSign, Layers, Folders, Bookmark, Box, Trash2,
+  SwatchBook
 } from "lucide-react"
 import { toast } from "sonner"
 import { productSchema, type ProductFormValues } from "../schemas"
 import { useCreateProductMutation, useGetProductSelectorsQuery } from "../store/productApi"
 import { parseBackendErrors } from "@/utils/formatErrors"
 
-// --- SUB-COMPONENTE: Previsualización Visual ---
+// --- SUB-COMPONENTE: Previsualización Visual (SIN CAMBIOS) ---
 const ImagePreviewItem = ({ 
   file, 
   isPrincipal, 
@@ -35,15 +36,13 @@ const ImagePreviewItem = ({
   onSetPrincipal: () => void, 
   onRemove: () => void 
 }) => {
-  // Generamos la URL de previsualización
   const previewUrl = useMemo(() => {
     if (!file) return null;
-    if (typeof file === "string") return file; // URL de Cloudinary
-    if (file instanceof File) return URL.createObjectURL(file); // Archivo local
+    if (typeof file === "string") return file;
+    if (file instanceof File) return URL.createObjectURL(file);
     return null;
   }, [file]);
 
-  // Renderizado condicional para evitar marcos vacíos
   if (!previewUrl) return null;
 
   return (
@@ -52,34 +51,15 @@ const ImagePreviewItem = ({
         ? 'border-emerald-500 shadow-lg shadow-emerald-100 ring-4 ring-emerald-500/10 scale-[1.02]' 
         : 'border-slate-100 hover:border-emerald-200 bg-white'
     }`}>
-      <img 
-        src={previewUrl} 
-        alt="preview" 
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-      />
-      
-      {/* Overlay de Acciones */}
+      <img src={previewUrl} alt="preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-emerald-950/20 opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-[2px] flex items-center justify-center gap-3">
-        <Button 
-          type="button" 
-          variant="secondary"
-          size="icon" 
-          className={`h-10 w-10 rounded-2xl border-none shadow-2xl transition-all hover:scale-110 ${isPrincipal ? 'bg-emerald-500 text-white' : 'bg-white text-slate-400 hover:text-emerald-500'}`}
-          onClick={(e) => { e.preventDefault(); onSetPrincipal(); }}
-        >
+        <Button type="button" variant="secondary" size="icon" className={`h-10 w-10 rounded-2xl border-none shadow-2xl transition-all hover:scale-110 ${isPrincipal ? 'bg-emerald-500 text-white' : 'bg-white text-slate-400 hover:text-emerald-500'}`} onClick={(e) => { e.preventDefault(); onSetPrincipal(); }}>
           <Star className={`h-5 w-5 ${isPrincipal ? 'fill-white' : ''}`} />
         </Button>
-        <Button 
-          type="button" 
-          variant="destructive" 
-          size="icon" 
-          className="h-10 w-10 rounded-2xl shadow-2xl transition-all hover:scale-110 bg-white text-rose-500 hover:bg-rose-50 border-none"
-          onClick={(e) => { e.preventDefault(); onRemove(); }}
-        >
+        <Button type="button" variant="destructive" size="icon" className="h-10 w-10 rounded-2xl shadow-2xl transition-all hover:scale-110 bg-white text-rose-500 hover:bg-rose-50 border-none" onClick={(e) => { e.preventDefault(); onRemove(); }}>
           <Trash2 className="h-5 w-5" />
         </Button>
       </div>
-
       {isPrincipal && (
         <div className="absolute top-4 left-4 bg-emerald-500 text-white text-[8px] font-black uppercase tracking-[0.15em] px-3 py-1 rounded-full shadow-lg z-10">
           Principal
@@ -97,15 +77,15 @@ interface ProductCreateModalProps {
 export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps) {
   const [createProduct, { isLoading }] = useCreateProductMutation()
   const { data: selectorsResponse } = useGetProductSelectorsQuery()
-  const selectors = selectorsResponse?.data || { marcas: [], categorias: [], tipos: [], colores: [] }
+  // Aumentamos "tonos" a la desestructuración de selectores
+  const selectors = selectorsResponse?.data || { marcas: [], categorias: [], tipos: [], colores: [], tonos: [] }
 
   const form = useForm<ProductFormValues>({
-    // eslint
     resolver: zodResolver(productSchema) as any,
     defaultValues: {
       nombre: "", descripcion: "", sku: "", precio_venta: "" as any,
       stock_minimo: 3, id_marca: "", id_categoria: "", id_tipo: "",
-      colores_ids: [], is_visible: true, imagenes_upload: []
+      colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: [] // Agregado tonos_ids
     },
   })
 
@@ -114,7 +94,6 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
     name: "imagenes_upload"
   });
 
-  // Asegurar estrella principal
   useEffect(() => {
     const currentImages = form.getValues("imagenes_upload");
     if (currentImages && currentImages.length > 0) {
@@ -127,10 +106,7 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
 
   const handleSetPrimaryImage = (index: number) => {
     const currentImgs = form.getValues("imagenes_upload") || [];
-    const updated = currentImgs.map((img, i) => ({
-      ...img,
-      es_principal: i === index
-    }));
+    const updated = currentImgs.map((img, i) => ({ ...img, es_principal: i === index }));
     form.setValue("imagenes_upload", updated, { shouldValidate: true });
   };
 
@@ -145,7 +121,10 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
     formData.append('id_marca', values.id_marca);
     formData.append('id_categoria', values.id_categoria);
     formData.append('is_visible', String(values.is_visible));
+    
     values.colores_ids.forEach(id => formData.append('colores_ids', id));
+    // AÑADIMOS LOS TONOS AL FORMDATA
+    values.tonos_ids.forEach(id => formData.append('tonos_ids', id));
 
     values.imagenes_upload.forEach((imgObj, index) => {
       if (imgObj.imagen instanceof File) {
@@ -230,7 +209,7 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                 )} />
               </div>
 
-              {/* SELECTORES */}
+              {/* SELECTORES MARCA/CAT/TIPO */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <FormField control={form.control} name="id_marca" render={({ field }) => (
                   <FormItem className="space-y-1.5">
@@ -261,11 +240,31 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                 )} />
               </div>
 
-              {/* COLORES */}
+              {/* SECCIÓN DE TONOS (NUEVA) */}
               <div className="space-y-4">
-                <div className="flex items-center gap-2 px-1"><Palette className="w-4 h-4 text-emerald-600" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Colores Disponibles</h4></div>
+                <div className="flex items-center gap-2 px-1">
+                  <SwatchBook className="w-4 h-4 text-emerald-600" />
+                  <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Tonos y Filtros (Catálogo)</h4>
+                </div>
+                <FormField control={form.control} name="tonos_ids" render={({ field }) => (
+                  <div className="flex flex-wrap gap-2.5 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                    {selectors.tonos.map(tono => (
+                      <button key={tono.id} type="button" onClick={() => {
+                        const next = field.value.includes(tono.id) ? field.value.filter(id => id !== tono.id) : [...field.value, tono.id];
+                        field.onChange(next);
+                      }} className={`flex items-center gap-2.5 px-4 py-2 rounded-full border-2 transition-all duration-300 ${field.value.includes(tono.id) ? 'bg-emerald-600 text-white border-emerald-600 shadow-lg scale-105' : 'bg-white text-slate-500 border-slate-200'}`}>
+                        <span className="text-[10px] font-black uppercase tracking-tight">{tono.nombre}</span>
+                      </button>
+                    ))}
+                  </div>
+                )} />
+              </div>
+
+              {/* COLORES (MANTENIDO) */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1"><Palette className="w-4 h-4 text-emerald-600" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Colores Disponibles (Físicos)</h4></div>
                 <FormField control={form.control} name="colores_ids" render={({ field }) => (
-                  <div className="flex flex-wrap gap-2.5 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100">
+                  <div className="flex flex-wrap gap-2.5 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 shadow-inner">
                     {selectors.colores.map(color => (
                       <button key={color.id} type="button" onClick={() => {
                         const next = field.value.includes(color.id) ? field.value.filter(id => id !== color.id) : [...field.value, color.id];
@@ -283,11 +282,11 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
               <FormField control={form.control} name="stock_minimo" render={({ field }) => (
                 <FormItem className="space-y-1.5">
                   <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Box className="w-3.5 h-3.5" /> Alerta de Stock Mínimo</FormLabel>
-                  <FormControl><Input {...field} type="number" className="h-10 rounded-2xl font-bold bg-white w-full sm:w-32 border-slate-200" /></FormControl>
+                  <FormControl><Input {...field} type="number" className="h-10 rounded-2xl font-bold bg-white w-full sm:w-32 border-slate-200 shadow-sm" /></FormControl>
                 </FormItem>
               )} />
 
-              {/* GALERÍA DE IMÁGENES PRO */}
+              {/* GALERÍA DE IMÁGENES PRO (MANTENIDO) */}
               <div className="space-y-5">
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-emerald-600" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Galería del Producto</h4></div>

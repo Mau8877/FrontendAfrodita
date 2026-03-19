@@ -86,49 +86,51 @@ export function ReplenishmentDetailModal({ purchaseId, isOpen, onClose }: Props)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-3xl w-[95vw] bg-white rounded-[2.5rem] overflow-hidden border-none shadow-2xl p-0 flex flex-col [&>button>svg]:text-primary">
+      {/* CAMBIO CRÍTICO 1: Fijamos la altura del modal estrictamente a h-[90vh] md:h-[85vh] */}
+      <DialogContent className="sm:max-w-3xl w-[95vw] h-[90vh] md:h-[85vh] bg-white rounded-[2.5rem] overflow-hidden border-none shadow-2xl p-0 flex flex-col [&>button>svg]:text-primary">
         
-        {/* TÍTULO Y DESCRIPCIÓN PARA ACCESIBILIDAD (Ocultos visualmente si es necesario, pero presentes) */}
+        {/* TÍTULO Y DESCRIPCIÓN PARA ACCESIBILIDAD */}
         <div className="sr-only">
           <DialogTitle>Detalle de Reposición {purchaseId}</DialogTitle>
           <DialogDescription>Desglose técnico de la entrada de mercadería y lotes generados.</DialogDescription>
         </div>
 
+        {/* CAMBIO 2: flex-1 para que el loader o el error se centren en el espacio del modal */}
         {isFetching ? (
-          <div className="h-[450px] flex flex-col items-center justify-center gap-4">
+          <div className="flex-1 flex flex-col items-center justify-center gap-4">
              <Loader2 className="w-10 h-10 animate-spin text-primary" />
              <span className="text-[10px] font-black uppercase tracking-[3px] text-slate-400 animate-pulse">Sincronizando Auditoría...</span>
           </div>
         ) : isError || !purchase ? (
-          <div className="p-20 text-center text-slate-400 font-bold uppercase text-xs italic">
+          <div className="flex-1 flex items-center justify-center p-20 text-center text-slate-400 font-bold uppercase text-xs italic">
             No se pudo cargar la información de la compra
           </div>
         ) : (
           <>
-            {/* CABECERA VISUAL */}
-            <div className="p-6 border-b shrink-0 bg-primary/5 border-primary/10">
+            {/* CAMBIO 3: CABECERA VISUAL (Agregado shrink-0 para que no se aplaste) */}
+            <div className="p-4 md:p-6 border-b shrink-0 bg-primary/5 border-primary/10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
-                    <PackageSearch className="w-6 h-6" />
+                  <div className="h-10 w-10 md:h-12 md:w-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
+                    <PackageSearch className="w-5 h-5 md:w-6 md:h-6" />
                   </div>
                   <div className="flex flex-col min-w-0 pr-4">
-                    <h2 className="text-xl font-black uppercase tracking-tighter text-primary leading-none flex items-center gap-2 truncate">
-                      Auditoría de Reposición de Stock
+                    <h2 className="text-lg md:text-xl font-black uppercase tracking-tighter text-primary leading-none flex items-center gap-2 truncate">
+                      Auditoría de Reposición
                     </h2>
                     
                     <div className="flex flex-col gap-0.5 mt-1">
                         <div className="flex items-center gap-1.5">
                           <Truck className="w-3 h-3 text-slate-400" />
-                          <span className="text-[11px] font-black text-slate-600 uppercase tracking-wider">{purchase.nombre_proveedor}</span>
+                          <span className="text-[10px] md:text-[11px] font-black text-slate-600 uppercase tracking-wider">{purchase.nombre_proveedor}</span>
                         </div>
                         <div className="flex items-center gap-1 group">
                           <span className="text-[9px] font-mono text-slate-400 uppercase tracking-tighter opacity-70">
-                            ID COMPRA: {purchase.id}
+                            ID: {purchase.id}
                           </span>
                           <button 
                             onClick={() => handleCopy(purchase.id, 'sub-id')} 
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="bg-white border border-slate-200 p-0.5 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-all"
                           >
                             {copiedId === 'sub-id' ? <Check className="w-2.5 h-2.5 text-emerald-500" /> : <Copy className="w-2.5 h-2.5 text-slate-300" />}
                           </button>
@@ -142,8 +144,8 @@ export function ReplenishmentDetailModal({ purchaseId, isOpen, onClose }: Props)
               </div>
             </div>
 
-            {/* DASHBOARDS DE RESUMEN */}
-            <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white border-b border-slate-50 text-left">
+            {/* CAMBIO 4: DASHBOARDS DE RESUMEN (Agregado shrink-0) */}
+            <div className="px-4 md:px-6 py-4 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white border-b border-slate-50 text-left shrink-0">
               <div className="bg-slate-50/80 p-3 rounded-2xl border border-slate-100 flex items-center gap-3">
                 <div className="h-8 w-8 rounded-lg bg-white flex items-center justify-center shadow-sm text-primary">
                   <TrendingUp className="w-4 h-4" />
@@ -173,14 +175,18 @@ export function ReplenishmentDetailModal({ purchaseId, isOpen, onClose }: Props)
               </div>
             </div>
 
-            {/* TABLA DE DETALLES */}
-            <div className="p-6 flex-grow overflow-y-auto custom-scrollbar bg-white text-left">
-              <div className="flex items-center gap-2 mb-4">
+            {/* CAMBIO 5: TABLA DE DETALLES - LA JAULA DE HIERRO
+                flex-1 y min-h-0 le dicen a la tabla "NO IMPORTA CUÁNTOS LOTES TENGAS, 
+                NO PUEDES ESTIRAR EL MODAL. ACTIVA TU SCROLL INTERNO." 
+            */}
+            <div className="flex-1 min-h-0 flex flex-col bg-white text-left p-4 md:p-6">
+              <div className="flex items-center gap-2 mb-4 shrink-0">
                  <CalendarClock className="w-4 h-4 text-emerald-600" />
                  <h4 className="text-[10px] font-black uppercase tracking-[2px] text-emerald-500">Desglose de Lotes Generados</h4>
               </div>
               
-              <div className="border border-slate-100 rounded-2xl overflow-hidden shadow-sm bg-white overflow-x-auto">
+              {/* Aquí ocurre la magia del scroll interno */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar border border-slate-100 rounded-2xl shadow-sm bg-white">
                 <DataTable 
                   columns={columns} 
                   data={purchase.detalles || []} 
@@ -190,8 +196,8 @@ export function ReplenishmentDetailModal({ purchaseId, isOpen, onClose }: Props)
               </div>
             </div>
 
-            {/* FOOTER DE AUDITORÍA */}
-            <div className="p-4 bg-primary/35 flex justify-between items-center px-8 border-t border-white/5">
+            {/* CAMBIO 6: FOOTER DE AUDITORÍA (Agregado shrink-0) */}
+            <div className="p-4 md:px-8 bg-primary/35 flex justify-between items-center border-t border-white/5 shrink-0">
               <div className="flex flex-col text-left">
                 <span className="text-[8px] font-black text-slate-700 uppercase tracking-widest leading-none mb-1">Registrado por</span>
                 <span className="text-xs font-bold text-secondary uppercase tracking-tight leading-none">
@@ -199,7 +205,7 @@ export function ReplenishmentDetailModal({ purchaseId, isOpen, onClose }: Props)
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                 <span className="text-[9px] font-mono text-slate-500 uppercase tracking-tighter">REF: {purchase.id.split('-')[0]}</span>
+                 <span className="text-[9px] font-mono text-slate-700 font-bold uppercase tracking-tighter">REF: {purchase.id.split('-')[0]}</span>
               </div>
             </div>
           </>

@@ -17,19 +17,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Plus, Type, Palette, FolderTree } from "lucide-react"
+import { Plus, Type, Palette } from "lucide-react"
 import { toast } from "sonner"
 import { colorSchema } from "../schemas"
-import { useCreateColorMutation, useGetColorSelectorsQuery } from "../store/colorApi"
+import { useCreateColorMutation } from "../store/colorApi"
 import { parseBackendErrors } from "@/utils/formatErrors"
 
 type FormInput = z.input<typeof colorSchema>;
@@ -42,8 +35,6 @@ interface ColorCreateModalProps {
 
 export function ColorCreateModal({ isOpen, onClose }: ColorCreateModalProps) {
   const [createColor, { isLoading }] = useCreateColorMutation()
-  // Obtenemos las familias para el Select
-  const { data: selectors } = useGetColorSelectorsQuery()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<FormInput, any, FormOutput>({
@@ -51,7 +42,6 @@ export function ColorCreateModal({ isOpen, onClose }: ColorCreateModalProps) {
     defaultValues: {
       nombre: "",
       codigo_hex: "",
-      id_familia: null,
     },
   })
 
@@ -97,7 +87,7 @@ export function ColorCreateModal({ isOpen, onClose }: ColorCreateModalProps) {
                 Nuevo Color
               </DialogTitle>
               <DialogDescription className="text-[9px] font-bold text-emerald-600/60 uppercase tracking-widest mt-0.5">
-                Añade variantes cromáticas y organízalas por familias.
+                Añade una variante de color a tu catálogo.
               </DialogDescription>
             </div>
           </div>
@@ -108,41 +98,6 @@ export function ColorCreateModal({ isOpen, onClose }: ColorCreateModalProps) {
             
             <div className="p-6 space-y-5 flex-grow overflow-y-auto custom-scrollbar">
               
-              {/* CAMPO FAMILIA (NUEVO) */}
-              <FormField
-                control={form.control}
-                name="id_familia"
-                render={({ field }) => (
-                  <FormItem className="space-y-1 text-left">
-                    <FormLabel className="text-[10px] font-black uppercase text-slate-400 ml-1 flex items-center gap-2">
-                      <FolderTree className="w-3 h-3" /> Familia del Color
-                    </FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
-                      value={field.value ?? undefined}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="h-11 rounded-2xl font-bold bg-slate-50 border-slate-100 focus:bg-white transition-all">
-                          <SelectValue placeholder="Selecciona una familia (Opcional)" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
-                        {selectors?.data.familias.map((familia) => (
-                          <SelectItem 
-                            key={familia.id} 
-                            value={familia.id}
-                            className="text-xs font-bold text-slate-600 focus:bg-emerald-50 focus:text-emerald-700 rounded-xl m-1"
-                          >
-                            {familia.nombre}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-[9px]" />
-                  </FormItem>
-                )}
-              />
-
               {/* CAMPO NOMBRE */}
               <FormField
                 control={form.control}
@@ -184,7 +139,7 @@ export function ColorCreateModal({ isOpen, onClose }: ColorCreateModalProps) {
                           {...field} 
                           value={field.value?.replace('#', '') ?? ""}
                           placeholder="000000" 
-                          maxLength={6} 
+                          maxLength={7} 
                           onChange={(e) => {
                             const val = e.target.value.replace(/[^A-Fa-f0-9]/g, '');
                             field.onChange(`#${val}`);

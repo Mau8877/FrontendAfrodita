@@ -21,6 +21,10 @@ export interface Product {
     nombre: string;
     codigo_hex: string;
   }[];
+  tonos: {
+    id: string;
+    nombre: string;
+  }[];
   // En lectura el backend devuelve 'imagenes'
   imagenes: {
     id: string;
@@ -44,6 +48,7 @@ export interface ProductSelectors {
   categorias: { id: string; nombre: string }[];
   tipos: { id: string; nombre: string }[];
   colores: { id: string; nombre: string; codigo_hex: string }[];
+  tonos: { id: string; nombre: string }[];
 }
 
 // --- TIPOS PARA PETICIONES (ESCRITURA) ---
@@ -54,7 +59,7 @@ export type UpdateProductRequest = {
   body: Partial<ProductFormValues & { restore?: boolean }>;
 };
 
-// Respuesta para la HomePage Nuevos Modelos (Lista de 3 productos sin paginación)
+// Respuesta para la HomePage Nuevos Modelos (Lista de 4 productos sin paginación)
 export type NewModelsResponse = StandardResponse<Product[]>;
 
 export type ProductsListResponse = StandardResponse<PaginatedData<Product>>;

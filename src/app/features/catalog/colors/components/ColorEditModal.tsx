@@ -18,19 +18,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Edit3, Type, Palette, RefreshCcw, FolderTree } from "lucide-react"
+import { Edit3, Type, Palette, RefreshCcw } from "lucide-react"
 import { toast } from "sonner"
 import { colorSchema } from "../schemas"
-import { useUpdateColorMutation, useGetColorSelectorsQuery } from "../store/colorApi"
+import { useUpdateColorMutation } from "../store/colorApi"
 import { type Color } from "../types"
 import { parseBackendErrors } from "@/utils/formatErrors"
 
@@ -45,8 +38,6 @@ interface ColorEditModalProps {
 
 export function ColorEditModal({ color, isOpen, onClose }: ColorEditModalProps) {
   const [updateColor, { isLoading }] = useUpdateColorMutation()
-  // Cargamos las familias disponibles para el selector
-  const { data: selectors } = useGetColorSelectorsQuery()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<FormInput, any, FormOutput>({
@@ -54,7 +45,6 @@ export function ColorEditModal({ color, isOpen, onClose }: ColorEditModalProps) 
     defaultValues: {
       nombre: "",
       codigo_hex: "",
-      id_familia: null,
     },
   })
 
@@ -63,7 +53,6 @@ export function ColorEditModal({ color, isOpen, onClose }: ColorEditModalProps) 
       form.reset({
         nombre: color.nombre,
         codigo_hex: color.codigo_hex || "",
-        id_familia: color.id_familia || null, // Cargamos la familia actual del color
       })
     }
   }, [color, form])
@@ -123,7 +112,7 @@ export function ColorEditModal({ color, isOpen, onClose }: ColorEditModalProps) 
                 Editar Color
               </DialogTitle>
               <DialogDescription className="text-[9px] font-bold text-primary/40 uppercase tracking-widest mt-0.5">
-                Modifica los datos y la familia de {color?.nombre}.
+                Modifica los datos de {color?.nombre}.
               </DialogDescription>
             </div>
           </div>
@@ -133,41 +122,6 @@ export function ColorEditModal({ color, isOpen, onClose }: ColorEditModalProps) 
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col overflow-hidden">
             <div className="p-6 space-y-5 text-left flex-grow overflow-y-auto custom-scrollbar">
               
-              {/* CAMPO FAMILIA */}
-              <FormField
-                control={form.control}
-                name="id_familia"
-                render={({ field }) => (
-                  <FormItem className="space-y-1 text-left">
-                    <FormLabel className="text-[9px] font-bold uppercase text-slate-400 ml-1 flex items-center gap-2">
-                      <FolderTree className="w-3 h-3" /> Familia del Color
-                    </FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
-                      value={field.value ?? undefined}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="h-9 rounded-xl border-primary/10 font-bold text-secondary bg-slate-50/50 focus:ring-secondary/20 transition-all">
-                          <SelectValue placeholder="Sin familia asignada" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="rounded-2xl border-slate-100 shadow-xl">
-                        {selectors?.data.familias.map((familia) => (
-                          <SelectItem 
-                            key={familia.id} 
-                            value={familia.id}
-                            className="text-xs font-bold text-slate-600 focus:bg-primary/5 focus:text-primary rounded-xl m-1"
-                          >
-                            {familia.nombre}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-[9px]" />
-                  </FormItem>
-                )}
-              />
-
               {/* CAMPO NOMBRE */}
               <FormField
                 control={form.control}
@@ -208,7 +162,7 @@ export function ColorEditModal({ color, isOpen, onClose }: ColorEditModalProps) 
                           {...field} 
                           value={field.value?.replace('#', '') ?? ""}
                           placeholder="000000" 
-                          maxLength={6} 
+                          maxLength={7} 
                           onChange={(e) => {
                             const val = e.target.value.replace(/[^A-Fa-f0-9]/g, ''); 
                             field.onChange(`#${val}`); 

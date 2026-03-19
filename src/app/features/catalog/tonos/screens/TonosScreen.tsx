@@ -1,32 +1,32 @@
 import { useState } from "react"
-import { Palette, Trash2, CheckCircle } from "lucide-react"
+import { SwatchBook, Trash2, CheckCircle } from "lucide-react"
 import { type ColumnDef, type SortingState } from "@tanstack/react-table"
 
 import { PageHeader } from "@/components/ui/page-header"
 import { DataTable } from "@/components/ui/data-table"
-import { useGetColorsQuery, useDeleteColorMutation } from "../store/colorApi" 
-import { type Color } from "../types" 
-import { ColorEditModal, ColorCreateModal } from "../components"
+import { useGetTonosQuery, useDeleteTonoMutation } from "../store" 
+import { type Tono } from "../types" 
+import { TonoEditModal, TonoCreateModal } from "../components"
 import { GenericDeleteModal } from "@/components/GenericDeleteModal"
 
-export const ColorsScreen = () => {
-  // --- ESTADOS TABLA COLORES ---
+export const TonosScreen = () => {
+  // --- ESTADOS TABLA TONOS ---
   const [page, setPage] = useState(0)
   const [sorting, setSorting] = useState<SortingState>([])
   const [searchValue, setSearchValue] = useState("") 
   const [appliedSearch, setAppliedSearch] = useState("") 
 
-  const [colorToEdit, setColorToEdit] = useState<Color | null>(null)
+  const [tonoToEdit, setTonoToEdit] = useState<Tono | null>(null)
   const [isEditOpen, setIsEditOpen] = useState(false)
-  const [colorToDelete, setColorToDelete] = useState<Color | null>(null)
+  const [tonoToDelete, setTonoToDelete] = useState<Tono | null>(null)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
 
-  const [deleteColor] = useDeleteColorMutation()
+  const [deleteTono] = useDeleteTonoMutation()
 
-  // --- LÓGICA COLORES ---
+  // --- LÓGICA TONOS ---
   const ordering = sorting.length ? `${sorting[0].desc ? '-' : ''}${sorting[0].id}` : undefined
-  const { data: apiResponse, isFetching, refetch } = useGetColorsQuery({ 
+  const { data: apiResponse, isFetching, refetch } = useGetTonosQuery({ 
     page: page + 1, ordering, search: appliedSearch || undefined 
   })
 
@@ -35,7 +35,7 @@ export const ColorsScreen = () => {
     setAppliedSearch(searchValue)
   }
 
-  const colors = apiResponse?.data?.results || []
+  const tonos = apiResponse?.data?.results || []
   const totalCount = apiResponse?.data?.count || 0
   const totalPages = Math.ceil(totalCount / 10)
 
@@ -56,29 +56,14 @@ export const ColorsScreen = () => {
   }
 
   // --- COLUMNAS DE LA TABLA ---
-  const columns: ColumnDef<Color>[] = [
+  const columns: ColumnDef<Tono>[] = [
     {
       accessorKey: "nombre",
-      header: "Color",
+      header: "Nombre del Tono",
       cell: ({ row }) => (
-        <div className="flex items-center gap-3">
-          <div 
-            className="h-6 w-6 rounded-full border border-slate-200 shadow-sm shrink-0"
-            style={{ backgroundColor: row.original.codigo_hex || 'transparent' }} 
-          />
-          <span className="font-bold text-primary uppercase tracking-tighter block">
-            {row.original.nombre}
-          </span>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "codigo_hex",
-      header: "Código HEX",
-      cell: ({ row }) => (
-        <code className="text-[11px] font-mono font-black text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 shadow-inner">
-          {row.original.codigo_hex ? row.original.codigo_hex.toUpperCase() : "#------"}
-        </code>
+        <span className="font-black text-primary uppercase tracking-tighter block text-[13px]">
+          {row.original.nombre}
+        </span>
       ),
     },
     { 
@@ -89,23 +74,23 @@ export const ColorsScreen = () => {
   ]
 
   // --- HANDLERS ---
-  const onEdit = (color: Color) => { setColorToEdit(color); setIsEditOpen(true); }
-  const onDelete = (color: Color) => { setColorToDelete(color); setIsDeleteOpen(true); }
+  const onEdit = (tono: Tono) => { setTonoToEdit(tono); setIsEditOpen(true); }
+  const onDelete = (tono: Tono) => { setTonoToDelete(tono); setIsDeleteOpen(true); }
   const onAdd = () => setIsCreateOpen(true)
 
   return (
     <div className="p-4 md:p-6 space-y-8 text-left max-w-7xl mx-auto">
       
       <PageHeader 
-        title="Gestionar Colores" 
-        icon={Palette} 
-        breadcrumbs={[ { label: "Catalog" }, { label: "Color_Management" } ]} 
+        title="Gestionar Tonos" 
+        icon={SwatchBook} 
+        breadcrumbs={[ { label: "Catalog" }, { label: "Tonos_Management" } ]} 
       />
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <DataTable 
           columns={columns} 
-          data={colors} 
+          data={tonos} 
           isFetching={isFetching} 
           onRefresh={refetch} 
           manualPagination={true}
@@ -125,24 +110,28 @@ export const ColorsScreen = () => {
       </div>
 
       {/* MODALES */}
-      <ColorEditModal 
-        color={colorToEdit} 
-        isOpen={isEditOpen} 
-        onClose={() => { setIsEditOpen(false); setColorToEdit(null); }} 
-      />
+      {isEditOpen && (
+        <TonoEditModal 
+          tono={tonoToEdit} 
+          isOpen={isEditOpen} 
+          onClose={() => { setIsEditOpen(false); setTonoToEdit(null); }} 
+        />
+      )}
       
-      <ColorCreateModal 
-        isOpen={isCreateOpen} 
-        onClose={() => setIsCreateOpen(false)} 
-      />
+      {isCreateOpen && (
+        <TonoCreateModal 
+          isOpen={isCreateOpen} 
+          onClose={() => setIsCreateOpen(false)} 
+        />
+      )}
 
       <GenericDeleteModal 
-        item={colorToDelete} 
+        item={tonoToDelete} 
         isOpen={isDeleteOpen} 
-        onClose={() => { setIsDeleteOpen(false); setColorToDelete(null); }}
-        onDelete={(p) => deleteColor(p).unwrap()} 
-        itemName={colorToDelete?.nombre || ""} 
-        itemType="este color" 
+        onClose={() => { setIsDeleteOpen(false); setTonoToDelete(null); }}
+        onDelete={(p) => deleteTono(p).unwrap()} 
+        itemName={tonoToDelete?.nombre || ""} 
+        itemType="este tono" 
         itemIdentifier="Catálogo" 
         isSuperUser 
       />
