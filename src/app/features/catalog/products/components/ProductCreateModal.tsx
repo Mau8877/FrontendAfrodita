@@ -77,15 +77,14 @@ interface ProductCreateModalProps {
 export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps) {
   const [createProduct, { isLoading }] = useCreateProductMutation()
   const { data: selectorsResponse } = useGetProductSelectorsQuery()
-  // Aumentamos "tonos" a la desestructuración de selectores
   const selectors = selectorsResponse?.data || { marcas: [], categorias: [], tipos: [], colores: [], tonos: [] }
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema) as any,
     defaultValues: {
       nombre: "", descripcion: "", sku: "", precio_venta: "" as any,
-      stock_minimo: 3, id_marca: "", id_categoria: "", id_tipo: "",
-      colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: [] // Agregado tonos_ids
+      stock_minimo: 3, id_marca: undefined, id_categoria: undefined, id_tipo: "",
+      colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: []
     },
   })
 
@@ -118,12 +117,14 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
     formData.append('precio_venta', String(values.precio_venta));
     formData.append('stock_minimo', String(values.stock_minimo));
     formData.append('id_tipo', values.id_tipo);
-    formData.append('id_marca', values.id_marca);
-    formData.append('id_categoria', values.id_categoria);
+    
+    // Solo enviamos si existen, de lo contrario el backend recibirá null/vacio correctamente
+    if (values.id_marca) formData.append('id_marca', values.id_marca);
+    if (values.id_categoria) formData.append('id_categoria', values.id_categoria);
+    
     formData.append('is_visible', String(values.is_visible));
     
     values.colores_ids.forEach(id => formData.append('colores_ids', id));
-    // AÑADIMOS LOS TONOS AL FORMDATA
     values.tonos_ids.forEach(id => formData.append('tonos_ids', id));
 
     values.imagenes_upload.forEach((imgObj, index) => {
@@ -169,7 +170,6 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col overflow-hidden">
             <div className="p-6 sm:px-10 space-y-8 overflow-y-auto custom-scrollbar">
               
-              {/* DATOS PRINCIPALES */}
               <div className="space-y-5 bg-slate-50/50 p-7 rounded-[2.5rem] border border-slate-100">
                 <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
                   <FormField control={form.control} name="nombre" render={({ field }) => (
@@ -203,29 +203,34 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                 <FormField control={form.control} name="descripcion" render={({ field }) => (
                   <FormItem className="space-y-1.5">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><AlignLeft className="w-3.5 h-3.5" /> Descripción</FormLabel>
-                    <FormControl><Textarea {...field} maxLength={1000} className="min-h-[100px] rounded-[1.5rem] font-medium bg-white resize-none text-xs border-slate-200 shadow-sm" /></FormControl>
+                    <FormControl><Textarea {...field} value={field.value ?? ""} maxLength={1000} className="min-h-[100px] rounded-[1.5rem] font-medium bg-white resize-none text-xs border-slate-200 shadow-sm" /></FormControl>
                     <div className="flex justify-end pr-2"><span className="text-[8px] font-bold text-slate-300 uppercase">{field.value?.length || 0} / 1000</span></div>
                   </FormItem>
                 )} />
               </div>
 
-              {/* SELECTORES MARCA/CAT/TIPO */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 <FormField control={form.control} name="id_marca" render={({ field }) => (
                   <FormItem className="space-y-1.5">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Bookmark className="w-3.5 h-3.5" /> Marca</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value || "none"}>
                       <FormControl><SelectTrigger className="h-10 rounded-2xl font-bold bg-white border-slate-200 shadow-sm"><SelectValue placeholder="..." /></SelectTrigger></FormControl>
-                      <SelectContent>{selectors.marcas.map(m => <SelectItem key={m.id} value={m.id}>{m.nombre}</SelectItem>)}</SelectContent>
+                      <SelectContent>
+                        <SelectItem value="none" className="font-bold text-slate-300 uppercase text-[10px]">Sin Marca / Genérico</SelectItem>
+                        {selectors.marcas.map(m => <SelectItem key={m.id} value={m.id}>{m.nombre}</SelectItem>)}
+                      </SelectContent>
                     </Select>
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="id_categoria" render={({ field }) => (
                   <FormItem className="space-y-1.5">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Layers className="w-3.5 h-3.5" /> Categoría</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value || "none"}>
                       <FormControl><SelectTrigger className="h-10 rounded-2xl font-bold bg-white border-slate-200 shadow-sm"><SelectValue placeholder="..." /></SelectTrigger></FormControl>
-                      <SelectContent>{selectors.categorias.map(c => <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>)}</SelectContent>
+                      <SelectContent>
+                        <SelectItem value="none" className="font-bold text-slate-300 uppercase text-[10px]">Sin Categoría</SelectItem>
+                        {selectors.categorias.map(c => <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>)}
+                      </SelectContent>
                     </Select>
                   </FormItem>
                 )} />
@@ -240,7 +245,6 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                 )} />
               </div>
 
-              {/* SECCIÓN DE TONOS (NUEVA) */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 px-1">
                   <SwatchBook className="w-4 h-4 text-emerald-600" />
@@ -260,7 +264,6 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                 )} />
               </div>
 
-              {/* COLORES (MANTENIDO) */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 px-1"><Palette className="w-4 h-4 text-emerald-600" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Colores Disponibles (Físicos)</h4></div>
                 <FormField control={form.control} name="colores_ids" render={({ field }) => (
@@ -278,7 +281,6 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                 )} />
               </div>
 
-              {/* STOCK */}
               <FormField control={form.control} name="stock_minimo" render={({ field }) => (
                 <FormItem className="space-y-1.5">
                   <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Box className="w-3.5 h-3.5" /> Alerta de Stock Mínimo</FormLabel>
@@ -286,7 +288,6 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                 </FormItem>
               )} />
 
-              {/* GALERÍA DE IMÁGENES PRO (MANTENIDO) */}
               <div className="space-y-5">
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-emerald-600" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Galería del Producto</h4></div>

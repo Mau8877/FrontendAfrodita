@@ -3,8 +3,8 @@ import { Package, LayoutGrid } from "lucide-react"
 import { type ColumnDef, type SortingState } from "@tanstack/react-table"
 
 import { PageHeader } from "@/components/ui/page-header"
-import { DataCardTable } from "@/components/ui/data-card-table"
-import { ProductCardItem } from "@/components/ProductCardItem"
+import { DataCardTable } from "@/components/ui/data-card-table" // La "tabla" pero en cards
+import { ProductCardItem } from "@/components/ProductCardItem" // UI de las Cards (Admin)
 import { useGetProductsQuery, useDeleteProductMutation } from "../store/productApi" 
 import { type Product } from "../types" 
 import { ProductEditModal, ProductCreateModal } from "../components"

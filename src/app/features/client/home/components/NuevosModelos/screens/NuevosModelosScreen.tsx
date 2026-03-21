@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetNewModelsQuery } from "../store/newModelsApi"
 import { ProductClientCard } from "@/components/ui/data-card-table-client"
 import { Link } from "@tanstack/react-router"
@@ -36,32 +37,42 @@ export function NuevosModelosScreen() {
 
         {/* LÓGICA DE RENDERIZADO */}
         {isFetching ? (
-          /* SKELETON / LOADING STATE */
           <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="aspect-[3/4] rounded-[1.5rem] md:rounded-[2.5rem] bg-slate-50 animate-pulse border border-slate-100" />
             ))}
           </div>
         ) : productos.length > 0 ? (
-          /* GRID DE PRODUCTOS */
           <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
             {productos.map((product) => (
-              <ProductClientCard 
+              /* ENVOLVEMOS LA CARD CON EL LINK A LA NUEVA RUTA */
+              <Link
                 key={product.id}
-                product={product} 
-                onAddToCart={(p) => console.log("Carrito:", p.nombre)}
-                onQuickView={(p) => console.log("Detalle:", p.id)}
-              />
+                to="/catalog/product/$productId"
+                params={{ productId: String(product.id) }}
+                className="contents group/card" // contents evita que el <a> rompa el grid
+              >
+                <ProductClientCard 
+                  product={product as any} 
+                  onAddToCart={(p) => {
+                    // Evitamos que el click del carrito dispare la navegación del Link
+                    console.log("Carrito:", p.nombre)
+                  }}
+                  onQuickView={(p) => {
+                    // El Link ya se encarga de navegar, pero puedes dejar esto para analytics
+                    console.log("Navegando a:", p.id)
+                  }}
+                />
+              </Link>
             ))}
           </div>
         ) : (
-          /* EMPTY STATE: No hay productos */
           <div className="w-full py-20 flex flex-col items-center justify-center bg-slate-50/50 rounded-[2rem] md:rounded-[3rem] border border-dashed border-slate-200">
             <div className="p-4 rounded-full bg-white shadow-sm mb-4">
               <ImageIcon className="w-8 h-8 text-slate-300" />
             </div>
             <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-slate-400 text-center px-6">
-              No hay productos disponibles en el catálogo por el momento, vuelva más tarde
+              No hay productos disponibles en el catálogo por el momento
             </p>
           </div>
         )}

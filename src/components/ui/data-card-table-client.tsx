@@ -13,7 +13,6 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
   const [currentImgIndex, setCurrentImgIndex] = useState(0)
   const imagenes = product.imagenes || []
   
-  // 1. Lógica de reseteo automático de imagen (10 segundos)
   useEffect(() => {
     if (currentImgIndex !== 0) {
       const timer = setTimeout(() => {
@@ -23,7 +22,6 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
     }
   }, [currentImgIndex])
 
-  // 2. Formateo de precio (Quita decimales si es .00)
   const formattedPrice = Number(product.precio_venta) % 1 === 0 
     ? Math.floor(Number(product.precio_venta)) 
     : product.precio_venta;
@@ -53,15 +51,16 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
           <div className="h-full w-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase">Sin imagen</div>
         )}
 
-        {/* Badge de Marca con Icono */}
-        <div className="absolute top-2 left-2 md:top-3 md:left-3">
-          <span className="flex items-center gap-1 bg-white/90 backdrop-blur-md px-2 md:px-3 py-1 rounded-full text-[7px] md:text-[9px] font-black uppercase tracking-widest text-secondary shadow-sm border border-secondary/10">
-            <Tag className="w-2.5 h-2.5 md:w-3 md:h-3 text-secondary" />
-            {product.nombre_marca || 'Afrodita'}
-          </span>
-        </div>
+        {/* CAMBIO 1: Badge de Marca condicional (Igual al admin) */}
+        {product.nombre_marca && (
+          <div className="absolute top-2 left-2 md:top-3 md:left-3">
+            <span className="flex items-center gap-1 bg-white/90 backdrop-blur-md px-2 md:px-3 py-1 rounded-full text-[7px] md:text-[9px] font-black uppercase tracking-widest text-secondary shadow-sm border border-secondary/10">
+              <Tag className="w-2.5 h-2.5 md:w-3 md:h-3 text-secondary" />
+              {product.nombre_marca}
+            </span>
+          </div>
+        )}
 
-        {/* Controles de Navegación: Sutilmente visibles en móvil, hover en web */}
         {imagenes.length > 1 && (
           <div className="absolute inset-x-1 md:inset-x-2 top-1/2 -translate-y-1/2 flex justify-between opacity-40 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <Button size="icon" variant="ghost" onClick={prevImage} className="h-6 w-6 md:h-8 md:w-8 rounded-full bg-white/80 backdrop-blur-sm shadow-sm">
@@ -73,7 +72,6 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
           </div>
         )}
 
-        {/* Indicadores de fotos (Dots) */}
         {imagenes.length > 1 && (
           <div className="absolute bottom-2 md:bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
             {imagenes.map((_, idx) => (
@@ -89,21 +87,31 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
       {/* --- SECCIÓN 2: INFORMACIÓN --- */}
       <div className="mt-3 md:mt-5 flex flex-col flex-grow px-1">
         
-        {/* Categoría Breadcrumb */}
+        {/* CAMBIO 2: Categoría Breadcrumb condicional (Sin "/" si falta uno) */}
         <div className="flex items-center gap-1 overflow-hidden mb-1">
-          <span className="text-[7px] md:text-[9px] font-black text-slate-400 uppercase tracking-tighter shrink-0">{product.nombre_tipo}</span>
-          <span className="text-[7px] md:text-[9px] text-slate-300 shrink-0">/</span>
-          <span className="text-[7px] md:text-[9px] font-black text-secondary/60 uppercase tracking-tighter truncate">{product.nombre_categoria}</span>
+          {product.nombre_tipo && (
+            <span className="text-[7px] md:text-[9px] font-black text-slate-400 uppercase tracking-tighter shrink-0">
+              {product.nombre_tipo}
+            </span>
+          )}
+          
+          {product.nombre_tipo && product.nombre_categoria && (
+            <span className="text-[7px] md:text-[9px] text-slate-300 shrink-0">/</span>
+          )}
+
+          {product.nombre_categoria && (
+            <span className="text-[7px] md:text-[9px] font-black text-secondary/60 uppercase tracking-tighter truncate">
+              {product.nombre_categoria}
+            </span>
+          )}
         </div>
 
-        {/* Título: Altura fija de 2 líneas para alineación perfecta */}
         <h3 className="text-[11px] md:text-base font-black text-slate-800 uppercase tracking-tight line-clamp-2 leading-tight md:leading-[1.25rem] h-[1.8rem] md:h-[2.5rem] overflow-hidden">
           {product.nombre}
         </h3>
 
-        {/* Descripción: Pegada al título */}
         <p className="text-[8px] md:text-[10px] font-medium text-slate-400 italic leading-snug line-clamp-1 mt-0.5">
-          {product.descripcion}
+          {product.descripcion || "Sin descripción"}
         </p>
 
         {/* Colores y SKU */}
@@ -125,7 +133,7 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
           </div>
         </div>
         
-        {/* --- SECCIÓN 3: FOOTER (Precio y Botones) --- */}
+        {/* --- SECCIÓN 3: FOOTER --- */}
         <div className="flex items-center justify-between pt-2 md:pt-3 mt-auto border-t border-slate-50">
           <div className="flex flex-col">
             <span className="text-[7px] md:text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Precio</span>

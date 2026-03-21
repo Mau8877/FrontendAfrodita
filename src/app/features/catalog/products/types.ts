@@ -1,15 +1,15 @@
 import type { ProductFormValues } from "./schemas";
 import type { StandardResponse, PaginatedData } from '@/app/common.types';
 
-// --- MODELO DE DATOS (DOMINIO / LECTURA) ---
+// --- MODELO DE DATOS  ---
 export interface Product {
   id: string;
   id_tipo: string;
-  id_marca: string;
-  id_categoria: string;
+  id_marca: string | null;  
+  id_categoria: string | null;
   nombre: string;
   sku: string;
-  descripcion: string;
+  descripcion: string | null;
   precio_venta: string; 
   stock_minimo: number;
   is_visible: boolean;
@@ -25,7 +25,6 @@ export interface Product {
     id: string;
     nombre: string;
   }[];
-  // En lectura el backend devuelve 'imagenes'
   imagenes: {
     id: string;
     imagen: string;

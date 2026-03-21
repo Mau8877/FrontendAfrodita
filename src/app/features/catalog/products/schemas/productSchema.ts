@@ -13,32 +13,43 @@ export const productSchema = z.object({
   
   descripcion: z
     .string()
-    .max(1000, "Descripción demasiado larga (máximo 1000 caracteres)")
+    .max(1000, "Descripción demasiado larga")
     .optional()
+    .nullable() // Permite null
     .or(z.literal("")),
 
   precio_venta: z.coerce
     .number()
-    .positive("El precio debe ser mayor a 0")
-    .multipleOf(0.01, "Máximo 2 decimales"),
+    .positive("El precio debe ser mayor a 0"),
   
   stock_minimo: z.coerce
     .number()
-    .int("Debe ser un número entero")
-    .nonnegative("No puede ser negativo")
+    .int()
     .default(3),
   
   id_tipo: z.string().uuid("Seleccione un tipo válido"),
-  id_marca: z.string().uuid("Seleccione una marca válida"),
-  id_categoria: z.string().uuid("Seleccione una categoría válida"),
   
+  id_marca: z
+    .string()
+    .uuid("Seleccione una marca válida")
+    .or(z.literal("none")) 
+    .optional()
+    .nullable(),
+
+  id_categoria: z
+    .string()
+    .uuid("Seleccione una categoría válida")
+    .or(z.literal("none"))
+    .optional()
+    .nullable(),
+
   colores_ids: z
-    .array(z.string().uuid("ID de color inválido"))
-    .min(1, "Debe seleccionar al menos un color"),
-  
+    .array(z.string().uuid())
+    .default([]), // Quitamos el .min(1) para que los estuches pasen
+
   tonos_ids: z
-    .array(z.string().uuid("ID de tono inválido"))
-    .min(1, "Debe seleccionar al menos un tono para el catálogo"),
+    .array(z.string().uuid())
+    .default([]), // Quitamos el .min(1)
 
   imagenes_upload: z
     .array(

@@ -49,15 +49,19 @@ const FilterSection = ({
 
 export function CatalogFiltersBar({ filters, onFilterChange, onReset }: Props) {
   const [localSearch, setLocalSearch] = useState(filters.search || '')
+  const [prevSearch, setPrevSearch] = useState(filters.search)
+
+  // Sincronización inmediata si la prop cambia externamente
+  if (filters.search !== prevSearch) {
+    setLocalSearch(filters.search || '')
+    setPrevSearch(filters.search)
+  }
+
   const [debouncedSearch, setDebouncedSearch] = useState(localSearch)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false) 
   
   const { data: selectors, isLoading } = useGetSelectorsQuery()
-
-  if (filters.search !== undefined && filters.search !== localSearch && !showSuggestions) {
-    setLocalSearch(filters.search);
-  }
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedSearch(localSearch), 500);
@@ -87,10 +91,7 @@ export function CatalogFiltersBar({ filters, onFilterChange, onReset }: Props) {
   if (isLoading) return <aside className="w-full md:w-[320px] shrink-0 p-8 animate-pulse bg-primary/15 rounded-[2rem]" />;
 
   return (
-    <aside className="w-full md:w-[320px] shrink-0 sticky top-0 md:top-6 self-start z-40">
-      {/* Añadí z-40 aquí arriba y un fondo blanco sólido para móvil. 
-        Esto evitará que las fotos de los productos "traspasen" la burbuja.
-      */}
+    <aside className="w-full md:w-[320px] shrink-0 sticky top-0 md:top-6 self-start z-10">
       <div className="flex flex-col bg-white md:bg-primary/15 rounded-b-[2rem] md:rounded-[2.5rem] shadow-lg md:shadow-primary/10 border-b md:border border-white/40 max-h-[90vh] md:max-h-[85vh] transition-all duration-300 relative z-50">
         
         {/* HEADER */}
@@ -169,7 +170,6 @@ export function CatalogFiltersBar({ filters, onFilterChange, onReset }: Props) {
         .persistent-scrollbar::-webkit-scrollbar-thumb { background: rgba(178, 87, 201, 0.3); border-radius: 10px; }
       `}} />
 
-      {/* Overlay para cerrar sugerencias */}
       {showSuggestions && <div className="fixed inset-0 z-30" onClick={() => setShowSuggestions(false)} />}
     </aside>
   )

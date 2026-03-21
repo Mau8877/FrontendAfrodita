@@ -64,6 +64,14 @@ export const catalogApi = api.injectEndpoints({
           : [{ type: 'Products', id: 'CATALOG_LIST' }],
     }),
 
+    getProductCatalogDetail: builder.query<StandardResponse<Product>, string>({
+      query: (id) => ({
+        url: `/inventario/products/catalog/${id}/`,
+        method: 'GET',
+      }),
+      providesTags: (_result, _error, id) => [{ type: 'Products', id }],
+    }),
+
     // --- SUGERENCIAS PARA AUTOCOMPLETE ---
     getSearchSuggestions: builder.query<StandardResponse<ProductSuggestion[]>, string>({
       query: (term) => ({
@@ -89,6 +97,7 @@ export const catalogApi = api.injectEndpoints({
 
 export const {
   useGetCatalogQuery,
+  useGetProductCatalogDetailQuery,
   useGetSearchSuggestionsQuery,
   useGetSelectorsQuery
 } = catalogApi

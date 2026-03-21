@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect } from 'react'
 import { 
   Tag, Eye, EyeOff, ChevronLeft, ChevronRight, Pencil, Trash2, CheckCircle 
@@ -11,7 +12,6 @@ interface ProductCardItemProps {
   product: Product
   onEdit?: (p: Product) => void
   onDelete?: (p: Product) => void
-  // Agregamos esta prop para controlar si queremos mostrar el botón de ojo (visibilidad)
   showVisibilityToggle?: boolean 
 }
 
@@ -25,7 +25,6 @@ const ProductActions = ({
 }) => {
   const [updateProduct, { isLoading }] = useUpdateProductMutation()
 
-  // Si no hay ninguna acción permitida, no renderizamos el contenedor
   if (!showVisibilityToggle && !onEdit && !onDelete) return null;
 
   const handleToggleVisibility = async (e: React.MouseEvent) => {
@@ -50,7 +49,6 @@ const ProductActions = ({
 
   return (
     <div className="flex items-center justify-around w-full mt-auto pt-4 border-t border-slate-100/60">
-      {/* OJO: Solo si se activa la prop */}
       {showVisibilityToggle && (
         <Button 
           variant="ghost" size="icon" 
@@ -66,7 +64,6 @@ const ProductActions = ({
         </Button>
       )}
 
-      {/* LÁPIZ: Solo si viene la función onEdit */}
       {onEdit && (
         <Button 
             variant="ghost" size="icon" 
@@ -77,7 +74,6 @@ const ProductActions = ({
         </Button>
       )}
 
-      {/* BASURERO: Solo si viene la función onDelete */}
       {onDelete && (
         <Button 
             variant="ghost" size="icon" 
@@ -115,7 +111,6 @@ export const ProductCardItem = ({ product, onEdit, onDelete, showVisibilityToggl
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* ... (Todo el código del renderizado de imagen se mantiene igual) ... */}
       <div className="relative h-48 bg-slate-50/40 flex items-center justify-center p-6 overflow-hidden">
         <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
           {isDeleted ? (
@@ -150,12 +145,15 @@ export const ProductCardItem = ({ product, onEdit, onDelete, showVisibilityToggl
           Bs. {product.precio_venta}
         </div>
 
-        <div className="absolute top-4 left-4">
-           <span className="bg-white/80 backdrop-blur pl-1.5 pr-3 py-1 rounded-full text-[9px] font-black uppercase text-primary border border-primary/5 shadow-sm flex items-center gap-1.5">
-             <Tag className="w-2.5 h-2.5 text-primary/40" />
-             {product.nombre_marca}
-           </span>
-        </div>
+        {/* CAMBIO 1: Solo mostrar si existe nombre_marca */}
+        {product.nombre_marca && (
+          <div className="absolute top-4 left-4">
+             <span className="bg-white/80 backdrop-blur pl-1.5 pr-3 py-1 rounded-full text-[9px] font-black uppercase text-primary border border-primary/5 shadow-sm flex items-center gap-1.5">
+               <Tag className="w-2.5 h-2.5 text-primary/40" />
+               {product.nombre_marca}
+             </span>
+          </div>
+        )}
 
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
           {product.imagenes.map((_, i) => (
@@ -165,10 +163,12 @@ export const ProductCardItem = ({ product, onEdit, onDelete, showVisibilityToggl
       </div>
 
       <div className="p-5 flex-grow flex flex-col">
-        {/* ... (Sección de textos se mantiene igual) ... */}
         <div className="mb-3">
+          {/* CAMBIO 2: Renderizado condicional del tipo, separador y categoría */}
           <p className="text-[9px] font-black text-slate-400/80 uppercase tracking-widest mb-1">
-            {product.nombre_tipo} <span className="mx-1 opacity-50">/</span> {product.nombre_categoria}
+            {product.nombre_tipo} 
+            {product.nombre_tipo && product.nombre_categoria && <span className="mx-1 opacity-50">/</span>} 
+            {product.nombre_categoria}
           </p>
           <h3 className={`text-[13px] font-black uppercase leading-tight line-clamp-1 ${isDeleted ? 'text-slate-300' : 'text-slate-800'}`}>
             {product.nombre}
@@ -189,7 +189,6 @@ export const ProductCardItem = ({ product, onEdit, onDelete, showVisibilityToggl
           </span>
         </div>
 
-        {/* Pasamos las props condicionales a las acciones */}
         <ProductActions 
           product={product} 
           onEdit={onEdit} 
