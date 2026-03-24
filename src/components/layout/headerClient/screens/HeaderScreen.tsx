@@ -1,5 +1,4 @@
 import { SidebarControl } from '../components/SidebarControl'
-import { SearchBar } from '../components/SearchBar'
 import { BrandLogo } from '../components/BrandLogo'
 import { UserActions } from '../components/UserActions'
 
@@ -11,7 +10,6 @@ export function HeaderScreen() {
         {/* IZQUIERDA: Ocupa un ancho fijo para no pisar el logo */}
         <div className="flex items-center gap-1 w-1/3 justify-start">
           <SidebarControl />
-          <SearchBar />
         </div>
 
         {/* CENTRO: Logo siempre centrado */}

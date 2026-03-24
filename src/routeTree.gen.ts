@@ -16,6 +16,7 @@ import { Route as MainSplatRouteImport } from './routes/_main/$'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainClientIndexRouteImport } from './routes/_main/_client/index'
+import { Route as MainClientCartRouteImport } from './routes/_main/_client/cart'
 import { Route as MainClientCatalogIndexRouteImport } from './routes/_main/_client/catalog.index'
 import { Route as MainAuthenticatedAdminDashboardRouteImport } from './routes/_main/_authenticated/admin/dashboard'
 import { Route as MainClientCatalogProductProductIdRouteImport } from './routes/_main/_client/catalog.product.$productId'
@@ -69,6 +70,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const MainClientIndexRoute = MainClientIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => MainClientRoute,
+} as any)
+const MainClientCartRoute = MainClientCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => MainClientRoute,
 } as any)
 const MainClientCatalogIndexRoute = MainClientCatalogIndexRouteImport.update({
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
+  '/cart': typeof MainClientCartRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
   '/catalog/': typeof MainClientCatalogIndexRoute
   '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
@@ -236,6 +243,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
+  '/cart': typeof MainClientCartRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
   '/catalog': typeof MainClientCatalogIndexRoute
   '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/_main/$': typeof MainSplatRoute
   '/_main/_authenticated': typeof MainAuthenticatedRouteWithChildren
   '/_main/_client': typeof MainClientRouteWithChildren
+  '/_main/_client/cart': typeof MainClientCartRoute
   '/_main/_client/': typeof MainClientIndexRoute
   '/_main/_authenticated/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
   '/_main/_client/catalog/': typeof MainClientCatalogIndexRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/$'
+    | '/cart'
     | '/admin/dashboard'
     | '/catalog/'
     | '/admin/catalog/brands_management'
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/$'
+    | '/cart'
     | '/admin/dashboard'
     | '/catalog'
     | '/admin/catalog/brands_management'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/_main/$'
     | '/_main/_authenticated'
     | '/_main/_client'
+    | '/_main/_client/cart'
     | '/_main/_client/'
     | '/_main/_authenticated/admin/dashboard'
     | '/_main/_client/catalog/'
@@ -436,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof MainClientIndexRouteImport
+      parentRoute: typeof MainClientRoute
+    }
+    '/_main/_client/cart': {
+      id: '/_main/_client/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof MainClientCartRouteImport
       parentRoute: typeof MainClientRoute
     }
     '/_main/_client/catalog/': {
@@ -663,12 +682,14 @@ const MainAuthenticatedRouteWithChildren =
   MainAuthenticatedRoute._addFileChildren(MainAuthenticatedRouteChildren)
 
 interface MainClientRouteChildren {
+  MainClientCartRoute: typeof MainClientCartRoute
   MainClientIndexRoute: typeof MainClientIndexRoute
   MainClientCatalogIndexRoute: typeof MainClientCatalogIndexRoute
   MainClientCatalogProductProductIdRoute: typeof MainClientCatalogProductProductIdRoute
 }
 
 const MainClientRouteChildren: MainClientRouteChildren = {
+  MainClientCartRoute: MainClientCartRoute,
   MainClientIndexRoute: MainClientIndexRoute,
   MainClientCatalogIndexRoute: MainClientCatalogIndexRoute,
   MainClientCatalogProductProductIdRoute:

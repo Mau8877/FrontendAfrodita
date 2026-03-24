@@ -94,7 +94,7 @@
   --ring: oklch(0.53 0.19 309);
 
   /* HEADER & SIDEBAR ESPECÍFICOS */
-  --header-bg: oklch(0.81 0.10 346);
+  --header-bg: #f4afcc;
   /* #F4AFCC - El más claro */
   --sidebar: oklch(0.87 0.05 18);
   /* #F7D1D0 - El más sólido */

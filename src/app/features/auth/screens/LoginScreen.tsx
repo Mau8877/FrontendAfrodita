@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,17 +28,10 @@ export function LoginScreen() {
   
   const [login, { isLoading }] = useLoginMutation()
 
-  const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm<LoginFormValues>({
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' }
   })
-
-  useEffect(() => {
-    const savedEmail = localStorage.getItem('afrodita_remember_email')
-    if (savedEmail) {
-      setValue('email', savedEmail)
-    }
-  }, [setValue])
 
   const triggerShake = () => {
     setIsShaking(true)
@@ -49,7 +42,6 @@ export function LoginScreen() {
     try {
       const response = await login(data).unwrap()
       
-      localStorage.setItem('afrodita_remember_email', data.email)
       dispatch(api.util.resetApiState())
       dispatch(setCredentials(response.data))
 
