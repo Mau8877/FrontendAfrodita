@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react"
-import { ShoppingCart, Eye, ChevronLeft, ChevronRight, Tag, Share2, Check } from "lucide-react"
+import { toast } from "sonner"
+import { ShoppingCart, Eye, ChevronLeft, ChevronRight, Tag, Share2, Check, Plus, Minus } from "lucide-react"
 import { Button } from "./button"
 import { type Product } from "@/app/features/client/catalog/types"
+import { useCartStore } from "@/app/features/client/catalog/hooks" 
 
 interface ProductClientCardProps {
   product: Product
@@ -10,13 +12,21 @@ interface ProductClientCardProps {
   onAddToCart?: (product: Product) => void
 }
 
-export function ProductClientCard({ product, onQuickView, onAddToCart }: ProductClientCardProps) {
+export function ProductClientCard({ product, onQuickView }: ProductClientCardProps) {
   const [currentImgIndex, setCurrentImgIndex] = useState(0)
   const [isShared, setIsShared] = useState(false)
   const imagenes = product.imagenes || []
+  
+  // Zustand: Traemos items y acciones
+  const { items, addItem, updateQuantity, removeItem } = useCartStore()
 
-  // Verificamos si hay stock
-  const isOutOfStock = (product.stock_disponible ?? 0) <= 0
+  // Buscamos si el producto ya está en el carrito para mostrar el contador
+  const cartItem = items.find((item) => item.id === product.id)
+  const isInCart = Boolean(cartItem)
+
+  // Verificamos si hay stock (Casteo as any)
+  const stockDisponible = (product as any).stock_disponible ?? 0
+  const isOutOfStock = stockDisponible <= 0
 
   useEffect(() => {
     if (currentImgIndex !== 0) {
@@ -45,6 +55,37 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
       await navigator.clipboard.writeText(shareUrl)
       setIsShared(true)
       setTimeout(() => setIsShared(false), 2000)
+    }
+  }
+
+  // Lógica para añadir por primera vez
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (isOutOfStock) return
+    
+    addItem(product, 1)
+    
+    toast.success(`Añadido: ${product.nombre} al Carrito`, {
+      duration: 2000,
+      style: { borderRadius: '1.5rem', fontFamily: 'Poppins' }
+    })
+  }
+
+  // Lógica para aumentar cantidad (+1)
+  const handleIncrement = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    addItem(product, 1)
+  }
+
+  // Lógica para disminuir cantidad (-1)
+  const handleDecrement = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!cartItem) return
+    
+    if (cartItem.cantidad === 1) {
+      removeItem(product.id)
+    } else {
+      updateQuantity(product.id, cartItem.cantidad - 1)
     }
   }
 
@@ -122,18 +163,15 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
 
       {/* --- SECCIÓN 2: INFORMACIÓN --- */}
       <div className="mt-3 md:mt-5 flex flex-col flex-grow px-1">
-        
         <div className="flex items-center gap-1 overflow-hidden mb-1">
           {product.nombre_tipo && (
             <span className="text-[7px] md:text-[9px] font-black text-slate-400 uppercase tracking-tighter shrink-0">
               {product.nombre_tipo}
             </span>
           )}
-          
           {product.nombre_tipo && product.nombre_categoria && (
             <span className="text-[7px] md:text-[9px] text-slate-300 shrink-0">/</span>
           )}
-
           {product.nombre_categoria && (
             <span className="text-[7px] md:text-[9px] font-black text-secondary/60 uppercase tracking-tighter truncate">
               {product.nombre_categoria}
@@ -159,7 +197,6 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
               />
             ))}
           </div>
-
           <div className="bg-secondary/10 px-1.5 md:px-2 h-4 md:h-5 flex items-center justify-center rounded-md border border-secondary/20">
             <span className="text-[7px] md:text-[8px] font-mono font-bold text-secondary uppercase tracking-tighter leading-none">
               {product.sku}
@@ -169,43 +206,67 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
         
         {/* --- SECCIÓN 3: FOOTER --- */}
         <div className="flex items-center justify-between pt-2 md:pt-3 mt-auto border-t border-slate-50">
-          <div className="flex flex-col">
-            <span className="text-[7px] md:text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Precio</span>
-            <div className="flex items-baseline gap-0.5 md:gap-1 mt-1">
-              <span className="text-sm md:text-xl font-black text-slate-900 leading-none">
+          
+          <div className="flex flex-col shrink-0 mr-1">
+            <span className="text-[8.5px] md:text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Precio</span>
+            <div className="flex items-baseline gap-0.5 mt-1">
+              <span className="text-[12.5px] md:text-xl font-black text-slate-900 leading-none">
                 {formattedPrice}
               </span>
-              <span className="text-[8px] md:text-[10px] font-bold text-slate-900 uppercase">Bs</span>
+              <span className="text-[7px] md:text-[10px] font-bold text-slate-900 uppercase">Bs</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 md:gap-2">
+          <div className="flex items-center gap-0.5 md:gap-2 shrink-0">
             <Button 
               size="icon" variant="ghost" onClick={handleShare}
-              className={`h-7 w-7 md:h-9 md:w-9 rounded-lg md:rounded-xl transition-all ${isShared ? 'text-green-500' : 'text-slate-400 hover:text-blue-500'}`}
+              className={`h-6 w-6 md:h-9 md:w-9 p-0 shrink-0 rounded-lg md:rounded-xl transition-all ${isShared ? 'text-green-500' : 'text-slate-400 hover:text-blue-500'}`}
             >
-              {isShared ? <Check className="h-3.5 w-3.5 md:h-4 md:w-4" /> : <Share2 className="h-3.5 w-3.5 md:h-4 md:w-4" />}
+              {isShared ? <Check className="h-3 w-3 md:h-4 md:w-4" /> : <Share2 className="h-3 w-3 md:h-4 md:w-4" />}
             </Button>
 
             <Button 
               size="icon" variant="outline" onClick={() => onQuickView?.(product)}
-              className="h-7 w-7 md:h-9 md:w-9 rounded-lg md:rounded-xl border-slate-100 text-slate-400 hover:text-secondary hover:border-secondary transition-all"
+              className="h-6 w-6 md:h-9 md:w-9 p-0 shrink-0 rounded-lg md:rounded-xl border-slate-100 text-slate-400 hover:text-secondary hover:border-secondary transition-all"
             >
-              <Eye className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              <Eye className="h-3 w-3 md:h-4 md:w-4" />
             </Button>
             
-            <Button 
-              size="icon" 
-              onClick={() => onAddToCart?.(product)}
-              disabled={isOutOfStock}
-              className={`h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl transition-all 
-                ${isOutOfStock 
-                  ? 'bg-slate-300 text-white cursor-not-allowed shadow-none' 
-                  : 'bg-secondary hover:bg-secondary/90 text-white shadow-lg shadow-secondary/20 active:scale-95'}
-              `}
-            >
-              <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
-            </Button>
+            {/* LÓGICA CONDICIONAL: CANTIDAD O CARRITO */}
+            {isInCart ? (
+              <div className="flex items-center bg-secondary/10 rounded-md md:rounded-xl p-0.5 md:p-1 gap-0.5 md:gap-1 border border-secondary/20 animate-in fade-in zoom-in duration-300">
+                <Button 
+                  size="icon" variant="ghost" onClick={handleDecrement}
+                  className="h-5 w-5 md:h-8 md:w-8 p-0 shrink-0 rounded md:rounded-lg hover:bg-white text-secondary transition-colors"
+                >
+                  <Minus className="h-2.5 w-2.5 md:h-4 md:w-4" />
+                </Button>
+                
+                <span className="text-[9px] md:text-xs font-black text-secondary w-2 md:w-4 text-center shrink-0">
+                  {cartItem?.cantidad}
+                </span>
+                
+                <Button 
+                  size="icon" variant="ghost" onClick={handleIncrement}
+                  className="h-5 w-5 md:h-8 md:w-8 p-0 shrink-0 rounded md:rounded-lg hover:bg-white text-secondary transition-colors"
+                >
+                  <Plus className="h-2.5 w-2.5 md:h-4 md:w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                size="icon" 
+                onClick={handleAddToCart}
+                disabled={isOutOfStock}
+                className={`h-6 w-6 md:h-10 md:w-10 p-0 shrink-0 rounded-md md:rounded-xl transition-all 
+                  ${isOutOfStock 
+                    ? 'bg-slate-300 text-white cursor-not-allowed shadow-none' 
+                    : 'bg-secondary hover:bg-secondary/90 text-white shadow-lg shadow-secondary/20 active:scale-95'}
+                `}
+              >
+                <ShoppingCart className="h-3.5 w-3.5 md:h-5 md:w-5" />
+              </Button>
+            )}
           </div>
         </div>
       </div>

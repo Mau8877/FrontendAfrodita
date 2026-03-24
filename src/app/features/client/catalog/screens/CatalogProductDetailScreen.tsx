@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
+import { toast } from "sonner"
 import { 
   ArrowLeft, ShoppingCart, Tag, ShieldCheck, 
-  Truck, Check, Tags, Fingerprint, PackageCheck, Share2, XCircle 
+  Truck, Check, Tags, Fingerprint, PackageCheck, Share2, XCircle, Plus, Minus
 } from 'lucide-react'
 import { useGetProductCatalogDetailQuery } from '@/app/features/client/catalog/store'
+import { useCartStore } from "@/app/features/client/catalog/hooks" 
 import { Button } from '@/components/ui/button'
 
 export function CatalogProductDetailScreen() {
@@ -20,8 +22,36 @@ export function CatalogProductDetailScreen() {
   const product = data?.data
   const imagenes = product?.imagenes || []
 
-  // Lógica de Stock
-  const isOutOfStock = (product?.stock_disponible ?? 0) <= 0
+  // Lógica de Zustand y Stock
+  const { items, addItem, updateQuantity, removeItem } = useCartStore()
+  const cartItem = items.find((item) => item.id === product?.id)
+  const isInCart = Boolean(cartItem)
+
+  const stockDisponible = (product as any)?.stock_disponible ?? 0
+  const isOutOfStock = stockDisponible <= 0
+
+  const handleAddToCart = () => {
+    if (isOutOfStock || !product) return
+    addItem(product, 1)
+    toast.success(`Añadido: ${product.nombre} al Carrito`, {
+      duration: 2000,
+      style: { borderRadius: '1.5rem', fontFamily: 'Poppins' }
+    })
+  }
+
+  const handleIncrement = () => {
+    if (!product) return
+    addItem(product, 1)
+  }
+
+  const handleDecrement = () => {
+    if (!cartItem || !product) return
+    if (cartItem.cantidad === 1) {
+      removeItem(product.id)
+    } else {
+      updateQuantity(product.id, cartItem.cantidad - 1)
+    }
+  }
 
   const handleShare = async () => {
     const shareUrl = window.location.href
@@ -306,25 +336,46 @@ export function CatalogProductDetailScreen() {
               </div>
             </div>
 
-            {/* BOTÓN DE ACCIÓN */}
+            {/* BOTÓN DE ACCIÓN / CONTROLES DE CANTIDAD */}
             <div className="pt-4 flex justify-center lg:justify-start pb-8">
-              <Button 
-                disabled={isOutOfStock}
-                className={`w-full max-sm:max-w-full max-w-sm h-14 rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-xl transition-all active:scale-95
-                  ${isOutOfStock 
-                    ? 'bg-slate-200 text-slate-400 shadow-none cursor-not-allowed' 
-                    : 'bg-secondary hover:bg-[#5a2ab1] text-white shadow-secondary/20'}`}
-              >
-                {isOutOfStock ? (
-                  "Próximamente disponible"
-                ) : (
-                  <>
-                    <ShoppingCart size={18} className="mr-3" strokeWidth={2.5} />
-                    Añadir al carrito
-                  </>
-                )}
-              </Button>
+              {isOutOfStock ? (
+                <Button 
+                  disabled
+                  className="w-full max-sm:max-w-full max-w-sm h-14 rounded-full font-black uppercase text-xs tracking-[0.2em] bg-slate-200 text-slate-400 shadow-none cursor-not-allowed"
+                >
+                  Próximamente disponible
+                </Button>
+              ) : isInCart ? (
+                <div className="flex items-center justify-between bg-secondary/10 rounded-full h-14 w-full max-sm:max-w-full max-w-sm px-2 border border-secondary/20 animate-in fade-in zoom-in duration-300">
+                  <Button 
+                    variant="ghost" onClick={handleDecrement}
+                    className="h-10 w-10 md:h-12 md:w-12 rounded-full hover:bg-white text-secondary transition-colors shrink-0"
+                  >
+                    <Minus className="h-5 w-5 md:h-6 md:w-6" />
+                  </Button>
+                  
+                  <span className="text-base md:text-lg font-black text-secondary text-center px-4 w-12 shrink-0">
+                    {cartItem?.cantidad}
+                  </span>
+                  
+                  <Button 
+                    variant="ghost" onClick={handleIncrement}
+                    className="h-10 w-10 md:h-12 md:w-12 rounded-full hover:bg-white text-secondary transition-colors shrink-0"
+                  >
+                    <Plus className="h-5 w-5 md:h-6 md:w-6" />
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  onClick={handleAddToCart}
+                  className="w-full max-sm:max-w-full max-w-sm h-14 rounded-full font-black uppercase text-xs tracking-[0.2em] bg-secondary hover:bg-[#5a2ab1] text-white shadow-xl shadow-secondary/20 transition-transform active:scale-95"
+                >
+                  <ShoppingCart size={18} className="mr-3" strokeWidth={2.5} />
+                  Añadir al carrito
+                </Button>
+              )}
             </div>
+            
           </div>
         </main>
       </div>

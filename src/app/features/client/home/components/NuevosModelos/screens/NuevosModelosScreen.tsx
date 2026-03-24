@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetNewModelsQuery } from "../store/newModelsApi"
 import { ProductClientCard } from "@/components/ui/data-card-table-client"
-import { Link, useNavigate } from "@tanstack/react-router" // Importamos useNavigate
+import { Link, useNavigate } from "@tanstack/react-router"
 import { ImageIcon } from "lucide-react"
+import { useCartStore } from "@/app/features/client/catalog/hooks" 
 
 export function NuevosModelosScreen() {
   const { data, isFetching } = useGetNewModelsQuery()
   const productos = data?.data || []
-  const navigate = useNavigate() // Hook para navegar programáticamente
+  const navigate = useNavigate()
+  
+  // 2. Extraemos la función addItem del store
+  const addItem = useCartStore((state) => state.addItem)
 
   return (
     <section className="py-12 bg-white w-full">
@@ -50,8 +54,7 @@ export function NuevosModelosScreen() {
                 key={product.id}
                 product={product as any} 
                 onAddToCart={(p) => {
-                  // Aquí va tu lógica de carrito
-                  console.log("Añadido al carrito:", p.nombre)
+                  addItem(p, 1)
                 }}
                 onQuickView={(p) => {
                   navigate({
