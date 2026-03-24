@@ -33,8 +33,7 @@ export function MarcasScreen() {
             key={marca.id}
             to="/catalog" 
             search={{ 
-              marca: marca.filterValue, 
-              page: 1 
+              marca: marca.filterValue
             } as any}
             className="group flex flex-col items-center transition-all active:scale-95 overflow-hidden"
           >

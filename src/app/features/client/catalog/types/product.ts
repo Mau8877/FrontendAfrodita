@@ -36,7 +36,7 @@ export interface Product {
   tonos: ProductTono[];
   imagenes: ProductImage[];
   
-  stock_total?: number;
+  stock_disponible?: number;
   
   created_at: string;
   updated_at: string;

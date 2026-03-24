@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from 'react' // <-- Solo necesitamos useState
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Loader2, ImageIcon, ArrowUp, Check } from 'lucide-react'
 import { useGetCatalogQuery } from '../store'
@@ -8,65 +9,55 @@ import { ProductClientCard } from "@/components/ui/data-card-table-client"
 import { Button } from '@/components/ui/button'
 
 export function CatalogScreen() {
+  // 1. Obtenemos filtros de la URL (búsqueda, marca, etc), PERO IGNORAMOS LA PÁGINA
   const searchParams = useSearch({ strict: false }) as unknown as IFilters
   const navigate = useNavigate()
 
-  const { data, isFetching } = useGetCatalogQuery(searchParams)
+  // 2. LA SOLUCIÓN MÁGICA: La página ahora vive en memoria.
+  // Al hacer refresh, esto SIEMPRE nacerá en 1. Fin del problema.
+  const [page, setPage] = useState(1)
+
+  // 3. Unimos los filtros de la URL con nuestra página en memoria
+  const currentFilters = { ...searchParams, page }
+
+  // 4. Petición super limpia
+  const { data, isFetching } = useGetCatalogQuery(currentFilters)
   
   const products = data?.data.results || []
   const hasNextPage = !!data?.data.next
   const totalCount = data?.data.count || 0
 
+  // Al cambiar un filtro (ej. buscar "lentes"), volvemos a la pág 1
   const handleFilterChange = (newParams: Partial<IFilters>) => {
-    (navigate as any)({
-      search: (prev: any) => ({ 
-        ...prev, 
-        ...newParams, 
-        page: 1 
-      }),
+    setPage(1) // Reseteamos la página en memoria a 1
+    ;(navigate as any)({
+      search: (prev: any) => {
+        // Clonamos los parámetros actuales y los nuevos
+        const nextFilters = { ...prev, ...newParams };
+        // Eliminamos 'page' de la URL sin crear variables no usadas
+        delete nextFilters.page; 
+        return nextFilters;
+      },
       replace: true 
     })
   }
 
   const handleReset = () => {
-    (navigate as any)({
-      search: () => ({ 
-        page: 1, 
-        search: '',
-        tipo: undefined,
-        marca: undefined,
-        categoria: undefined,
-        tonos: undefined 
-      }),
+    setPage(1) // Reseteamos a página 1
+    ;(navigate as any)({
+      search: () => ({ search: '', tipo: undefined, marca: undefined, categoria: undefined, tonos: undefined }),
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const loadMore = () => {
     if (hasNextPage && !isFetching) {
-      (navigate as any)({
-        search: (prev: any) => ({ 
-          ...prev, 
-          page: (Number(prev?.page) || 1) + 1 
-        }),
-      })
+      setPage(p => p + 1) // Sumamos 1 a la memoria. ¡La URL ni se entera!
     }
   }
 
-  // --- NUEVAS FUNCIONES DE CONEXIÓN ---
-
   const handleGoToDetail = (productId: string) => {
-    (navigate as any)({
-      // Usamos la ruta limpia que creamos en catalog.product.$productId.tsx
-      to: '/catalog/product/$productId',
-      params: { productId },
-      // IMPORTANTE: Al no pasar el objeto 'search', la URL se limpia de los filtros del catálogo
-    })
-  }
-
-  const handleAddToCart = (product: any) => {
-    // Aquí irá tu lógica de Redux para el carrito más adelante
-    console.log("Añadido al carrito:", product.nombre)
+    (navigate as any)({ to: '/catalog/product/$productId', params: { productId } })
   }
 
   return (
@@ -81,7 +72,6 @@ export function CatalogScreen() {
           />
 
           <main className="flex-1 w-full relative z-0">
-            {/* Título y Contador */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 text-center md:text-left items-center md:items-end">
               <div className="space-y-1">
                 <div className="flex items-center justify-center md:justify-start gap-2">
@@ -96,7 +86,7 @@ export function CatalogScreen() {
               </div>
               
               <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-400">
-                {isFetching ? (
+                {isFetching && page === 1 ? (
                    <span className="animate-pulse">Sincronizando...</span>
                 ) : (
                    <span>{totalCount} Productos encontrados</span>
@@ -106,7 +96,7 @@ export function CatalogScreen() {
             </div>
 
             {/* Grid de productos */}
-            {isFetching && (Number(searchParams.page) || 1) === 1 ? (
+            {isFetching && page === 1 ? (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-10">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="aspect-[3/4.5] rounded-[2rem] md:rounded-[3rem] bg-slate-50 animate-pulse border border-slate-100" />
@@ -118,8 +108,7 @@ export function CatalogScreen() {
                   <ProductClientCard 
                     key={product.id}
                     product={product as any} 
-                    // CONECTAMOS LAS ACCIONES AQUÍ:
-                    onAddToCart={handleAddToCart}
+                    onAddToCart={(p) => console.log("Carrito:", p.nombre)}
                     onQuickView={(p) => handleGoToDetail(p.id)}
                   />
                 ))}
@@ -135,6 +124,7 @@ export function CatalogScreen() {
 
             {/* SECCIÓN FINAL DE PAGINACIÓN */}
             <div className="mt-24 mb-20 flex flex-col items-center justify-center min-h-[120px]">
+              
               {hasNextPage && !isFetching && (
                   <Button 
                     onClick={loadMore} 
@@ -145,7 +135,7 @@ export function CatalogScreen() {
                   </Button>
               )}
 
-              {isFetching && (Number(searchParams.page) || 0) > 1 && (
+              {isFetching && page > 1 && (
                 <div className="flex flex-col items-center gap-4">
                   <Loader2 className="animate-spin text-secondary" size={32} />
                   <span className="text-secondary font-black text-[10px] uppercase tracking-[0.3em]">Cargando...</span>

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react"
-import { ShoppingCart, Eye, ChevronLeft, ChevronRight, Tag } from "lucide-react"
+import { ShoppingCart, Eye, ChevronLeft, ChevronRight, Tag, Share2, Check } from "lucide-react"
 import { Button } from "./button"
-import { type Product } from "@/app/features/catalog"
+import { type Product } from "@/app/features/client/catalog/types"
 
 interface ProductClientCardProps {
   product: Product
@@ -11,8 +12,12 @@ interface ProductClientCardProps {
 
 export function ProductClientCard({ product, onQuickView, onAddToCart }: ProductClientCardProps) {
   const [currentImgIndex, setCurrentImgIndex] = useState(0)
+  const [isShared, setIsShared] = useState(false)
   const imagenes = product.imagenes || []
-  
+
+  // Verificamos si hay stock
+  const isOutOfStock = (product.stock_disponible ?? 0) <= 0
+
   useEffect(() => {
     if (currentImgIndex !== 0) {
       const timer = setTimeout(() => {
@@ -21,6 +26,27 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
       return () => clearTimeout(timer)
     }
   }, [currentImgIndex])
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const shareUrl = window.location.origin + `/catalog/product/${product.id}`
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.nombre,
+          text: `Mira este producto: ${product.nombre}`,
+          url: shareUrl,
+        })
+      } catch (err) {
+        console.log("Error al compartir:", err)
+      }
+    } else {
+      await navigator.clipboard.writeText(shareUrl)
+      setIsShared(true)
+      setTimeout(() => setIsShared(false), 2000)
+    }
+  }
 
   const formattedPrice = Number(product.precio_venta) % 1 === 0 
     ? Math.floor(Number(product.precio_venta)) 
@@ -37,8 +63,19 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
   }
 
   return (
-    <div className="group relative bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-2 md:p-4 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(247,209,208,0.3)] border border-slate-50 flex flex-col h-full">
+    <div className={`group relative bg-white rounded-[1.5rem] md:rounded-[2.5rem] p-2 md:p-4 transition-all duration-500 border border-slate-50 flex flex-col h-full overflow-hidden
+      ${isOutOfStock ? 'grayscale-[0.8] opacity-80' : 'hover:shadow-[0_20px_50px_rgba(247,209,208,0.3)]'}
+    `}>
       
+      {/* BANNER DIAGONAL DE AGOTADO */}
+      {isOutOfStock && (
+        <div className="absolute top-0 right-0 w-24 h-24 md:w-32 md:h-32 overflow-hidden z-20 pointer-events-none">
+          <div className="absolute top-4 -right-8 md:top-6 md:-right-10 bg-slate-800 text-white text-[8px] md:text-[10px] font-black py-1 w-32 md:w-40 text-center transform rotate-45 shadow-lg uppercase tracking-widest">
+            Agotado
+          </div>
+        </div>
+      )}
+
       {/* --- SECCIÓN 1: IMAGEN --- */}
       <div className="relative aspect-square overflow-hidden rounded-[1.2rem] md:rounded-[2rem] bg-slate-50 border border-slate-100">
         {imagenes.length > 0 ? (
@@ -51,9 +88,8 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
           <div className="h-full w-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase">Sin imagen</div>
         )}
 
-        {/* CAMBIO 1: Badge de Marca condicional (Igual al admin) */}
         {product.nombre_marca && (
-          <div className="absolute top-2 left-2 md:top-3 md:left-3">
+          <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10">
             <span className="flex items-center gap-1 bg-white/90 backdrop-blur-md px-2 md:px-3 py-1 rounded-full text-[7px] md:text-[9px] font-black uppercase tracking-widest text-secondary shadow-sm border border-secondary/10">
               <Tag className="w-2.5 h-2.5 md:w-3 md:h-3 text-secondary" />
               {product.nombre_marca}
@@ -61,7 +97,7 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
           </div>
         )}
 
-        {imagenes.length > 1 && (
+        {imagenes.length > 1 && !isOutOfStock && (
           <div className="absolute inset-x-1 md:inset-x-2 top-1/2 -translate-y-1/2 flex justify-between opacity-40 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <Button size="icon" variant="ghost" onClick={prevImage} className="h-6 w-6 md:h-8 md:w-8 rounded-full bg-white/80 backdrop-blur-sm shadow-sm">
               <ChevronLeft className="h-3 w-3 md:h-4 md:w-4 text-slate-700" />
@@ -87,7 +123,6 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
       {/* --- SECCIÓN 2: INFORMACIÓN --- */}
       <div className="mt-3 md:mt-5 flex flex-col flex-grow px-1">
         
-        {/* CAMBIO 2: Categoría Breadcrumb condicional (Sin "/" si falta uno) */}
         <div className="flex items-center gap-1 overflow-hidden mb-1">
           {product.nombre_tipo && (
             <span className="text-[7px] md:text-[9px] font-black text-slate-400 uppercase tracking-tighter shrink-0">
@@ -114,7 +149,6 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
           {product.descripcion || "Sin descripción"}
         </p>
 
-        {/* Colores y SKU */}
         <div className="flex items-center justify-between mt-3 md:mt-4 mb-1 md:mb-2">
           <div className="flex -space-x-1.5 md:-space-x-2">
             {product.colores?.slice(0, 3).map((color) => (
@@ -147,14 +181,28 @@ export function ProductClientCard({ product, onQuickView, onAddToCart }: Product
 
           <div className="flex items-center gap-1 md:gap-2">
             <Button 
+              size="icon" variant="ghost" onClick={handleShare}
+              className={`h-7 w-7 md:h-9 md:w-9 rounded-lg md:rounded-xl transition-all ${isShared ? 'text-green-500' : 'text-slate-400 hover:text-blue-500'}`}
+            >
+              {isShared ? <Check className="h-3.5 w-3.5 md:h-4 md:w-4" /> : <Share2 className="h-3.5 w-3.5 md:h-4 md:w-4" />}
+            </Button>
+
+            <Button 
               size="icon" variant="outline" onClick={() => onQuickView?.(product)}
               className="h-7 w-7 md:h-9 md:w-9 rounded-lg md:rounded-xl border-slate-100 text-slate-400 hover:text-secondary hover:border-secondary transition-all"
             >
               <Eye className="h-3.5 w-3.5 md:h-4 md:w-4" />
             </Button>
+            
             <Button 
-              size="icon" onClick={() => onAddToCart?.(product)}
-              className="h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl bg-secondary hover:bg-secondary/90 text-white shadow-lg shadow-secondary/20 active:scale-95 transition-all"
+              size="icon" 
+              onClick={() => onAddToCart?.(product)}
+              disabled={isOutOfStock}
+              className={`h-8 w-8 md:h-10 md:w-10 rounded-lg md:rounded-xl transition-all 
+                ${isOutOfStock 
+                  ? 'bg-slate-300 text-white cursor-not-allowed shadow-none' 
+                  : 'bg-secondary hover:bg-secondary/90 text-white shadow-lg shadow-secondary/20 active:scale-95'}
+              `}
             >
               <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
             </Button>

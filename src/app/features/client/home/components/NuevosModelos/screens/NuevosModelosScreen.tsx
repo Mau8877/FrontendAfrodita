@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetNewModelsQuery } from "../store/newModelsApi"
 import { ProductClientCard } from "@/components/ui/data-card-table-client"
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router" // Importamos useNavigate
 import { ImageIcon } from "lucide-react"
 
 export function NuevosModelosScreen() {
   const { data, isFetching } = useGetNewModelsQuery()
   const productos = data?.data || []
+  const navigate = useNavigate() // Hook para navegar programáticamente
 
   return (
     <section className="py-12 bg-white w-full">
@@ -45,25 +46,20 @@ export function NuevosModelosScreen() {
         ) : productos.length > 0 ? (
           <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
             {productos.map((product) => (
-              /* ENVOLVEMOS LA CARD CON EL LINK A LA NUEVA RUTA */
-              <Link
+              <ProductClientCard 
                 key={product.id}
-                to="/catalog/product/$productId"
-                params={{ productId: String(product.id) }}
-                className="contents group/card" // contents evita que el <a> rompa el grid
-              >
-                <ProductClientCard 
-                  product={product as any} 
-                  onAddToCart={(p) => {
-                    // Evitamos que el click del carrito dispare la navegación del Link
-                    console.log("Carrito:", p.nombre)
-                  }}
-                  onQuickView={(p) => {
-                    // El Link ya se encarga de navegar, pero puedes dejar esto para analytics
-                    console.log("Navegando a:", p.id)
-                  }}
-                />
-              </Link>
+                product={product as any} 
+                onAddToCart={(p) => {
+                  // Aquí va tu lógica de carrito
+                  console.log("Añadido al carrito:", p.nombre)
+                }}
+                onQuickView={(p) => {
+                  navigate({
+                    to: "/catalog/product/$productId",
+                    params: { productId: String(p.id) }
+                  })
+                }}
+              />
             ))}
           </div>
         ) : (

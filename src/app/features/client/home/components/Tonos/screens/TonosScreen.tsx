@@ -34,8 +34,7 @@ export function TonosScreen() {
             key={tono.id}
             to="/catalog"
             search={{ 
-              tonos: tono.filterValue, 
-              page: 1 
+              tonos: tono.filterValue
             } as any}
             className="group flex flex-col items-center transition-all active:scale-95"
           >

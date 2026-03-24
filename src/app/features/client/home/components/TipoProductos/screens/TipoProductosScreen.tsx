@@ -19,8 +19,7 @@ export function TipoProductosScreen() {
             key={type.id} 
             to="/catalog"
             search={{ 
-              tipo: type.filterValue, 
-              page: 1 
+              tipo: type.filterValue
             } as any}
             className="group flex flex-col items-center gap-2 md:gap-4 transition-all duration-300 active:scale-95 flex-shrink-0"
           >
