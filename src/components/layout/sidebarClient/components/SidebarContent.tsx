@@ -1,7 +1,6 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { type RootState } from '@/app/store'
+import { useDispatch } from 'react-redux'
 import { close } from '../store/sidebarSlice'
-import { X, Home, ShoppingBag, MapPin, HelpCircle } from 'lucide-react'
+import { X, Home, ShoppingBag, HelpCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
 
@@ -14,8 +13,7 @@ export function SidebarContent({ onItemClick }: SidebarContentProps) {
   
   const clientLinks = [
     { label: 'Inicio', to: '/', icon: Home },
-    { label: 'Productos', to: '/productos', icon: ShoppingBag },
-    { label: 'Contacto', to: '/visitanos', icon: MapPin },
+    { label: 'Productos', to: '/catalog', icon: ShoppingBag },
     { label: 'Preguntas Frecuentes', to: '/faq', icon: HelpCircle },
   ]
 

@@ -180,8 +180,8 @@ export function RegisterScreen() {
 
             <div className={`overflow-hidden transition-all duration-500 ease-in-out ${showOptional ? 'max-h-[280px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
               <div className="space-y-2.5 bg-slate-50/50 p-5 rounded-[2rem] border border-slate-100 shadow-inner">
-                <Input {...register("nombre")} placeholder="Nombre" className="h-10 rounded-full border-none bg-white px-6 text-xs focus-visible:ring-primary/20" />
-                <Input {...register("apellido")} placeholder="Apellido" className="h-10 rounded-full border-none bg-white px-6 text-xs focus-visible:ring-primary/20" />
+                <Input {...register("nombre")} placeholder="Nombres" className="h-10 rounded-full border-none bg-white px-6 text-xs focus-visible:ring-primary/20" />
+                <Input {...register("apellido")} placeholder="Apellidos" className="h-10 rounded-full border-none bg-white px-6 text-xs focus-visible:ring-primary/20" />
                 <Input {...register("telefono")} placeholder="Celular" className="h-10 rounded-full border-none bg-white px-6 text-xs focus-visible:ring-primary/20" />
               </div>
             </div>

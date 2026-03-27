@@ -119,12 +119,16 @@ export function UserActions() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-slate-100 mx-2" />
             
-            <DropdownMenuItem className="py-3 rounded-xl cursor-pointer gap-3 font-bold text-slate-700 focus:bg-secondary/10 focus:text-secondary">
-              <UserCircle className="h-4.5 w-4.5" /> Mi Perfil
+            <DropdownMenuItem asChild className="py-3 rounded-xl cursor-pointer gap-3 font-bold text-slate-700 focus:bg-secondary/10 focus:text-secondary">
+              <Link to="/profile">
+                <UserCircle className="h-4.5 w-4.5" /> Mi Perfil
+              </Link>
             </DropdownMenuItem>
             
-            <DropdownMenuItem className="py-3 rounded-xl cursor-pointer gap-3 font-bold text-slate-700 focus:bg-secondary/10 focus:text-secondary">
-              <Package className="h-4.5 w-4.5" /> Mis Pedidos
+            <DropdownMenuItem asChild className="py-3 rounded-xl cursor-pointer gap-3 font-bold text-slate-700 focus:bg-secondary/10 focus:text-secondary">
+              <Link to="/my-orders">
+                <Package className="h-4.5 w-4.5" /> Mis Pedidos
+              </Link>
             </DropdownMenuItem>
             
             <DropdownMenuSeparator className="bg-slate-100 mx-2" />

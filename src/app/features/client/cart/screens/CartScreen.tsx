@@ -70,7 +70,7 @@ export function CartScreen() {
         if (method === 'pickup') {
           textoEnvio = "Recojo en Tienda";
         } else if (rateData?.requiere_coordinacion || shippingCost === 0) {
-          textoEnvio = "A coordinar";
+          textoEnvio = "A otro Departamento / Provincia";
         } else if (coordinates) {
           textoEnvio = `https://www.google.com/maps/search/?api=1&query=${coordinates.lat},${coordinates.lng}`;
         }

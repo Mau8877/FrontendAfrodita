@@ -16,14 +16,21 @@ import { Route as MainSplatRouteImport } from './routes/_main/$'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as MainClientIndexRouteImport } from './routes/_main/_client/index'
+import { Route as MainClientProfileRouteImport } from './routes/_main/_client/profile'
+import { Route as MainClientMyOrdersRouteImport } from './routes/_main/_client/my-orders'
+import { Route as MainClientFaqRouteImport } from './routes/_main/_client/faq'
 import { Route as MainClientCartRouteImport } from './routes/_main/_client/cart'
 import { Route as MainClientCatalogIndexRouteImport } from './routes/_main/_client/catalog.index'
+import { Route as MainAuthenticatedAdminProfileRouteImport } from './routes/_main/_authenticated/admin/profile'
 import { Route as MainAuthenticatedAdminDashboardRouteImport } from './routes/_main/_authenticated/admin/dashboard'
 import { Route as MainClientCatalogProductProductIdRouteImport } from './routes/_main/_client/catalog.product.$productId'
 import { Route as MainAuthenticatedAdminUsersViewRouteImport } from './routes/_main/_authenticated/admin/users/view'
 import { Route as MainAuthenticatedAdminUsersManagementRouteImport } from './routes/_main/_authenticated/admin/users/management'
 import { Route as MainAuthenticatedAdminSecurityLoginLogsRouteImport } from './routes/_main/_authenticated/admin/security/login-logs'
 import { Route as MainAuthenticatedAdminSecurityActionLogsRouteImport } from './routes/_main/_authenticated/admin/security/action-logs'
+import { Route as MainAuthenticatedAdminSalesSalesHistoryRouteImport } from './routes/_main/_authenticated/admin/sales/sales-history'
+import { Route as MainAuthenticatedAdminSalesPosRouteImport } from './routes/_main/_authenticated/admin/sales/pos'
+import { Route as MainAuthenticatedAdminSalesOrdersRouteImport } from './routes/_main/_authenticated/admin/sales/orders'
 import { Route as MainAuthenticatedAdminInventorySuppliersRouteImport } from './routes/_main/_authenticated/admin/inventory/suppliers'
 import { Route as MainAuthenticatedAdminInventoryStockRouteImport } from './routes/_main/_authenticated/admin/inventory/stock'
 import { Route as MainAuthenticatedAdminInventoryBuy_productsRouteImport } from './routes/_main/_authenticated/admin/inventory/buy_products'
@@ -72,6 +79,21 @@ const MainClientIndexRoute = MainClientIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MainClientRoute,
 } as any)
+const MainClientProfileRoute = MainClientProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => MainClientRoute,
+} as any)
+const MainClientMyOrdersRoute = MainClientMyOrdersRouteImport.update({
+  id: '/my-orders',
+  path: '/my-orders',
+  getParentRoute: () => MainClientRoute,
+} as any)
+const MainClientFaqRoute = MainClientFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => MainClientRoute,
+} as any)
 const MainClientCartRoute = MainClientCartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -82,6 +104,12 @@ const MainClientCatalogIndexRoute = MainClientCatalogIndexRouteImport.update({
   path: '/catalog/',
   getParentRoute: () => MainClientRoute,
 } as any)
+const MainAuthenticatedAdminProfileRoute =
+  MainAuthenticatedAdminProfileRouteImport.update({
+    id: '/admin/profile',
+    path: '/admin/profile',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
 const MainAuthenticatedAdminDashboardRoute =
   MainAuthenticatedAdminDashboardRouteImport.update({
     id: '/admin/dashboard',
@@ -116,6 +144,24 @@ const MainAuthenticatedAdminSecurityActionLogsRoute =
   MainAuthenticatedAdminSecurityActionLogsRouteImport.update({
     id: '/admin/security/action-logs',
     path: '/admin/security/action-logs',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminSalesSalesHistoryRoute =
+  MainAuthenticatedAdminSalesSalesHistoryRouteImport.update({
+    id: '/admin/sales/sales-history',
+    path: '/admin/sales/sales-history',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminSalesPosRoute =
+  MainAuthenticatedAdminSalesPosRouteImport.update({
+    id: '/admin/sales/pos',
+    path: '/admin/sales/pos',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminSalesOrdersRoute =
+  MainAuthenticatedAdminSalesOrdersRouteImport.update({
+    id: '/admin/sales/orders',
+    path: '/admin/sales/orders',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
 const MainAuthenticatedAdminInventorySuppliersRoute =
@@ -215,7 +261,11 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/cart': typeof MainClientCartRoute
+  '/faq': typeof MainClientFaqRoute
+  '/my-orders': typeof MainClientMyOrdersRoute
+  '/profile': typeof MainClientProfileRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/profile': typeof MainAuthenticatedAdminProfileRoute
   '/catalog/': typeof MainClientCatalogIndexRoute
   '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
   '/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
@@ -232,6 +282,9 @@ export interface FileRoutesByFullPath {
   '/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
+  '/admin/sales/orders': typeof MainAuthenticatedAdminSalesOrdersRoute
+  '/admin/sales/pos': typeof MainAuthenticatedAdminSalesPosRoute
+  '/admin/sales/sales-history': typeof MainAuthenticatedAdminSalesSalesHistoryRoute
   '/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
   '/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
@@ -244,7 +297,11 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/$': typeof MainSplatRoute
   '/cart': typeof MainClientCartRoute
+  '/faq': typeof MainClientFaqRoute
+  '/my-orders': typeof MainClientMyOrdersRoute
+  '/profile': typeof MainClientProfileRoute
   '/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/admin/profile': typeof MainAuthenticatedAdminProfileRoute
   '/catalog': typeof MainClientCatalogIndexRoute
   '/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
   '/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
@@ -261,6 +318,9 @@ export interface FileRoutesByTo {
   '/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
+  '/admin/sales/orders': typeof MainAuthenticatedAdminSalesOrdersRoute
+  '/admin/sales/pos': typeof MainAuthenticatedAdminSalesPosRoute
+  '/admin/sales/sales-history': typeof MainAuthenticatedAdminSalesSalesHistoryRoute
   '/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
   '/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
@@ -276,8 +336,12 @@ export interface FileRoutesById {
   '/_main/_authenticated': typeof MainAuthenticatedRouteWithChildren
   '/_main/_client': typeof MainClientRouteWithChildren
   '/_main/_client/cart': typeof MainClientCartRoute
+  '/_main/_client/faq': typeof MainClientFaqRoute
+  '/_main/_client/my-orders': typeof MainClientMyOrdersRoute
+  '/_main/_client/profile': typeof MainClientProfileRoute
   '/_main/_client/': typeof MainClientIndexRoute
   '/_main/_authenticated/admin/dashboard': typeof MainAuthenticatedAdminDashboardRoute
+  '/_main/_authenticated/admin/profile': typeof MainAuthenticatedAdminProfileRoute
   '/_main/_client/catalog/': typeof MainClientCatalogIndexRoute
   '/_main/_authenticated/admin/catalog/brands_management': typeof MainAuthenticatedAdminCatalogBrands_managementRoute
   '/_main/_authenticated/admin/catalog/categories_management': typeof MainAuthenticatedAdminCatalogCategories_managementRoute
@@ -294,6 +358,9 @@ export interface FileRoutesById {
   '/_main/_authenticated/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/_main/_authenticated/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/_main/_authenticated/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
+  '/_main/_authenticated/admin/sales/orders': typeof MainAuthenticatedAdminSalesOrdersRoute
+  '/_main/_authenticated/admin/sales/pos': typeof MainAuthenticatedAdminSalesPosRoute
+  '/_main/_authenticated/admin/sales/sales-history': typeof MainAuthenticatedAdminSalesSalesHistoryRoute
   '/_main/_authenticated/admin/security/action-logs': typeof MainAuthenticatedAdminSecurityActionLogsRoute
   '/_main/_authenticated/admin/security/login-logs': typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   '/_main/_authenticated/admin/users/management': typeof MainAuthenticatedAdminUsersManagementRoute
@@ -308,7 +375,11 @@ export interface FileRouteTypes {
     | '/register'
     | '/$'
     | '/cart'
+    | '/faq'
+    | '/my-orders'
+    | '/profile'
     | '/admin/dashboard'
+    | '/admin/profile'
     | '/catalog/'
     | '/admin/catalog/brands_management'
     | '/admin/catalog/categories_management'
@@ -325,6 +396,9 @@ export interface FileRouteTypes {
     | '/admin/inventory/buy_products'
     | '/admin/inventory/stock'
     | '/admin/inventory/suppliers'
+    | '/admin/sales/orders'
+    | '/admin/sales/pos'
+    | '/admin/sales/sales-history'
     | '/admin/security/action-logs'
     | '/admin/security/login-logs'
     | '/admin/users/management'
@@ -337,7 +411,11 @@ export interface FileRouteTypes {
     | '/register'
     | '/$'
     | '/cart'
+    | '/faq'
+    | '/my-orders'
+    | '/profile'
     | '/admin/dashboard'
+    | '/admin/profile'
     | '/catalog'
     | '/admin/catalog/brands_management'
     | '/admin/catalog/categories_management'
@@ -354,6 +432,9 @@ export interface FileRouteTypes {
     | '/admin/inventory/buy_products'
     | '/admin/inventory/stock'
     | '/admin/inventory/suppliers'
+    | '/admin/sales/orders'
+    | '/admin/sales/pos'
+    | '/admin/sales/sales-history'
     | '/admin/security/action-logs'
     | '/admin/security/login-logs'
     | '/admin/users/management'
@@ -368,8 +449,12 @@ export interface FileRouteTypes {
     | '/_main/_authenticated'
     | '/_main/_client'
     | '/_main/_client/cart'
+    | '/_main/_client/faq'
+    | '/_main/_client/my-orders'
+    | '/_main/_client/profile'
     | '/_main/_client/'
     | '/_main/_authenticated/admin/dashboard'
+    | '/_main/_authenticated/admin/profile'
     | '/_main/_client/catalog/'
     | '/_main/_authenticated/admin/catalog/brands_management'
     | '/_main/_authenticated/admin/catalog/categories_management'
@@ -386,6 +471,9 @@ export interface FileRouteTypes {
     | '/_main/_authenticated/admin/inventory/buy_products'
     | '/_main/_authenticated/admin/inventory/stock'
     | '/_main/_authenticated/admin/inventory/suppliers'
+    | '/_main/_authenticated/admin/sales/orders'
+    | '/_main/_authenticated/admin/sales/pos'
+    | '/_main/_authenticated/admin/sales/sales-history'
     | '/_main/_authenticated/admin/security/action-logs'
     | '/_main/_authenticated/admin/security/login-logs'
     | '/_main/_authenticated/admin/users/management'
@@ -450,6 +538,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainClientIndexRouteImport
       parentRoute: typeof MainClientRoute
     }
+    '/_main/_client/profile': {
+      id: '/_main/_client/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof MainClientProfileRouteImport
+      parentRoute: typeof MainClientRoute
+    }
+    '/_main/_client/my-orders': {
+      id: '/_main/_client/my-orders'
+      path: '/my-orders'
+      fullPath: '/my-orders'
+      preLoaderRoute: typeof MainClientMyOrdersRouteImport
+      parentRoute: typeof MainClientRoute
+    }
+    '/_main/_client/faq': {
+      id: '/_main/_client/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof MainClientFaqRouteImport
+      parentRoute: typeof MainClientRoute
+    }
     '/_main/_client/cart': {
       id: '/_main/_client/cart'
       path: '/cart'
@@ -463,6 +572,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/catalog/'
       preLoaderRoute: typeof MainClientCatalogIndexRouteImport
       parentRoute: typeof MainClientRoute
+    }
+    '/_main/_authenticated/admin/profile': {
+      id: '/_main/_authenticated/admin/profile'
+      path: '/admin/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof MainAuthenticatedAdminProfileRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
     }
     '/_main/_authenticated/admin/dashboard': {
       id: '/_main/_authenticated/admin/dashboard'
@@ -504,6 +620,27 @@ declare module '@tanstack/react-router' {
       path: '/admin/security/action-logs'
       fullPath: '/admin/security/action-logs'
       preLoaderRoute: typeof MainAuthenticatedAdminSecurityActionLogsRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/sales/sales-history': {
+      id: '/_main/_authenticated/admin/sales/sales-history'
+      path: '/admin/sales/sales-history'
+      fullPath: '/admin/sales/sales-history'
+      preLoaderRoute: typeof MainAuthenticatedAdminSalesSalesHistoryRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/sales/pos': {
+      id: '/_main/_authenticated/admin/sales/pos'
+      path: '/admin/sales/pos'
+      fullPath: '/admin/sales/pos'
+      preLoaderRoute: typeof MainAuthenticatedAdminSalesPosRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/sales/orders': {
+      id: '/_main/_authenticated/admin/sales/orders'
+      path: '/admin/sales/orders'
+      fullPath: '/admin/sales/orders'
+      preLoaderRoute: typeof MainAuthenticatedAdminSalesOrdersRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
     '/_main/_authenticated/admin/inventory/suppliers': {
@@ -616,6 +753,7 @@ declare module '@tanstack/react-router' {
 
 interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminDashboardRoute: typeof MainAuthenticatedAdminDashboardRoute
+  MainAuthenticatedAdminProfileRoute: typeof MainAuthenticatedAdminProfileRoute
   MainAuthenticatedAdminCatalogBrands_managementRoute: typeof MainAuthenticatedAdminCatalogBrands_managementRoute
   MainAuthenticatedAdminCatalogCategories_managementRoute: typeof MainAuthenticatedAdminCatalogCategories_managementRoute
   MainAuthenticatedAdminCatalogColor_managementRoute: typeof MainAuthenticatedAdminCatalogColor_managementRoute
@@ -631,6 +769,9 @@ interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminInventoryBuy_productsRoute: typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   MainAuthenticatedAdminInventoryStockRoute: typeof MainAuthenticatedAdminInventoryStockRoute
   MainAuthenticatedAdminInventorySuppliersRoute: typeof MainAuthenticatedAdminInventorySuppliersRoute
+  MainAuthenticatedAdminSalesOrdersRoute: typeof MainAuthenticatedAdminSalesOrdersRoute
+  MainAuthenticatedAdminSalesPosRoute: typeof MainAuthenticatedAdminSalesPosRoute
+  MainAuthenticatedAdminSalesSalesHistoryRoute: typeof MainAuthenticatedAdminSalesSalesHistoryRoute
   MainAuthenticatedAdminSecurityActionLogsRoute: typeof MainAuthenticatedAdminSecurityActionLogsRoute
   MainAuthenticatedAdminSecurityLoginLogsRoute: typeof MainAuthenticatedAdminSecurityLoginLogsRoute
   MainAuthenticatedAdminUsersManagementRoute: typeof MainAuthenticatedAdminUsersManagementRoute
@@ -639,6 +780,7 @@ interface MainAuthenticatedRouteChildren {
 
 const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
   MainAuthenticatedAdminDashboardRoute: MainAuthenticatedAdminDashboardRoute,
+  MainAuthenticatedAdminProfileRoute: MainAuthenticatedAdminProfileRoute,
   MainAuthenticatedAdminCatalogBrands_managementRoute:
     MainAuthenticatedAdminCatalogBrands_managementRoute,
   MainAuthenticatedAdminCatalogCategories_managementRoute:
@@ -669,6 +811,11 @@ const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
     MainAuthenticatedAdminInventoryStockRoute,
   MainAuthenticatedAdminInventorySuppliersRoute:
     MainAuthenticatedAdminInventorySuppliersRoute,
+  MainAuthenticatedAdminSalesOrdersRoute:
+    MainAuthenticatedAdminSalesOrdersRoute,
+  MainAuthenticatedAdminSalesPosRoute: MainAuthenticatedAdminSalesPosRoute,
+  MainAuthenticatedAdminSalesSalesHistoryRoute:
+    MainAuthenticatedAdminSalesSalesHistoryRoute,
   MainAuthenticatedAdminSecurityActionLogsRoute:
     MainAuthenticatedAdminSecurityActionLogsRoute,
   MainAuthenticatedAdminSecurityLoginLogsRoute:
@@ -683,6 +830,9 @@ const MainAuthenticatedRouteWithChildren =
 
 interface MainClientRouteChildren {
   MainClientCartRoute: typeof MainClientCartRoute
+  MainClientFaqRoute: typeof MainClientFaqRoute
+  MainClientMyOrdersRoute: typeof MainClientMyOrdersRoute
+  MainClientProfileRoute: typeof MainClientProfileRoute
   MainClientIndexRoute: typeof MainClientIndexRoute
   MainClientCatalogIndexRoute: typeof MainClientCatalogIndexRoute
   MainClientCatalogProductProductIdRoute: typeof MainClientCatalogProductProductIdRoute
@@ -690,6 +840,9 @@ interface MainClientRouteChildren {
 
 const MainClientRouteChildren: MainClientRouteChildren = {
   MainClientCartRoute: MainClientCartRoute,
+  MainClientFaqRoute: MainClientFaqRoute,
+  MainClientMyOrdersRoute: MainClientMyOrdersRoute,
+  MainClientProfileRoute: MainClientProfileRoute,
   MainClientIndexRoute: MainClientIndexRoute,
   MainClientCatalogIndexRoute: MainClientCatalogIndexRoute,
   MainClientCatalogProductProductIdRoute:

@@ -30,6 +30,8 @@ import {
   QrCode,
   Key,
   UserRoundCog,
+  ClipboardList,
+  CircleDollarSign,
 } from 'lucide-react'
 
 export const iconMap: Record<string, LucideIcon> = {
@@ -63,4 +65,6 @@ export const iconMap: Record<string, LucideIcon> = {
   QrCode,
   Key,
   UserRoundCog,
+  ClipboardList,
+  CircleDollarSign,
 }

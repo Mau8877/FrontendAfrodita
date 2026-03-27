@@ -1,9 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { authSelectors, logout } from '@/app/features/auth/store'
 import { useLogoutServerMutation } from '@/app/features/auth/store/loginApi'
-import { ShoppingCart, User, ChevronDown, LogOut, Loader2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useNavigate } from '@tanstack/react-router'
+import { User, ChevronDown, LogOut, Loader2, UserCircle } from 'lucide-react'
+import { useNavigate, Link } from '@tanstack/react-router'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,15 +58,7 @@ export function UserActions() {
 
   return (
     <div className="flex items-center gap-4">
-      {/* 1. ÍCONO DE CARRITO */}
-      <Button variant="ghost" size="icon" className="relative text-slate-700 hover:bg-white/40 rounded-full transition-colors">
-        <ShoppingCart className="h-5 w-5 text-secondary" strokeWidth={2.5} />
-      </Button>
-
-      {/* Separador vertical */}
-      <div className="h-6 w-[1px] bg-secondary/20 hidden sm:block" />
-
-      {/* 2. USUARIO CON INFORMACIÓN MEJORADA */}
+      
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button 
@@ -104,8 +95,10 @@ export function UserActions() {
             Mi Cuenta
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-secondary/10" />
-          <DropdownMenuItem className="cursor-pointer font-medium text-slate-700 focus:text-secondary focus:bg-secondary/5">
-            <User className="mr-2 h-4 w-4" /> Perfil
+          <DropdownMenuItem asChild className="cursor-pointer rounded-lg py-2.5 font-medium text-slate-700 focus:text-secondary focus:bg-secondary/5 transition-colors">
+            <Link to="/admin/profile">
+              <UserCircle className="mr-2 h-4.5 w-4.5" /> Ver Perfil
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="bg-secondary/10" />
           <DropdownMenuItem 
