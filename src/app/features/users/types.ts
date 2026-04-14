@@ -1,5 +1,5 @@
 import type { UserCreateFormValues, UserEditFormValues } from "./schemas";
-import type { StandardResponse, PaginatedData } from '@/app/common.types';
+import type { StandardResponse, PaginatedData } from "@/app/common.types";
 
 // --- MODELOS DE DATOS (DOMINIO) ---
 
@@ -13,7 +13,7 @@ export interface Perfil {
 export interface Telefono {
   id?: string; // ID opcional para sincronización
   numero: string;
-  tipo: string; 
+  tipo: string;
 }
 
 export interface Direccion {
@@ -33,7 +33,7 @@ export interface Role {
 export interface RolesListResponse {
   success: boolean;
   message: string;
-  data: Role[] | { results: Role[] }; 
+  data: Role[] | { results: Role[] };
 }
 
 // --- INTERFAZ PRINCIPAL DE USUARIO ---
@@ -43,14 +43,22 @@ export interface User {
   username: string;
   email: string;
   id_rol: string;
-  rol_nombre: string;   
+  rol_nombre: string;
   is_active: boolean;
-  is_staff: boolean;    
-  created_at: string;    
+  is_staff: boolean;
+  created_at: string;
   deleted_at: string | null;
   perfil: Perfil | null;
   telefonos: Telefono[];
   direcciones: Direccion[];
+}
+
+export interface UserSimple {
+  id: string;
+  username: string;
+  email: string;
+  nombre_completo: string;
+  puntos_fidelidad: number;
 }
 
 // --- TIPOS PARA PETICIONES (REQUESTS) ---
@@ -64,3 +72,4 @@ export type UpdateUserRequest = {
 
 export type UsersListResponse = StandardResponse<PaginatedData<User>>;
 export type UserResponse = StandardResponse<User>;
+export type UserSimpleListResponse = StandardResponse<UserSimple[]>;
