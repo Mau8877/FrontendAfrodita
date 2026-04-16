@@ -4,12 +4,12 @@ import type {
   CreateVentaRequest,
   VentasListResponse,
   PedidoDetailResponse,
+  ProductoSimpleListResponse,
 } from "../types";
 
 export const ventasApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // --- 1. BUSCAR PEDIDO POR CÓDIGO (PRE-VENTA) ---
-    // Ideal para buscar con el código "K4SV" y rellenar el formulario
     getPedidoByCodigo: builder.query<PedidoDetailResponse, string>({
       query: (codigo) => ({
         url: "/ventas/pedidos/buscar/",
@@ -18,7 +18,7 @@ export const ventasApi = api.injectEndpoints({
       }),
     }),
 
-    // --- 3. LISTADO HISTÓRICO DE VENTAS ---
+    // --- 2. LISTADO HISTÓRICO DE VENTAS ---
     getVentas: builder.query<
       VentasListResponse,
       { page?: number; search?: string; estado?: string }
@@ -40,7 +40,7 @@ export const ventasApi = api.injectEndpoints({
           : [{ type: "Ventas", id: "LIST" }],
     }),
 
-    // --- 4. CREAR VENTA (CHECKOUT) ---
+    // --- 3. CREAR VENTA (CHECKOUT) ---
     createVenta: builder.mutation<VentaCreateResponse, CreateVentaRequest>({
       query: (nuevaVenta) => ({
         url: "/sales/ventas/",
@@ -53,7 +53,7 @@ export const ventasApi = api.injectEndpoints({
       ],
     }),
 
-    // --- 5. ANULAR VENTA ---
+    // --- 4. ANULAR VENTA ---
     anularVenta: builder.mutation<
       { success: boolean; mensaje: string },
       string
@@ -68,14 +68,29 @@ export const ventasApi = api.injectEndpoints({
         { type: "ActionLogs", id: "LIST" },
       ],
     }),
+
+    // --- 5. BUSCADOR SIMPLE DE PRODUCTOS ---
+    getProductsSimple: builder.query<
+      ProductoSimpleListResponse,
+      { search?: string }
+    >({
+      query: (params) => ({
+        url: "/products/simple-list/",
+        method: "GET",
+        params,
+      }),
+      providesTags: [{ type: "Products", id: "SIMPLE_LIST" }],
+    }),
   }),
   overrideExisting: false,
 });
 
 export const {
   useGetPedidoByCodigoQuery,
-  useLazyGetPedidoByCodigoQuery, // Exportamos la versión Lazy para ejecutarla al hacer click en "Buscar"
+  useLazyGetPedidoByCodigoQuery,
   useGetVentasQuery,
   useCreateVentaMutation,
   useAnularVentaMutation,
+  useGetProductsSimpleQuery,
+  useLazyGetProductsSimpleQuery,
 } = ventasApi;

@@ -23,19 +23,24 @@ import { TablaProductosVenta } from "../components/TablaProductosVenta";
 import { CheckoutPanel } from "../components/CheckoutPanel";
 
 export function VentasScreen() {
-  // --- 1. RTK QUERY HOOKS ---
   const [triggerSearch, { isFetching: isSearching }] =
     useLazyGetPedidoByCodigoQuery();
   const { data: sucursalesRes } = useGetBranchesSimpleQuery();
   const { data: metodosPagoRes } = useGetPaymentMethodsSimpleQuery();
   const [createVenta, { isLoading: isCreating }] = useCreateVentaMutation();
 
-  // --- 2. ESTADOS LOCALES (UI Cliente) ---
   const [nombreCliente, setNombreCliente] = useState("");
   const [metodoEntrega, setMetodoEntrega] = useState("pickup");
   const [referencia, setReferencia] = useState("");
 
-  // --- 3. REACT HOOK FORM SETUP ---
+  // Coordenadas actuales modificables
+  const [latitud, setLatitud] = useState<number | null>(null);
+  const [longitud, setLongitud] = useState<number | null>(null);
+
+  // Coordenadas originales para el botón Reset
+  const [originalLat, setOriginalLat] = useState<number | null>(null);
+  const [originalLng, setOriginalLng] = useState<number | null>(null);
+
   const {
     control,
     handleSubmit,
@@ -58,21 +63,19 @@ export function VentasScreen() {
     },
   });
 
-  // Hook para manejar el array de productos dinámicamente
-  const { fields, update, remove } = useFieldArray({
+  // 👇 AÑADIDO: Sacamos 'append' para poder agregar filas vacías
+  const { fields, update, remove, append } = useFieldArray({
     control,
     name: "detalles",
   });
 
-  // Observamos los valores para pasarlos a los componentes y calcular
   const detallesWatch = watch("detalles");
   const totalEnvioWatch = watch("total_envio");
   const idSucursalWatch = watch("id_sucursal");
   const idMetodoWatch = watch("id_metodo_pago");
   const observacionesWatch = watch("observaciones");
-  const idClienteWatch = watch("id_cliente"); // <--- NUEVO: Vigilamos el ID del cliente
+  const idClienteWatch = watch("id_cliente");
 
-  // --- 4. EFECTO: RECALCULAR TOTALES ---
   useEffect(() => {
     const subtotal = detallesWatch.reduce(
       (acc, item) => acc + item.cantidad * item.precio_final,
@@ -84,7 +87,6 @@ export function VentasScreen() {
     });
   }, [detallesWatch, totalEnvioWatch, setValue]);
 
-  // --- 5. FUNCIONES HANDLE ---
   const handleBuscarPedido = async (codigo: string) => {
     try {
       const res = await triggerSearch(codigo).unwrap();
@@ -97,12 +99,28 @@ export function VentasScreen() {
       toast.success(`Pedido ${codigo} cargado correctamente`);
 
       setValue("id_pedido", res.id);
-      setValue("id_cliente", datosJson.cliente.id_auth || null);
       setValue("total_envio", datosJson.entrega.costo_envio);
-
-      setNombreCliente(datosJson.cliente.nombre_reserva || "Cliente Invitado");
       setMetodoEntrega(datosJson.entrega.metodo || "pickup");
       setReferencia(datosJson.entrega.referencia || "");
+
+      setLatitud(datosJson.entrega.latitud || null);
+      setLongitud(datosJson.entrega.longitud || null);
+      setOriginalLat(datosJson.entrega.latitud || null);
+      setOriginalLng(datosJson.entrega.longitud || null);
+
+      const isInvitado = !datosJson.cliente.id_auth;
+      const nombreDesdeWsp = datosJson.cliente.nombre_reserva || "Desconocido";
+
+      if (isInvitado) {
+        setValue("id_cliente", null, { shouldValidate: true });
+        setNombreCliente("cliente_generico");
+        setValue("observaciones", `Reserva a nombre de: ${nombreDesdeWsp}\n`);
+      } else {
+        setValue("id_cliente", datosJson.cliente.id_auth, {
+          shouldValidate: true,
+        });
+        setNombreCliente(nombreDesdeWsp);
+      }
 
       const nuevosDetalles = datosJson.productos.map((p) => ({
         id_producto: p.id_producto,
@@ -117,6 +135,31 @@ export function VentasScreen() {
         error?.data?.errors || "No se encontró el pedido o ya fue procesado",
       );
     }
+  };
+
+  // 👇 NUEVO: Agregar fila vacía
+  const handleAddEmptyItem = () => {
+    append({
+      id_producto: "",
+      nombre: "",
+      cantidad: 1,
+      precio_final: 0,
+      subtotal: 0,
+    });
+  };
+
+  // 👇 NUEVO: Actualizar el ID y nombre cuando seleccionan del dropdown
+  const handleUpdateProducto = (
+    index: number,
+    id_producto: string,
+    nombre: string,
+  ) => {
+    const item = detallesWatch[index];
+    update(index, {
+      ...item,
+      id_producto,
+      nombre,
+    });
   };
 
   const handleUpdateCantidad = (index: number, nuevaCantidad: number) => {
@@ -137,14 +180,17 @@ export function VentasScreen() {
     });
   };
 
-  // --- 6. SUBMIT VENTA ---
   const onSubmitVenta = async (data: VentaFormValues) => {
     try {
       const etiquetaEntrega =
         metodoEntrega === "pickup" ? "RECOJO" : "DELIVERY";
-      // Si hay un cliente registrado, lo anotamos en las notas también por seguridad
       const tagCliente = data.id_cliente ? "[REGISTRADO]" : "[INVITADO]";
-      const notasCompletas = `[${etiquetaEntrega}] ${tagCliente} Nombre: ${nombreCliente} | Ref: ${referencia}\nNotas Vendedor: ${data.observaciones || "Ninguna"}`;
+
+      const avisoMapa =
+        latitud !== originalLat || longitud !== originalLng
+          ? " (Ubicación ajustada en mapa)"
+          : "";
+      const notasCompletas = `[${etiquetaEntrega}] ${tagCliente} Nombre: ${nombreCliente} | Ref: ${referencia}${avisoMapa}\nNotas Vendedor: ${data.observaciones || "Ninguna"}`;
 
       const payload: VentaFormValues = {
         ...data,
@@ -158,6 +204,10 @@ export function VentasScreen() {
       setNombreCliente("");
       setReferencia("");
       setMetodoEntrega("pickup");
+      setLatitud(null);
+      setLongitud(null);
+      setOriginalLat(null);
+      setOriginalLng(null);
     } catch (error: any) {
       const errorMessage =
         typeof error?.data?.errors === "string"
@@ -167,25 +217,9 @@ export function VentasScreen() {
     }
   };
 
-  // --- 7. RENDER ---
   return (
     <div className="flex flex-col lg:flex-row h-[100dvh] bg-slate-100 overflow-hidden font-sans">
-      {/* COLUMNA IZQUIERDA */}
       <div className="w-full lg:w-[65%] xl:w-[70%] h-full overflow-y-auto p-4 md:p-6 lg:p-8 custom-scrollbar">
-        <header className="flex items-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-            <ShoppingBag className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              Punto de Venta
-            </h1>
-            <p className="text-sm font-medium text-slate-500">
-              Procesa pedidos y realiza ventas rápidas
-            </p>
-          </div>
-        </header>
-
         <div className="space-y-6 max-w-4xl">
           <BuscadorPedido
             onSearch={handleBuscarPedido}
@@ -193,7 +227,6 @@ export function VentasScreen() {
           />
 
           <InfoClientCard
-            // --- NUEVOS PROPS PARA EL BUSCADOR DE CLIENTES ---
             idCliente={idClienteWatch ?? null}
             onClienteSelect={(id, nombre) => {
               setValue("id_cliente", id, { shouldValidate: true });
@@ -203,17 +236,26 @@ export function VentasScreen() {
               setValue("id_cliente", null, { shouldValidate: true });
               setNombreCliente("");
             }}
-            // -------------------------------------------------
             nombre={nombreCliente}
-            onNombreChange={setNombreCliente}
             metodoEntrega={metodoEntrega}
             onMetodoChange={setMetodoEntrega}
             referencia={referencia}
             onReferenciaChange={setReferencia}
+            latitud={latitud}
+            longitud={longitud}
+            originalLat={originalLat}
+            originalLng={originalLng}
+            onLocationChange={(nuevoLat, nuevoLng) => {
+              setLatitud(nuevoLat);
+              setLongitud(nuevoLng);
+            }}
           />
 
           <TablaProductosVenta
             items={fields as any[]}
+            // 👇 NUEVAS PROPS PASADAS A LA TABLA 👇
+            onAddItem={handleAddEmptyItem}
+            onUpdateProducto={handleUpdateProducto}
             onUpdateCantidad={handleUpdateCantidad}
             onUpdatePrecio={handleUpdatePrecio}
             onRemoveItem={remove}
@@ -221,7 +263,6 @@ export function VentasScreen() {
         </div>
       </div>
 
-      {/* COLUMNA DERECHA */}
       <div className="w-full lg:w-[35%] xl:w-[30%] bg-white border-l border-slate-200 shadow-[-10px_0_30px_rgba(0,0,0,0.03)] p-6 lg:p-8 h-full overflow-y-auto">
         <CheckoutPanel
           sucursales={sucursalesRes?.data || []}

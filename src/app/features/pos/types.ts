@@ -1,5 +1,5 @@
 import type { VentaFormValues } from "./schemas";
-import type { StandardResponse, PaginatedData } from '@/app/common.types';
+import type { StandardResponse, PaginatedData } from "@/app/common.types";
 
 // ==========================================
 // --- MODELOS DE DATOS (DOMINIO) ---
@@ -8,12 +8,12 @@ import type { StandardResponse, PaginatedData } from '@/app/common.types';
 export interface MetodoPago {
   id: string;
   nombre: string;
-  tipo: 'DIRECTO' | 'ONLINE';
+  tipo: "DIRECTO" | "ONLINE";
 }
 
 export interface Venta {
   id: string;
-  estado: 'SOLICITADO_WSP' | 'CONFIRMADO' | 'ENTREGADO' | 'ANULADO';
+  estado: "SOLICITADO_WSP" | "CONFIRMADO" | "ENTREGADO" | "ANULADO";
   total_productos: number;
   total_envio: number;
   total_general: number;
@@ -55,7 +55,7 @@ export interface PedidoTemporal {
   id: string;
   codigo: string;
   datos_json: string; // Ojo: A veces Django lo manda como string (necesita JSON.parse) o ya como objeto dependiendo de tu config de DRF. Si DRF lo parsea, cambia esto a PedidoJsonData
-  estado: 'PENDIENTE' | 'PROCESADO' | 'CANCELADO';
+  estado: "PENDIENTE" | "PROCESADO" | "CANCELADO";
   created_at: string;
 }
 
@@ -77,9 +77,15 @@ export interface VentaCreateResponse {
   total_general?: number;
   mensaje?: string;
   data?: Venta;
-  errors?: any;
+  errors?: unknown;
 }
 
+export interface ProductoSimple {
+  id: string;
+  nombre: string;
+}
+
+export type ProductoSimpleListResponse = StandardResponse<ProductoSimple[]>;
 export type MetodosPagoResponse = StandardResponse<MetodoPago[]>;
 export type VentasListResponse = StandardResponse<PaginatedData<Venta>>;
 export type PedidoDetailResponse = PedidoTemporal; // El GET del pedido devuelve el objeto directo
