@@ -7,7 +7,7 @@ export const pedidoCreateSchema = z.object({
 });
 
 export const pedidoEditSchema = z.object({
-  estado: z.enum(["COMPLETADO", "EN_CAMINO", "CANCELADO"]),
+  estado: z.enum(["PENDIENTE", "COMPLETADO", "EN_CAMINO", "CANCELADO"]),
 });
 
 export type PedidoCreateFormValues = z.infer<typeof pedidoCreateSchema>;

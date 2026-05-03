@@ -5,17 +5,19 @@ import { useState } from "react";
 import { GenericDeleteModal } from "@/components/GenericDeleteModal";
 import { DataTable } from "@/components/ui/data-table";
 import { PageHeader } from "@/components/ui/page-header";
-import { PedidoCreateModal, PedidoEditModal } from "../components";
+import { PedidoDetailModal, PedidoEditModal } from "../components";
 import { useDeletePedidoMutation, useGetPedidosQuery } from "../store";
 import type { Pedido } from "../types";
 
 const ESTADO_LABELS: Record<Pedido["estado"], string> = {
+  PENDIENTE: "Pendiente",
   COMPLETADO: "Completado",
   EN_CAMINO: "En Camino",
   CANCELADO: "Cancelado",
 };
 
 const ESTADO_BADGE_STYLES: Record<Pedido["estado"], string> = {
+  PENDIENTE: "bg-amber-100 text-amber-700 border-amber-200",
   COMPLETADO: "bg-emerald-100 text-emerald-700 border-emerald-200",
   EN_CAMINO: "bg-orange-100 text-orange-700 border-orange-200",
   CANCELADO: "bg-rose-100 text-rose-700 border-rose-200",
@@ -29,9 +31,10 @@ export const PedidosScreen = () => {
 
   const [pedidoToEdit, setPedidoToEdit] = useState<Pedido | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [pedidoToDetail, setPedidoToDetail] = useState<Pedido | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [pedidoToDelete, setPedidoToDelete] = useState<Pedido | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const [deletePedido] = useDeletePedidoMutation();
 
@@ -127,11 +130,14 @@ export const PedidosScreen = () => {
             setPedidoToEdit(pedido);
             setIsEditOpen(true);
           }}
+          onDetail={(pedido) => {
+            setPedidoToDetail(pedido);
+            setIsDetailOpen(true);
+          }}
           onDelete={(pedido) => {
             setPedidoToDelete(pedido);
             setIsDeleteOpen(true);
           }}
-          onAdd={() => setIsCreateOpen(true)}
         />
       </div>
 
@@ -144,9 +150,13 @@ export const PedidosScreen = () => {
         }}
       />
 
-      <PedidoCreateModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
+      <PedidoDetailModal
+        pedidoId={pedidoToDetail?.id}
+        isOpen={isDetailOpen}
+        onClose={() => {
+          setIsDetailOpen(false);
+          setPedidoToDetail(null);
+        }}
       />
 
       <GenericDeleteModal

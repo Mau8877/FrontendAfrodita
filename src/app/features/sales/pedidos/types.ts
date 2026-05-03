@@ -30,7 +30,7 @@ export interface Pedido {
       total_general?: number;
     };
   };
-  estado: "COMPLETADO" | "EN_CAMINO" | "CANCELADO";
+  estado: "PENDIENTE" | "COMPLETADO" | "EN_CAMINO" | "CANCELADO";
   cliente_nombre: string | null;
   total_general: number | null;
   cantidad_items: number;

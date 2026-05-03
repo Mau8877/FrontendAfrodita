@@ -49,7 +49,7 @@ export function PedidoEditModal({ pedido, isOpen, onClose }: PedidoEditModalProp
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<FormInput, any, FormOutput>({
     resolver: zodResolver(pedidoEditSchema),
-    defaultValues: { estado: "EN_CAMINO" },
+    defaultValues: { estado: "PENDIENTE" },
   });
 
   useEffect(() => {
@@ -121,15 +121,16 @@ export function PedidoEditModal({ pedido, isOpen, onClose }: PedidoEditModalProp
                 control={form.control}
                 name="estado"
                 render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="text-[9px] font-bold uppercase text-slate-400 ml-1">Estado</FormLabel>
+                  <FormItem className="space-y-2 max-w-[320px] mx-auto w-full">
+                    <FormLabel className="text-[9px] font-bold uppercase text-slate-400 text-center block">Estado</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger className="h-10 rounded-xl border-blue-500/10 font-bold text-secondary bg-slate-50/50">
+                        <SelectTrigger className="h-10 w-full rounded-xl border-blue-500/10 font-bold text-secondary bg-slate-50/50">
                           <SelectValue placeholder="Seleccione estado" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="rounded-xl">
+                        <SelectItem value="PENDIENTE" className="font-bold text-xs uppercase">Pendiente</SelectItem>
                         <SelectItem value="COMPLETADO" className="font-bold text-xs uppercase">Completado</SelectItem>
                         <SelectItem value="EN_CAMINO" className="font-bold text-xs uppercase">En Camino</SelectItem>
                         <SelectItem value="CANCELADO" className="font-bold text-xs uppercase">Cancelado</SelectItem>
