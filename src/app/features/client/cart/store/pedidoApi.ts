@@ -14,6 +14,7 @@ export const pedidoApi = api.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: [{ type: 'PEDIDO', id: 'LIST' }],
     }),
 
     // Por si el admin necesita buscarlo después en el frontend

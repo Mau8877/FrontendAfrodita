@@ -16,7 +16,7 @@ export const api = createApi({
     'Users', 'Auth', 'Menu', 'Roles', 'LoginLogs', 'ActionLogs',
     'Brands', 'Categories', 'ProductTypes', 'Colors', 'Tonos',
     'Products', 'Suppliers', 'Replenishment', 'Stock', 'PaymentMethods',
-    'Branches', 'ShippingRates', 'Ventas',
+    'Branches', 'ShippingRates', 'Ventas', 'PEDIDO',
     
     // TAGS DE CLIENTES
     

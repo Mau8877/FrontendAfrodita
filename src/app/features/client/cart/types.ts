@@ -63,7 +63,7 @@ export interface PedidoResponse {
   id: string;
   codigo: string; // El código de 6 dígitos (3B24AC)
   datos_json: unknown; // El objeto completo hidratado
-  estado: 'PENDIENTE' | 'PROCESADO' | 'CANCELADO';
+  estado: 'COMPLETADO' | 'EN_CAMINO' | 'CANCELADO';
   created_at: string;
 }
 

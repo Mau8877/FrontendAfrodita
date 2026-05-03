@@ -55,7 +55,7 @@ export interface PedidoTemporal {
   id: string;
   codigo: string;
   datos_json: string; // Ojo: A veces Django lo manda como string (necesita JSON.parse) o ya como objeto dependiendo de tu config de DRF. Si DRF lo parsea, cambia esto a PedidoJsonData
-  estado: "PENDIENTE" | "PROCESADO" | "CANCELADO";
+  estado: "COMPLETADO" | "EN_CAMINO" | "CANCELADO";
   created_at: string;
 }
 

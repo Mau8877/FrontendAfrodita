@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Link } from '@tanstack/react-router'
-import tonoCeleste from '@/assets/homePage/Tonos/Tono Celeste.png'
-import tonoVerde from '@/assets/homePage/Tonos/Tono Verde.png'
-import tonoMiel from '@/assets/homePage/Tonos/Tono Miel.png'
-import tonoGris from '@/assets/homePage/Tonos/Tono Gris.png'
+import tonoCeleste from "@/assets/homePage/Tonos/Tono Celeste.png";
+import tonoGris from "@/assets/homePage/Tonos/Tono Gris.png";
+import tonoMiel from "@/assets/homePage/Tonos/Tono Miel.png";
+import tonoVerde from "@/assets/homePage/Tonos/Tono Verde.png";
+import { Link } from "@tanstack/react-router";
 
 const TONOS = [
-  { id: 1, name: 'Celeste', img: tonoCeleste, filterValue: 'Celestes' },
-  { id: 2, name: 'Verde', img: tonoVerde, filterValue: 'Verdes' },
-  { id: 3, name: 'Miel', img: tonoMiel, filterValue: 'Mielel' },
-  { id: 4, name: 'Gris', img: tonoGris, filterValue: 'Grises' },
-]
+  { id: 1, name: "Celeste", img: tonoCeleste, filterValue: "Celestes" },
+  { id: 2, name: "Verde", img: tonoVerde, filterValue: "Verdes" },
+  { id: 3, name: "Miel", img: tonoMiel, filterValue: "Mieles" },
+  { id: 4, name: "Gris", img: tonoGris, filterValue: "Grises" },
+];
 
 export function TonosScreen() {
   return (
     <section className="pt-2 pb-5 w-full flex flex-col items-center px-4 md:px-12">
-      
       {/* Encabezado */}
       <div className="text-center mb-10 md:mb-16 space-y-2">
         <h2 className="text-2xl md:text-5xl font-black text-slate-800 uppercase tracking-tighter">
@@ -33,9 +32,11 @@ export function TonosScreen() {
           <Link
             key={tono.id}
             to="/catalog"
-            search={{ 
-              tonos: tono.filterValue
-            } as any}
+            search={
+              {
+                tonos: tono.filterValue,
+              } as any
+            }
             className="group flex flex-col items-center transition-all active:scale-95"
           >
             <div className="relative w-full aspect-square rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-lg md:shadow-2xl border border-slate-100 group-hover:shadow-secondary/40 transition-all duration-700">
@@ -60,5 +61,5 @@ export function TonosScreen() {
         ))}
       </div>
     </section>
-  )
+  );
 }
