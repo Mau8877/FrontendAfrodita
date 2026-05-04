@@ -169,12 +169,16 @@ export function ProductClientCard({ product, onQuickView }: ProductClientCardPro
               {product.nombre_tipo}
             </span>
           )}
-          {product.nombre_tipo && product.nombre_categoria && (
+          {product.nombre_tipo && (product.categorias?.length ?? 0) > 0 && (
             <span className="text-[7px] md:text-[9px] text-slate-300 shrink-0">/</span>
           )}
-          {product.nombre_categoria && (
+          {(product.categorias?.length ?? 0) > 0 ? (
             <span className="text-[7px] md:text-[9px] font-black text-secondary/60 uppercase tracking-tighter truncate">
-              {product.nombre_categoria}
+              {product.categorias.map((categoria) => categoria.nombre).join(", ")}
+            </span>
+          ) : (
+            <span className="text-[7px] md:text-[9px] font-black text-secondary/60 uppercase tracking-tighter truncate">
+              Sin categoría
             </span>
           )}
         </div>
