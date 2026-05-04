@@ -13,7 +13,7 @@ export interface MetodoPago {
 
 export interface Venta {
   id: string;
-  estado: "SOLICITADO_WSP" | "CONFIRMADO" | "ENTREGADO" | "ANULADO";
+  estado: "PENDIENTE" | "COMPLETADO" | "CANCELADO";
   total_productos: number;
   total_envio: number;
   total_general: number;
@@ -55,7 +55,7 @@ export interface PedidoTemporal {
   id: string;
   codigo: string;
   datos_json: string; // Ojo: A veces Django lo manda como string (necesita JSON.parse) o ya como objeto dependiendo de tu config de DRF. Si DRF lo parsea, cambia esto a PedidoJsonData
-  estado: "COMPLETADO" | "EN_CAMINO" | "CANCELADO";
+  estado: "PENDIENTE" | "COMPLETADO" | "CANCELADO";
   created_at: string;
 }
 

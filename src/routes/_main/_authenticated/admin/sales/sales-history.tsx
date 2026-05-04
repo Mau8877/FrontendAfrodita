@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { HistorialVentasScreen } from '@/app/features/sales/historial-ventas'
 
 export const Route = createFileRoute(
   '/_main/_authenticated/admin/sales/sales-history',
@@ -7,5 +8,5 @@ export const Route = createFileRoute(
 })
 
 function RouteComponent() {
-  return <div>Hello "/_main/_authenticated/admin/sales/sales-history"!</div>
+  return <HistorialVentasScreen />
 }

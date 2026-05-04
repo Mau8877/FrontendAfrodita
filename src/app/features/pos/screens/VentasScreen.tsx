@@ -90,15 +90,16 @@ export function VentasScreen() {
   const handleBuscarPedido = async (codigo: string) => {
     try {
       const res = await triggerSearch(codigo).unwrap();
+      const pedido = (res as any)?.data ?? res;
 
       const datosJson: PedidoJsonData =
-        typeof res.datos_json === "string"
-          ? JSON.parse(res.datos_json)
-          : res.datos_json;
+        typeof (pedido as any).datos_json === "string"
+          ? JSON.parse((pedido as any).datos_json)
+          : (pedido as any).datos_json;
 
       toast.success(`Pedido ${codigo} cargado correctamente`);
 
-      setValue("id_pedido", res.id);
+      setValue("id_pedido", (pedido as any).id);
       setValue("total_envio", datosJson.entrega.costo_envio);
       setMetodoEntrega(datosJson.entrega.metodo || "pickup");
       setReferencia(datosJson.entrega.referencia || "");

@@ -31,6 +31,11 @@ import { Route as MainAuthenticatedAdminSecurityActionLogsRouteImport } from './
 import { Route as MainAuthenticatedAdminSalesSalesHistoryRouteImport } from './routes/_main/_authenticated/admin/sales/sales-history'
 import { Route as MainAuthenticatedAdminSalesPosRouteImport } from './routes/_main/_authenticated/admin/sales/pos'
 import { Route as MainAuthenticatedAdminSalesOrdersRouteImport } from './routes/_main/_authenticated/admin/sales/orders'
+import { Route as MainAuthenticatedAdminReportsVentasSucursalRouteImport } from './routes/_main/_authenticated/admin/reports/ventas-sucursal'
+import { Route as MainAuthenticatedAdminReportsVentasPeriodoRouteImport } from './routes/_main/_authenticated/admin/reports/ventas-periodo'
+import { Route as MainAuthenticatedAdminReportsStockCriticoRouteImport } from './routes/_main/_authenticated/admin/reports/stock-critico'
+import { Route as MainAuthenticatedAdminReportsProductosMasVendidosRouteImport } from './routes/_main/_authenticated/admin/reports/productos-mas-vendidos'
+import { Route as MainAuthenticatedAdminReportsComprasProveedorRouteImport } from './routes/_main/_authenticated/admin/reports/compras-proveedor'
 import { Route as MainAuthenticatedAdminInventorySuppliersRouteImport } from './routes/_main/_authenticated/admin/inventory/suppliers'
 import { Route as MainAuthenticatedAdminInventoryStockRouteImport } from './routes/_main/_authenticated/admin/inventory/stock'
 import { Route as MainAuthenticatedAdminInventoryBuy_productsRouteImport } from './routes/_main/_authenticated/admin/inventory/buy_products'
@@ -164,6 +169,36 @@ const MainAuthenticatedAdminSalesOrdersRoute =
     path: '/admin/sales/orders',
     getParentRoute: () => MainAuthenticatedRoute,
   } as any)
+const MainAuthenticatedAdminReportsVentasSucursalRoute =
+  MainAuthenticatedAdminReportsVentasSucursalRouteImport.update({
+    id: '/admin/reports/ventas-sucursal',
+    path: '/admin/reports/ventas-sucursal',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminReportsVentasPeriodoRoute =
+  MainAuthenticatedAdminReportsVentasPeriodoRouteImport.update({
+    id: '/admin/reports/ventas-periodo',
+    path: '/admin/reports/ventas-periodo',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminReportsStockCriticoRoute =
+  MainAuthenticatedAdminReportsStockCriticoRouteImport.update({
+    id: '/admin/reports/stock-critico',
+    path: '/admin/reports/stock-critico',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminReportsProductosMasVendidosRoute =
+  MainAuthenticatedAdminReportsProductosMasVendidosRouteImport.update({
+    id: '/admin/reports/productos-mas-vendidos',
+    path: '/admin/reports/productos-mas-vendidos',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
+const MainAuthenticatedAdminReportsComprasProveedorRoute =
+  MainAuthenticatedAdminReportsComprasProveedorRouteImport.update({
+    id: '/admin/reports/compras-proveedor',
+    path: '/admin/reports/compras-proveedor',
+    getParentRoute: () => MainAuthenticatedRoute,
+  } as any)
 const MainAuthenticatedAdminInventorySuppliersRoute =
   MainAuthenticatedAdminInventorySuppliersRouteImport.update({
     id: '/admin/inventory/suppliers',
@@ -282,6 +317,11 @@ export interface FileRoutesByFullPath {
   '/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
+  '/admin/reports/compras-proveedor': typeof MainAuthenticatedAdminReportsComprasProveedorRoute
+  '/admin/reports/productos-mas-vendidos': typeof MainAuthenticatedAdminReportsProductosMasVendidosRoute
+  '/admin/reports/stock-critico': typeof MainAuthenticatedAdminReportsStockCriticoRoute
+  '/admin/reports/ventas-periodo': typeof MainAuthenticatedAdminReportsVentasPeriodoRoute
+  '/admin/reports/ventas-sucursal': typeof MainAuthenticatedAdminReportsVentasSucursalRoute
   '/admin/sales/orders': typeof MainAuthenticatedAdminSalesOrdersRoute
   '/admin/sales/pos': typeof MainAuthenticatedAdminSalesPosRoute
   '/admin/sales/sales-history': typeof MainAuthenticatedAdminSalesSalesHistoryRoute
@@ -318,6 +358,11 @@ export interface FileRoutesByTo {
   '/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
+  '/admin/reports/compras-proveedor': typeof MainAuthenticatedAdminReportsComprasProveedorRoute
+  '/admin/reports/productos-mas-vendidos': typeof MainAuthenticatedAdminReportsProductosMasVendidosRoute
+  '/admin/reports/stock-critico': typeof MainAuthenticatedAdminReportsStockCriticoRoute
+  '/admin/reports/ventas-periodo': typeof MainAuthenticatedAdminReportsVentasPeriodoRoute
+  '/admin/reports/ventas-sucursal': typeof MainAuthenticatedAdminReportsVentasSucursalRoute
   '/admin/sales/orders': typeof MainAuthenticatedAdminSalesOrdersRoute
   '/admin/sales/pos': typeof MainAuthenticatedAdminSalesPosRoute
   '/admin/sales/sales-history': typeof MainAuthenticatedAdminSalesSalesHistoryRoute
@@ -358,6 +403,11 @@ export interface FileRoutesById {
   '/_main/_authenticated/admin/inventory/buy_products': typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   '/_main/_authenticated/admin/inventory/stock': typeof MainAuthenticatedAdminInventoryStockRoute
   '/_main/_authenticated/admin/inventory/suppliers': typeof MainAuthenticatedAdminInventorySuppliersRoute
+  '/_main/_authenticated/admin/reports/compras-proveedor': typeof MainAuthenticatedAdminReportsComprasProveedorRoute
+  '/_main/_authenticated/admin/reports/productos-mas-vendidos': typeof MainAuthenticatedAdminReportsProductosMasVendidosRoute
+  '/_main/_authenticated/admin/reports/stock-critico': typeof MainAuthenticatedAdminReportsStockCriticoRoute
+  '/_main/_authenticated/admin/reports/ventas-periodo': typeof MainAuthenticatedAdminReportsVentasPeriodoRoute
+  '/_main/_authenticated/admin/reports/ventas-sucursal': typeof MainAuthenticatedAdminReportsVentasSucursalRoute
   '/_main/_authenticated/admin/sales/orders': typeof MainAuthenticatedAdminSalesOrdersRoute
   '/_main/_authenticated/admin/sales/pos': typeof MainAuthenticatedAdminSalesPosRoute
   '/_main/_authenticated/admin/sales/sales-history': typeof MainAuthenticatedAdminSalesSalesHistoryRoute
@@ -396,6 +446,11 @@ export interface FileRouteTypes {
     | '/admin/inventory/buy_products'
     | '/admin/inventory/stock'
     | '/admin/inventory/suppliers'
+    | '/admin/reports/compras-proveedor'
+    | '/admin/reports/productos-mas-vendidos'
+    | '/admin/reports/stock-critico'
+    | '/admin/reports/ventas-periodo'
+    | '/admin/reports/ventas-sucursal'
     | '/admin/sales/orders'
     | '/admin/sales/pos'
     | '/admin/sales/sales-history'
@@ -432,6 +487,11 @@ export interface FileRouteTypes {
     | '/admin/inventory/buy_products'
     | '/admin/inventory/stock'
     | '/admin/inventory/suppliers'
+    | '/admin/reports/compras-proveedor'
+    | '/admin/reports/productos-mas-vendidos'
+    | '/admin/reports/stock-critico'
+    | '/admin/reports/ventas-periodo'
+    | '/admin/reports/ventas-sucursal'
     | '/admin/sales/orders'
     | '/admin/sales/pos'
     | '/admin/sales/sales-history'
@@ -471,6 +531,11 @@ export interface FileRouteTypes {
     | '/_main/_authenticated/admin/inventory/buy_products'
     | '/_main/_authenticated/admin/inventory/stock'
     | '/_main/_authenticated/admin/inventory/suppliers'
+    | '/_main/_authenticated/admin/reports/compras-proveedor'
+    | '/_main/_authenticated/admin/reports/productos-mas-vendidos'
+    | '/_main/_authenticated/admin/reports/stock-critico'
+    | '/_main/_authenticated/admin/reports/ventas-periodo'
+    | '/_main/_authenticated/admin/reports/ventas-sucursal'
     | '/_main/_authenticated/admin/sales/orders'
     | '/_main/_authenticated/admin/sales/pos'
     | '/_main/_authenticated/admin/sales/sales-history'
@@ -643,6 +708,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainAuthenticatedAdminSalesOrdersRouteImport
       parentRoute: typeof MainAuthenticatedRoute
     }
+    '/_main/_authenticated/admin/reports/ventas-sucursal': {
+      id: '/_main/_authenticated/admin/reports/ventas-sucursal'
+      path: '/admin/reports/ventas-sucursal'
+      fullPath: '/admin/reports/ventas-sucursal'
+      preLoaderRoute: typeof MainAuthenticatedAdminReportsVentasSucursalRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/reports/ventas-periodo': {
+      id: '/_main/_authenticated/admin/reports/ventas-periodo'
+      path: '/admin/reports/ventas-periodo'
+      fullPath: '/admin/reports/ventas-periodo'
+      preLoaderRoute: typeof MainAuthenticatedAdminReportsVentasPeriodoRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/reports/stock-critico': {
+      id: '/_main/_authenticated/admin/reports/stock-critico'
+      path: '/admin/reports/stock-critico'
+      fullPath: '/admin/reports/stock-critico'
+      preLoaderRoute: typeof MainAuthenticatedAdminReportsStockCriticoRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/reports/productos-mas-vendidos': {
+      id: '/_main/_authenticated/admin/reports/productos-mas-vendidos'
+      path: '/admin/reports/productos-mas-vendidos'
+      fullPath: '/admin/reports/productos-mas-vendidos'
+      preLoaderRoute: typeof MainAuthenticatedAdminReportsProductosMasVendidosRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
+    '/_main/_authenticated/admin/reports/compras-proveedor': {
+      id: '/_main/_authenticated/admin/reports/compras-proveedor'
+      path: '/admin/reports/compras-proveedor'
+      fullPath: '/admin/reports/compras-proveedor'
+      preLoaderRoute: typeof MainAuthenticatedAdminReportsComprasProveedorRouteImport
+      parentRoute: typeof MainAuthenticatedRoute
+    }
     '/_main/_authenticated/admin/inventory/suppliers': {
       id: '/_main/_authenticated/admin/inventory/suppliers'
       path: '/admin/inventory/suppliers'
@@ -769,6 +869,11 @@ interface MainAuthenticatedRouteChildren {
   MainAuthenticatedAdminInventoryBuy_productsRoute: typeof MainAuthenticatedAdminInventoryBuy_productsRoute
   MainAuthenticatedAdminInventoryStockRoute: typeof MainAuthenticatedAdminInventoryStockRoute
   MainAuthenticatedAdminInventorySuppliersRoute: typeof MainAuthenticatedAdminInventorySuppliersRoute
+  MainAuthenticatedAdminReportsComprasProveedorRoute: typeof MainAuthenticatedAdminReportsComprasProveedorRoute
+  MainAuthenticatedAdminReportsProductosMasVendidosRoute: typeof MainAuthenticatedAdminReportsProductosMasVendidosRoute
+  MainAuthenticatedAdminReportsStockCriticoRoute: typeof MainAuthenticatedAdminReportsStockCriticoRoute
+  MainAuthenticatedAdminReportsVentasPeriodoRoute: typeof MainAuthenticatedAdminReportsVentasPeriodoRoute
+  MainAuthenticatedAdminReportsVentasSucursalRoute: typeof MainAuthenticatedAdminReportsVentasSucursalRoute
   MainAuthenticatedAdminSalesOrdersRoute: typeof MainAuthenticatedAdminSalesOrdersRoute
   MainAuthenticatedAdminSalesPosRoute: typeof MainAuthenticatedAdminSalesPosRoute
   MainAuthenticatedAdminSalesSalesHistoryRoute: typeof MainAuthenticatedAdminSalesSalesHistoryRoute
@@ -811,6 +916,16 @@ const MainAuthenticatedRouteChildren: MainAuthenticatedRouteChildren = {
     MainAuthenticatedAdminInventoryStockRoute,
   MainAuthenticatedAdminInventorySuppliersRoute:
     MainAuthenticatedAdminInventorySuppliersRoute,
+  MainAuthenticatedAdminReportsComprasProveedorRoute:
+    MainAuthenticatedAdminReportsComprasProveedorRoute,
+  MainAuthenticatedAdminReportsProductosMasVendidosRoute:
+    MainAuthenticatedAdminReportsProductosMasVendidosRoute,
+  MainAuthenticatedAdminReportsStockCriticoRoute:
+    MainAuthenticatedAdminReportsStockCriticoRoute,
+  MainAuthenticatedAdminReportsVentasPeriodoRoute:
+    MainAuthenticatedAdminReportsVentasPeriodoRoute,
+  MainAuthenticatedAdminReportsVentasSucursalRoute:
+    MainAuthenticatedAdminReportsVentasSucursalRoute,
   MainAuthenticatedAdminSalesOrdersRoute:
     MainAuthenticatedAdminSalesOrdersRoute,
   MainAuthenticatedAdminSalesPosRoute: MainAuthenticatedAdminSalesPosRoute,

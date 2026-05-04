@@ -9,16 +9,16 @@ import type {
 
 export const ventasApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // --- 1. BUSCAR PEDIDO POR CÃ“DIGO (PRE-VENTA) ---
+    // --- 1. BUSCAR PEDIDO POR CÓDIGO (PRE-VENTA) ---
     getPedidoByCodigo: builder.query<PedidoDetailResponse, string>({
       query: (codigo) => ({
-        url: "/ventas/pedidos/buscar/",
+        url: "/sales/pedidos/buscar/",
         method: "GET",
         params: { codigo },
       }),
     }),
 
-    // --- 2. LISTADO HISTÃ“RICO DE VENTAS ---
+    // --- 2. LISTADO HISTÓRICO DE VENTAS ---
     getVentas: builder.query<
       VentasListResponse,
       { page?: number; search?: string; estado?: string }
@@ -49,7 +49,8 @@ export const ventasApi = api.injectEndpoints({
       }),
       invalidatesTags: [
         { type: "Ventas", id: "LIST" }, // Refresca la tabla de ventas
-        { type: "ActionLogs", id: "LIST" }, // Por si tienes un log de auditorÃ­a
+        { type: "PEDIDO", id: "LIST" }, // Refresca la tabla de pedidos
+        { type: "ActionLogs", id: "LIST" }, // Por si tienes un log de auditoría
       ],
     }),
 

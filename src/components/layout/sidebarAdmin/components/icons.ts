@@ -32,6 +32,9 @@ import {
   UserRoundCog,
   ClipboardList,
   CircleDollarSign,
+  Trophy,
+  AlertTriangle,
+  LineChart,
 } from 'lucide-react'
 
 export const iconMap: Record<string, LucideIcon> = {
@@ -67,4 +70,7 @@ export const iconMap: Record<string, LucideIcon> = {
   UserRoundCog,
   ClipboardList,
   CircleDollarSign,
+  Trophy,
+  AlertTriangle,
+  LineChart,
 }
