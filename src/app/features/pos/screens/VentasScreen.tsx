@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { ShoppingBag } from "lucide-react";
 
 // Schemas y Types
 import { ventaSchema, type VentaFormValues } from "../schemas";
