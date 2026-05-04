@@ -18,7 +18,7 @@ const MARCAS = [
     name: "UrbanLayer",
     img: logoUrbanLayer,
     slogan: "Estilo Urbano",
-    filterValue: "Urbanlayer",
+    filterValue: "UrbanLayer",
   },
   {
     id: 3,
