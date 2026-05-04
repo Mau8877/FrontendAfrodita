@@ -16,11 +16,15 @@ export interface ProductTono {
   nombre: string;
 }
 
+export interface ProductCategoria {
+  id: string;
+  nombre: string;
+}
+
 export interface Product {
   id: string;
   id_tipo: string;
   id_marca: string;
-  id_categoria: string;
   nombre: string;
   sku: string;
   descripcion: string | null;
@@ -29,9 +33,9 @@ export interface Product {
   is_visible: boolean;
   
   nombre_marca: string;
-  nombre_categoria: string;
   nombre_tipo: string;
   
+  categorias: ProductCategoria[];
   colores: ProductColor[];
   tonos: ProductTono[];
   imagenes: ProductImage[];

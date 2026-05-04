@@ -17,9 +17,6 @@ import { setCredentials } from '@/app/store/authSlice'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-// Importación directa del asset
-import loginLogo from '@/assets/Login/LogoConNumero.png' 
-
 export function LoginScreen() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -107,7 +104,7 @@ export function LoginScreen() {
         </div>
         <div className="relative z-10 flex flex-col items-center text-center space-y-6">
           <div className="w-40 md:w-64 bg-white/10 p-4 rounded-3xl backdrop-blur-sm border border-white/20">
-            <img src={loginLogo} alt="Afrodita Logo" className="w-full h-auto object-contain" />
+            <img src="/Logo HD.png" alt="Afrodita Logo" className="w-full h-auto object-contain" />
           </div>
           <p className="max-w-[280px] font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs leading-relaxed">
             Resaltando la belleza de tu mirada con tecnología y elegancia
@@ -195,3 +192,4 @@ export function LoginScreen() {
     </div>
   )
 }
+

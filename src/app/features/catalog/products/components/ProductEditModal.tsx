@@ -94,8 +94,8 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
     resolver: zodResolver(productSchema) as any,
     defaultValues: {
       nombre: "", descripcion: "", sku: "", precio_venta: "" as any,
-      stock_minimo: 3, id_marca: "none", id_categoria: "none", id_tipo: "",
-      colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: []
+      stock_minimo: 3, id_marca: "none", id_tipo: "",
+      categorias_ids: [], colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: []
     },
   })
 
@@ -108,8 +108,6 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
     if (product && isOpen) {
       // Sincronización crucial: Si el campo es null en DB, lo pasamos a "none" para el Select
       const marcaVal = product.id_marca || "none";
-      const categoriaVal = product.id_categoria || "none";
-
       form.reset({
         nombre: product.nombre,
         descripcion: product.descripcion || "",
@@ -117,8 +115,8 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
         precio_venta: product.precio_venta as any,
         stock_minimo: product.stock_minimo,
         id_marca: marcaVal,
-        id_categoria: categoriaVal,
         id_tipo: product.id_tipo,
+        categorias_ids: (product.categorias || []).map((c: { id: string }) => c.id),
         // Tipamos explícitamente los elementos del array para el .map()
         colores_ids: (product.colores || []).map((c: { id: string }) => c.id),
         tonos_ids: (product.tonos || []).map((t: { id: string }) => t.id),
@@ -172,7 +170,7 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
     
     // Al enviar, si es "none", mandamos string vacío para que Django guarde NULL
     formData.append('id_marca', values.id_marca === "none" ? "" : (values.id_marca || ""));
-    formData.append('id_categoria', values.id_categoria === "none" ? "" : (values.id_categoria || ""));
+    values.categorias_ids.forEach(id => formData.append('categorias_ids', id));
     
     formData.append('is_visible', String(values.is_visible));
 
@@ -284,18 +282,6 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
                     </Select>
                   </FormItem>
                 )} />
-                <FormField control={form.control} name="id_categoria" render={({ field }) => (
-                  <FormItem className="space-y-1.5">
-                    <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Layers className="w-3.5 h-3.5" /> Categoría</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || "none"}>
-                      <FormControl><SelectTrigger className="h-10 rounded-2xl font-bold bg-white border-slate-200 shadow-sm"><SelectValue placeholder="..." /></SelectTrigger></FormControl>
-                      <SelectContent>
-                        <SelectItem value="none" className="font-bold text-slate-300 uppercase text-[10px]">Sin Categoría</SelectItem>
-                        {selectors.categorias.map((c) => <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
                 <FormField control={form.control} name="id_tipo" render={({ field }) => (
                   <FormItem className="space-y-1.5">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Folders className="w-3.5 h-3.5" /> Tipo</FormLabel>
@@ -304,6 +290,22 @@ export function ProductEditModal({ product, isOpen, onClose }: ProductEditModalP
                       <SelectContent>{selectors.tipos.map((t) => <SelectItem key={t.id} value={t.id}>{t.nombre}</SelectItem>)}</SelectContent>
                     </Select>
                   </FormItem>
+                )} />
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1"><Layers className="w-4 h-4 text-secondary" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Categorias</h4></div>
+                <FormField control={form.control} name="categorias_ids" render={({ field }) => (
+                  <div className="flex flex-wrap gap-2.5 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                    {selectors.categorias.map((categoria) => (
+                      <button key={categoria.id} type="button" onClick={() => {
+                        const next = field.value.includes(categoria.id) ? field.value.filter(id => id !== categoria.id) : [...field.value, categoria.id];
+                        field.onChange(next);
+                      }} className={`flex items-center gap-2.5 px-4 py-2 rounded-full border-2 transition-all duration-300 ${field.value.includes(categoria.id) ? 'bg-secondary text-white border-secondary shadow-lg scale-105' : 'bg-white text-slate-500 border-slate-200 hover:border-secondary/50'}`}>
+                        <span className="text-[10px] font-black uppercase tracking-tight">{categoria.nombre}</span>
+                      </button>
+                    ))}
+                  </div>
                 )} />
               </div>
 

@@ -90,6 +90,23 @@ export function CatalogFiltersBar({ filters, onFilterChange, onReset }: Props) {
 
   if (isLoading) return <aside className="w-full md:w-[320px] shrink-0 p-8 animate-pulse bg-primary/15 rounded-[2rem]" />;
 
+  const selectedCategories = (filters?.categoria || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  const handleCategoryToggle = (categoryName: string) => {
+    const exists = selectedCategories.includes(categoryName);
+    const nextCategories = exists
+      ? selectedCategories.filter((name) => name !== categoryName)
+      : [...selectedCategories, categoryName];
+
+    onFilterChange({
+      categoria: nextCategories.length ? nextCategories.join(",") : undefined,
+      page: 1,
+    });
+  };
+
   return (
     <aside className="w-full md:w-[320px] shrink-0 sticky top-0 md:top-6 self-start z-10">
       <div className="flex flex-col bg-white md:bg-primary/15 rounded-b-[2rem] md:rounded-[2.5rem] shadow-lg md:shadow-primary/10 border-b md:border border-white/40 max-h-[90vh] md:max-h-[85vh] transition-all duration-300 relative z-50">
@@ -161,7 +178,29 @@ export function CatalogFiltersBar({ filters, onFilterChange, onReset }: Props) {
           <FilterSection title="Tipos" items={selectors?.data.tipos || []} filterKey="tipo" currentValue={filters?.tipo} onSelect={(k, v) => onFilterChange({ [k]: filters[k] === v ? undefined : v, page: 1 })} />
           <FilterSection title="Tonos" items={selectors?.data.tonos || []} filterKey="tonos" currentValue={filters?.tonos} onSelect={(k, v) => onFilterChange({ [k]: filters[k] === v ? undefined : v, page: 1 })} />
           <FilterSection title="Marcas" items={selectors?.data.marcas || []} filterKey="marca" currentValue={filters?.marca} onSelect={(k, v) => onFilterChange({ [k]: filters[k] === v ? undefined : v, page: 1 })} />
-          <FilterSection title="Categorías" items={selectors?.data.categorias || []} filterKey="categoria" currentValue={filters?.categoria} onSelect={(k, v) => onFilterChange({ [k]: filters[k] === v ? undefined : v, page: 1 })} />
+          <div className="space-y-2.5">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-primary/70 px-1">Categorias</h3>
+            <div className="flex flex-row md:flex-wrap gap-2 overflow-x-auto md:overflow-visible pb-2 custom-scrollbar snap-x">
+              {(selectors?.data.categorias || []).map((item: any) => {
+                const isSelected = selectedCategories.includes(item.nombre);
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleCategoryToggle(item.nombre)}
+                    className={`snap-start whitespace-nowrap flex items-center justify-center px-3.5 py-1.5 md:py-2 rounded-2xl text-[9px] md:text-[10px] font-bold transition-all ${
+                      isSelected
+                        ? "bg-secondary text-white shadow-md shadow-secondary/30 scale-105"
+                        : "bg-white text-slate-500 border border-transparent hover:border-primary/20 hover:bg-primary/5 shadow-sm"
+                    }`}
+                  >
+                    {item.nombre.toUpperCase()}
+                    {isSelected && <X size={12} className="ml-1.5 opacity-90" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
