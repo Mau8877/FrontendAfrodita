@@ -13,9 +13,9 @@ export const productSchema = z.object({
   
   descripcion: z
     .string()
-    .max(1000, "Descripción demasiado larga")
+    .max(1000, "Descripcion demasiado larga")
     .optional()
-    .nullable() // Permite null
+    .nullable()
     .or(z.literal("")),
 
   precio_venta: z.coerce
@@ -27,29 +27,26 @@ export const productSchema = z.object({
     .int()
     .default(3),
   
-  id_tipo: z.string().uuid("Seleccione un tipo válido"),
+  id_tipo: z.string().uuid("Seleccione un tipo valido"),
   
   id_marca: z
     .string()
-    .uuid("Seleccione una marca válida")
+    .uuid("Seleccione una marca valida")
     .or(z.literal("none")) 
     .optional()
     .nullable(),
 
-  id_categoria: z
-    .string()
-    .uuid("Seleccione una categoría válida")
-    .or(z.literal("none"))
-    .optional()
-    .nullable(),
+  categorias_ids: z
+    .array(z.string().uuid())
+    .default([]),
 
   colores_ids: z
     .array(z.string().uuid())
-    .default([]), // Quitamos el .min(1) para que los estuches pasen
+    .default([]),
 
   tonos_ids: z
     .array(z.string().uuid())
-    .default([]), // Quitamos el .min(1)
+    .default([]),
 
   imagenes_upload: z
     .array(

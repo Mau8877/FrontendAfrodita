@@ -83,8 +83,8 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
     resolver: zodResolver(productSchema) as any,
     defaultValues: {
       nombre: "", descripcion: "", sku: "", precio_venta: "" as any,
-      stock_minimo: 3, id_marca: undefined, id_categoria: undefined, id_tipo: "",
-      colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: []
+      stock_minimo: 3, id_marca: undefined, id_tipo: "",
+      categorias_ids: [], colores_ids: [], tonos_ids: [], is_visible: true, imagenes_upload: []
     },
   })
 
@@ -120,7 +120,7 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
     
     // Solo enviamos si existen, de lo contrario el backend recibirá null/vacio correctamente
     if (values.id_marca) formData.append('id_marca', values.id_marca);
-    if (values.id_categoria) formData.append('id_categoria', values.id_categoria);
+    values.categorias_ids.forEach(id => formData.append('categorias_ids', id));
     
     formData.append('is_visible', String(values.is_visible));
     
@@ -222,18 +222,6 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                     </Select>
                   </FormItem>
                 )} />
-                <FormField control={form.control} name="id_categoria" render={({ field }) => (
-                  <FormItem className="space-y-1.5">
-                    <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Layers className="w-3.5 h-3.5" /> Categoría</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || "none"}>
-                      <FormControl><SelectTrigger className="h-10 rounded-2xl font-bold bg-white border-slate-200 shadow-sm"><SelectValue placeholder="..." /></SelectTrigger></FormControl>
-                      <SelectContent>
-                        <SelectItem value="none" className="font-bold text-slate-300 uppercase text-[10px]">Sin Categoría</SelectItem>
-                        {selectors.categorias.map(c => <SelectItem key={c.id} value={c.id}>{c.nombre}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
                 <FormField control={form.control} name="id_tipo" render={({ field }) => (
                   <FormItem className="space-y-1.5">
                     <FormLabel className="text-[10px] font-black uppercase text-slate-400 flex items-center gap-1.5 ml-1"><Folders className="w-3.5 h-3.5" /> Tipo</FormLabel>
@@ -242,6 +230,22 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
                       <SelectContent>{selectors.tipos.map(t => <SelectItem key={t.id} value={t.id}>{t.nombre}</SelectItem>)}</SelectContent>
                     </Select>
                   </FormItem>
+                )} />
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1"><Layers className="w-4 h-4 text-emerald-600" /><h4 className="text-[11px] font-black uppercase tracking-widest text-slate-400">Categorias</h4></div>
+                <FormField control={form.control} name="categorias_ids" render={({ field }) => (
+                  <div className="flex flex-wrap gap-2.5 p-6 bg-slate-50/50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                    {selectors.categorias.map(categoria => (
+                      <button key={categoria.id} type="button" onClick={() => {
+                        const next = field.value.includes(categoria.id) ? field.value.filter(id => id !== categoria.id) : [...field.value, categoria.id];
+                        field.onChange(next);
+                      }} className={`flex items-center gap-2.5 px-4 py-2 rounded-full border-2 transition-all duration-300 ${field.value.includes(categoria.id) ? 'bg-emerald-600 text-white border-emerald-600 shadow-lg scale-105' : 'bg-white text-slate-500 border-slate-200'}`}>
+                        <span className="text-[10px] font-black uppercase tracking-tight">{categoria.nombre}</span>
+                      </button>
+                    ))}
+                  </div>
                 )} />
               </div>
 
@@ -341,3 +345,4 @@ export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps)
     </Dialog>
   )
 }
+

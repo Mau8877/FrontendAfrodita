@@ -166,9 +166,9 @@ export const ProductCardItem = ({ product, onEdit, onDelete, showVisibilityToggl
         <div className="mb-3">
           {/* CAMBIO 2: Renderizado condicional del tipo, separador y categoría */}
           <p className="text-[9px] font-black text-slate-400/80 uppercase tracking-widest mb-1">
-            {product.nombre_tipo} 
-            {product.nombre_tipo && product.nombre_categoria && <span className="mx-1 opacity-50">/</span>} 
-            {product.nombre_categoria}
+            {product.nombre_tipo}
+            {product.nombre_tipo && (product.categorias?.length ?? 0) > 0 && <span className="mx-1 opacity-50">/</span>}
+            {(product.categorias || []).map((c) => c.nombre).join(", ")}
           </p>
           <h3 className={`text-[13px] font-black uppercase leading-tight line-clamp-1 ${isDeleted ? 'text-slate-300' : 'text-slate-800'}`}>
             {product.nombre}

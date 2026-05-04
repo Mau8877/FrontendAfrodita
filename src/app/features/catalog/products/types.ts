@@ -6,7 +6,6 @@ export interface Product {
   id: string;
   id_tipo: string;
   id_marca: string | null;  
-  id_categoria: string | null;
   nombre: string;
   sku: string;
   descripcion: string | null;
@@ -14,8 +13,11 @@ export interface Product {
   stock_minimo: number;
   is_visible: boolean;
   nombre_marca?: string;
-  nombre_categoria?: string;
   nombre_tipo?: string;
+  categorias: {
+    id: string;
+    nombre: string;
+  }[];
   colores: {
     id: string;
     nombre: string;
